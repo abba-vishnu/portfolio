@@ -71,6 +71,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img src="${rootPath}assets/images/logo_white.png" alt="Logo" style="height: 24px; width: auto; display: block;" />
                 <span id="brand-name">${SITE_CONFIG.name.toUpperCase()}</span>
             </a>
+            <button class="mobile-menu-toggle" aria-label="Toggle Navigation">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
             <nav class="nav-links">
                 <a href="${rootPath}index.html#work">Showcase</a>
                 <a href="${rootPath}index.html#workbook">Workbook</a>
@@ -80,6 +87,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${rootPath}index.html#contact">Contact</a>
             </nav>
         `;
+
+        // Mobile Menu Toggle Logic
+        const toggleBtn = header.querySelector('.mobile-menu-toggle');
+        const navLinks = header.querySelector('.nav-links');
+
+        if (toggleBtn && navLinks) {
+            toggleBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('mobile-active');
+            });
+
+            // Close mobile menu when a link is clicked
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('mobile-active');
+                });
+            });
+        }
 
         // Header Scroll Visibility Trigger
         window.addEventListener('scroll', () => {
