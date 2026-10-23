@@ -1,9 +1,26 @@
-//-------------- Helper: Determine Root Path -----------------------------------
-const path = window.location.pathname;
-const isSubdir = path.includes('/showcase/') || (path.split('/').filter(Boolean).length > 1 && !path.endsWith('/index.html'));
-const rootPath = isSubdir ? "../" : "./";
+/**
+ * ============================================================================
+ * CRITICAL REMINDER: HIERARCHY MATTERS
+ * Keep global path detection and head-injection routines at the top, and wrap 
+ * all DOM-dependent UI injectors inside DOMContentLoaded blocks so elements 
+ * are fully rendered before JavaScript tries to target them.
+ * ============================================================================
+ */
 
-//-------------- Dynamically inject universal favicons -----------------------------------
+//-------------- 1. Automatically Determine Root Path (Infinite Scalability) ---
+const scriptTag = document.querySelector('script[src*="script.js"]');
+let rootPath = "./";
+
+if (scriptTag) {
+    const srcAttr = scriptTag.getAttribute('src');
+    const index = srcAttr.indexOf('script.js');
+    if (index > 0) {
+        rootPath = srcAttr.substring(0, index); 
+    }
+}
+
+
+//-------------- 2. Universal Favicon Injector -----------------------------------
 const head = document.querySelector("head");
 if (head) {
     const lightIcon = document.createElement("link");
@@ -19,9 +36,34 @@ if (head) {
     head.appendChild(darkIcon);
 }
 
-//-------------- Dynamic Navigation Header & DOM Injection -----------------------------------
+
+//-------------- 3. DOM-Dependent Initializers & UI Injectors ------------------
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Inject Dynamic Header
+
+    // --- A. Universal Back Button Injector ---
+    const backContainer = document.getElementById("back-button-container");
+    if (backContainer) {
+        let pathToHome = "./";
+        if (scriptTag) {
+            const srcAttr = scriptTag.getAttribute('src');
+            const index = srcAttr.indexOf('script.js');
+            if (index > 0) {
+                pathToHome = srcAttr.substring(0, index) + "index.html";
+            }
+        }
+
+        backContainer.innerHTML = `
+            <a href="${pathToHome}" class="btn" style="display: inline-flex; width: auto; padding: 10px 20px; font-size: 0.9rem; align-items: center; gap: 8px; text-decoration: none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
+            </a>
+        `;
+    }
+
+    // --- B. Dynamic Navigation Header Injector ---
     const header = document.getElementById("site-header");
     if (header) {
         header.innerHTML = `
@@ -31,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
             <nav class="nav-links">
                 <a href="${rootPath}index.html#work">Showcase</a>
-                <a href="${rootPath}workbook/index.html">Workbook</a>
+                <a href="${rootPath}index.html#workbook">Workbook</a>
                 <a href="${rootPath}index.html#capabilities">Capabilities</a>
                 <a href="${rootPath}index.html#toolkit">Toolkit</a>
                 <a href="${rootPath}index.html#journey">Journey</a>
@@ -39,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </nav>
         `;
 
-        // Header Scroll Animation
+        // Header Scroll Visibility Trigger
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 header.classList.add('header-visible');
@@ -49,7 +91,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. Inject Page Title & Brand Names from SITE_CONFIG
+    // --- C. Dynamic Banner Hero Injector ---
+    const heroBar = document.getElementById("hero-top-bar");
+    if (heroBar) {
+        // Automatically grabs from HTML data-badge attribute, or falls back to global config
+        const badgeText = heroBar.dataset.badge || `${SITE_CONFIG.title} · ${SITE_CONFIG.location}`;
+        const taglineText = heroBar.dataset.tagline || "Over a decade of motion design and visual storytelling...";
+
+        heroBar.innerHTML = `
+            <div class="hero-left" style="display: flex; align-items: center; gap: 16px;">
+                <img src="${rootPath}assets/images/logo_white.png" alt="${SITE_CONFIG.name} Logo" style="height: 48px; width: auto; display: block;">
+                <h1 class="hero-name" id="hero-name">${SITE_CONFIG.name}</h1>
+            </div>
+            <div class="hero-separator"></div>
+            <div class="hero-right">
+                <span class="hero-badge" id="hero-badge">${badgeText}</span>
+                <p class="hero-tagline" id="hero-tagline">${taglineText}</p>
+            </div>
+        `;
+    }
+
+    // --- D. Global Config Data Binding (Titles, Names, Links) ---
     const pageTitle = document.getElementById("page-title");
     if (pageTitle) pageTitle.textContent = `${SITE_CONFIG.name} — ${SITE_CONFIG.title}`;
 
@@ -62,39 +124,146 @@ document.addEventListener("DOMContentLoaded", () => {
     const footerName = document.getElementById("footer-name");
     if (footerName) footerName.textContent = SITE_CONFIG.name;
 
-    // 3. Inject Hero Badge (Title & Location)
-    const heroBadge = document.getElementById("hero-badge");
-    if (heroBadge) heroBadge.textContent = `${SITE_CONFIG.title} · ${SITE_CONFIG.location}`;
-
-    // 4. Inject Email
-    const emailLinks = document.querySelectorAll(".contact-email");
-    emailLinks.forEach(el => {
+    // Contact & Social Data Binding
+    document.querySelectorAll(".contact-email").forEach(el => {
         el.textContent = SITE_CONFIG.email;
         el.href = `mailto:${SITE_CONFIG.email}`;
     });
 
-    // 5. Inject Resume Link
-    const resumeBtns = document.querySelectorAll(".resume-btn");
-    resumeBtns.forEach(el => {
+    document.querySelectorAll(".resume-btn").forEach(el => {
         el.href = SITE_CONFIG.resumeFile;
     });
 
-    // 6. Inject Phone Number
-    const phoneLinks = document.querySelectorAll("a[href^='tel:']");
-    phoneLinks.forEach(el => {
+    document.querySelectorAll("a[href^='tel:']").forEach(el => {
         el.textContent = SITE_CONFIG.phone;
         el.href = `tel:${SITE_CONFIG.phoneRaw}`;
     });
 
-    // 7. Inject Social Links
-    const linkedinLinks = document.querySelectorAll("a[href*='linkedin.com']");
-    linkedinLinks.forEach(el => el.href = SITE_CONFIG.socials.linkedin);
+    document.querySelectorAll("a[href*='linkedin.com']").forEach(el => {
+        el.href = SITE_CONFIG.socials.linkedin;
+    });
 
-    const vimeoLinks = document.querySelectorAll("a[href*='vimeo.com']");
-    vimeoLinks.forEach(el => el.href = SITE_CONFIG.socials.vimeo);
+    document.querySelectorAll("a[href*='vimeo.com']").forEach(el => {
+        el.href = SITE_CONFIG.socials.vimeo;
+    });
+
+
+    // --- E. Automatic Mixed Showcase Generator (YouTube & Vimeo) ---
+    const container = document.getElementById("vimeo-grid-container");
+    
+    if (container && typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.showcaseVideos) {
+        container.innerHTML = ""; // Clear existing placeholder content
+
+        SITE_CONFIG.showcaseVideos.forEach(video => {
+            let thumbSrc = "";
+            let dataAttr = "";
+
+            if (video.platform === "youtube") {
+                thumbSrc = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+            } else if (video.platform === "vimeo") {
+                thumbSrc = ""; 
+                dataAttr = `data-vimeo-id="${video.id}"`;
+            }
+
+            const cardHTML = `
+                <div class="card">
+                    <a href="${video.link}" target="_blank" rel="noopener" class="card-link">
+                        <div class="thumb-container">
+                            <img src="${thumbSrc}" ${dataAttr} alt="${video.title}">
+                            <div class="play-overlay">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-tag">${video.tag}</div>
+                            <h3>${video.title}</h3>
+                        </div>
+                    </a>
+                </div>
+            `;
+            container.innerHTML += cardHTML;
+        });
+
+        // Automatically fetch high-res Vimeo thumbnails asynchronously
+        document.querySelectorAll('img[data-vimeo-id]').forEach(img => {
+            const videoId = img.getAttribute('data-vimeo-id');
+            if (!videoId) return;
+
+            fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.thumbnail_url) {
+                        img.src = data.thumbnail_url.replace(/_\d+x\d+/, '_1280x720');
+                    }
+                })
+                .catch(err => console.error(`Error loading Vimeo thumbnail for ${videoId}:`, err));
+        });
+    }
+
+    // --- F. Workbook Image Cards (single class, auto aspect ratio) ---
+    const workbookContainer = document.getElementById("workbook-grid-container");
+
+    if (workbookContainer && SITE_CONFIG.workbookImages) {
+        const limit = parseInt(workbookContainer.dataset.limit, 10);
+        const images = Number.isNaN(limit)
+            ? SITE_CONFIG.workbookImages
+            : SITE_CONFIG.workbookImages.slice(0, limit);
+        const fallbackSrc = `${rootPath}${SITE_CONFIG.workbookFallback}`;
+
+        workbookContainer.innerHTML = "";
+
+        images.forEach((fileName, i) => {
+            const card = document.createElement("div");
+            card.className = "card image-card";
+
+            const thumb = document.createElement("div");
+            thumb.className = "thumb-container image-thumb";
+            thumb.style.setProperty("--ar", "1 / 1");
+
+            const img = document.createElement("img");
+            img.alt = `Workbook ${String(i + 1).padStart(2, "0")}`;
+            img.loading = "lazy";
+
+            let usingFallback = false;
+
+            img.addEventListener("load", () => {
+                // Fallback stays square; real images use their own ratio
+                if (!usingFallback && img.naturalWidth && img.naturalHeight) {
+                    thumb.style.setProperty("--ar", `${img.naturalWidth} / ${img.naturalHeight}`);
+                }
+            });
+
+            img.addEventListener("error", () => {
+                if (usingFallback) return; // avoid infinite error loop
+                usingFallback = true;
+                thumb.style.setProperty("--ar", "1 / 1");
+                img.src = fallbackSrc;
+            });
+
+            img.src = `${rootPath}${SITE_CONFIG.workbookPath}${fileName}`;
+
+            thumb.appendChild(img);
+            card.appendChild(thumb);
+            workbookContainer.appendChild(card);
+        });
+    }
 });
 
-//-------------- Toolkit Marquee / Scroll Logic -----------------------------------
+
+//-------------- 4. Dynamic Header Height Calculator ----------------------------
+function updateHeaderOffset() {
+    const header = document.getElementById('site-header');
+    if (header) {
+        const headerHeight = header.offsetHeight + 16;
+        document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+    }
+}
+
+window.addEventListener('load', updateHeaderOffset);
+window.addEventListener('resize', updateHeaderOffset);
+
+
+//-------------- 5. Toolkit Marquee / Scroll Logic ------------------------------
 document.addEventListener("DOMContentLoaded", () => {
     const wrappers = document.querySelectorAll('.toolkit-track-wrapper');
 

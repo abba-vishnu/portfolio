@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Site admin</title>
+
+<!-- Loads your current config as the starting point (admin.html lives next to config.js) -->
+<script src="config.js"></script>
+
+<style>
+:root {
+    --bg: #111313;
+    --card: #1b1e1e;
+    --field: #141717;
+    --text: #f2f3ef;
+    --muted: #a5aaa5;
+    --accent: #d6fa74;
+    --border: #343936;
+    --danger: #ff8a80;
+    --warn: #ffd37a;
+}
+* { box-sizing: border-box; }
+html { color-scheme: dark; }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Top bar ---------- */
+.bar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;
+    padding: 14px 5vw;
+    background: rgba(17,19,19,.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+}
+.bar h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+.status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; flex: 1; min-width: 200px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.dot.on { background: var(--accent); }
+.dirty { color: var(--warn); font-size: 13px; }
+.bar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer;
+    background: transparent; border: 1px solid var(--border);
+    transition: border-color .2s, background-color .2s, color .2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #111313; font-weight: 600; }
+.btn.primary:hover { background: #e4ff95; color: #111313; }
+.btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+.btn.sm { padding: 4px 9px; font-size: 13px; }
+.btn[disabled] { opacity: .4; pointer-events: none; }
+
+/* ---------- Layout ---------- */
+main { max-width: 1100px; margin: 0 auto; padding: 32px 5vw 120px; display: grid; gap: 28px; }
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; }
+.panel > h2 { margin: 0 0 4px; font-size: 20px; font-weight: 500; letter-spacing: -.02em; }
+.panel > .hint { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+.notice { border-color: #4a4630; color: var(--warn); font-size: 14px; }
+.notice p { margin: 0; }
+
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+label.f { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+label.f small { font-size: 12px; opacity: .8; }
+input[type=text], input[type=email], select {
+    width: 100%; padding: 9px 11px; border-radius: 6px;
+    background: var(--field); border: 1px solid var(--border); color: var(--text);
+}
+input:focus, select:focus { border-color: var(--accent); outline: none; }
+
+/* ---------- Workbook images ---------- */
+.drop {
+    display: grid; place-items: center; gap: 4px; text-align: center;
+    padding: 28px 16px; margin-bottom: 20px; cursor: pointer;
+    border: 1px dashed var(--border); border-radius: 6px; color: var(--muted);
+    transition: border-color .2s, background-color .2s;
+}
+.drop:hover, .drop.over { border-color: var(--accent); background: rgba(214,250,116,.04); color: var(--text); }
+.drop strong { color: var(--text); font-weight: 500; }
+.add-name { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.add-name input { flex: 1; min-width: 200px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
+.tile { background: var(--field); border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: grid; gap: 8px; align-content: start; }
+.tile-thumb { position: relative; aspect-ratio: 1; background: #000; border-radius: 4px; overflow: hidden; display: grid; place-items: center; }
+.tile-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.tile-thumb .missing { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; text-align: center; color: var(--warn); font-size: 12px; background: #1a1810; }
+.tile input { font-size: 13px; padding: 6px 8px; }
+.row-actions { display: flex; gap: 6px; }
+.row-actions .btn { flex: 1; }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+
+/* ---------- Videos ---------- */
+.add-video { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.add-video input { flex: 1; min-width: 260px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 20px; color: var(--muted); font-size: 13px; }
+.toolbar label { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.toolbar input[type=checkbox] { accent-color: var(--accent); }
+
+.videos { display: grid; gap: 12px; }
+.video { display: grid; grid-template-columns: 168px 1fr auto; gap: 16px; background: var(--field); border: 1px solid var(--border); border-radius: 6px; padding: 12px; align-items: start; }
+.vthumb { aspect-ratio: 16/9; background: #000; border-radius: 4px; overflow: hidden; display: grid; place-items: center; color: var(--muted); font-size: 12px; text-align: center; }
+.vthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vfields { display: grid; grid-template-columns: 130px 1fr; gap: 10px 12px; }
+.vfields .wide { grid-column: 1 / -1; }
+.vactions { display: grid; gap: 6px; }
+
+@media (max-width: 800px) {
+    .video { grid-template-columns: 1fr; }
+    .vactions { grid-auto-flow: column; }
+    .vfields { grid-template-columns: 1fr; }
+}
+
+details { margin-top: 20px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+details .fields { margin-top: 14px; }
+
+/* ---------- Toasts ---------- */
+#toasts { position: fixed; right: 20px; bottom: 20px; display: grid; gap: 8px; z-index: 100; max-width: min(420px, calc(100vw - 40px)); }
+.toast { background: #232727; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 14px; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warn { border-left-color: var(--warn); }
+
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+    <h1>Site admin</h1>
+    <div class="status">
+        <span class="dot" id="dot"></span>
+        <span id="status-text">Not connected</span>
+        <span class="dirty" id="dirty" hidden>Unsaved changes</span>
+    </div>
+    <div class="bar-actions">
+        <button class="btn" id="btn-reconnect" hidden></button>
+        <button class="btn" id="btn-connect">Connect site folder</button>
+        <button class="btn" id="btn-open">Open config.js</button>
+        <button class="btn" id="btn-pending" hidden></button>
+        <button class="btn primary" id="btn-save">Save</button>
+    </div>
+    <input type="file" id="file-config" accept=".js,text/javascript" hidden>
+    <input type="file" id="file-images" accept="image/*" multiple hidden>
+</div>
+
+<main>
+    <div class="panel notice" id="unsupported" hidden>
+        <p>This browser can't write to folders directly, so Save downloads a new config.js and uploads are downloaded as files. Replace the files in your project by hand. Chrome or Edge gives you direct saving.</p>
+    </div>
+
+    <section class="panel">
+        <h2>Profile</h2>
+        <p class="hint">Name, title and contact details used across the site.</p>
+        <div class="fields" id="form-profile"></div>
+    </section>
+
+    <section class="panel">
+        <h2>Links</h2>
+        <p class="hint">Social profiles and the resume file the buttons point to.</p>
+        <div class="fields" id="form-links"></div>
+    </section>
+
+    <section class="panel">
+        <h2>Workbook images</h2>
+        <p class="hint">Files are saved to the workbook folder. Order here is the order on the site. Removing an image only takes it out of the list; the file stays in the folder.</p>
+
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload images">
+            <strong>Drop images here or click to choose</strong>
+            <span>Several at once is fine</span>
+        </div>
+
+        <div class="add-name">
+            <input type="text" id="name-input" placeholder="Already in the folder? Type the file name, e.g. sketch_07.jpg" aria-label="File name to add">
+            <button class="btn" id="btn-add-name">Add name</button>
+        </div>
+
+        <div class="tiles" id="tiles"></div>
+
+        <details>
+            <summary>Folder settings</summary>
+            <div class="fields" id="form-workbook"></div>
+        </details>
+    </section>
+
+    <section class="panel">
+        <h2>Showcase videos</h2>
+        <p class="hint">YouTube and Vimeo videos shown in the showcase grid.</p>
+
+        <div class="add-video">
+            <input type="text" id="video-url" placeholder="Paste a YouTube or Vimeo link" aria-label="Video link">
+            <button class="btn primary" id="btn-add-video">Add video</button>
+        </div>
+        <div class="toolbar">
+            <label><input type="checkbox" id="auto-renumber" checked> Keep tag numbers in order</label>
+            <button class="btn sm" id="btn-renumber">Renumber now</button>
+        </div>
+
+        <div class="videos" id="videos"></div>
+    </section>
+</main>
+
+<div id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ============================ State ============================ */
+const DEFAULTS = {
+    name: "", title: "", location: "", email: "", phone: "", phoneRaw: "",
+    resumeFile: "assets/Resume.docx",
+    socials: { linkedin: "", vimeo: "" },
+    workbookImages: [],
+    workbookPath: "assets/images/workbook/",
+    workbookFallback: "assets/images/home/hero_poster.png",
+    showcaseVideos: []
+};
+
+let cfg = normalize(typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {});
+let dirHandle = null;       // connected project folder
+let savedHandle = null;     // remembered from a previous visit, needs re-permission
+let dirty = false;
+const pending = new Map();      // name -> File (uploads waiting to be downloaded; no folder connected)
+const previews = new Map();     // name -> object URL
+const vimeoCache = new Map();   // id -> oEmbed json | null
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const getPath = (o, p) => p.split(".").reduce((a, k) => a?.[k], o);
+const setPath = (o, p, v) => { const ks = p.split("."); const last = ks.pop(); ks.reduce((a, k) => a[k] ??= {}, o)[last] = v; };
+
+function normalize(obj) {
+    const o = structuredClone(obj || {});
+    const out = { ...structuredClone(DEFAULTS), ...o, socials: { ...DEFAULTS.socials, ...(o.socials || {}) } };
+    if (!Array.isArray(out.workbookImages)) out.workbookImages = [];
+    if (!Array.isArray(out.showcaseVideos)) out.showcaseVideos = [];
+    return out;
+}
+
+/* ============================ Toasts / status ============================ */
+function toast(msg, kind = "") {
+    const t = document.createElement("div");
+    t.className = "toast " + kind;
+    t.textContent = msg;
+    $("#toasts").appendChild(t);
+    setTimeout(() => t.remove(), kind === "error" ? 7000 : 3800);
+}
+function setDirty(v) {
+    dirty = v;
+    $("#dirty").hidden = !v;
+}
+function updateStatus() {
+    $("#dot").classList.toggle("on", !!dirHandle);
+    $("#status-text").textContent = dirHandle
+        ? `Connected to “${dirHandle.name}”. Save writes config.js there.`
+        : "Not connected. Save downloads config.js.";
+    const n = pending.size;
+    $("#btn-pending").hidden = n === 0;
+    $("#btn-pending").textContent = `Download ${n} new image${n === 1 ? "" : "s"}`;
+}
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ============================ Simple form fields ============================ */
+const FORMS = {
+    "#form-profile": [
+        ["name", "Name"], ["title", "Title"], ["location", "Location"],
+        ["email", "Email", "email"], ["phone", "Phone"],
+        ["phoneRaw", "Phone, dial format", "text", "Used for the tel: link. Fills in automatically from Phone."]
+    ],
+    "#form-links": [
+        ["socials.linkedin", "LinkedIn URL"],
+        ["socials.vimeo", "Vimeo showcase URL"],
+        ["resumeFile", "Resume file path", "text", "Relative to the site root."]
+    ],
+    "#form-workbook": [
+        ["workbookPath", "Workbook folder", "text", "Uploads are saved here. Keep the trailing slash."],
+        ["workbookFallback", "Fallback image", "text", "Shown when an image file is missing."]
+    ]
+};
+
+function buildForms() {
+    for (const [sel, fields] of Object.entries(FORMS)) {
+        $(sel).innerHTML = fields.map(([path, label, type = "text", note]) => `
+            <label class="f">${esc(label)}
+                <input type="${type}" data-path="${path}" autocomplete="off" spellcheck="false">
+                ${note ? `<small>${esc(note)}</small>` : ""}
+            </label>`).join("");
+    }
+    refreshForms();
+}
+function refreshForms() {
+    document.querySelectorAll("[data-path]").forEach(el => { el.value = getPath(cfg, el.dataset.path) ?? ""; });
+}
+const dial = p => { const d = String(p).replace(/[^\d]/g, ""); return d ? "+" + d : ""; };
+
+document.addEventListener("input", e => {
+    const el = e.target;
+    if (el.dataset?.path) {
+        const path = el.dataset.path;
+        const prev = getPath(cfg, path);
+        setPath(cfg, path, el.value);
+        if (path === "phone" && (cfg.phoneRaw === "" || cfg.phoneRaw === dial(prev))) {
+            cfg.phoneRaw = dial(el.value);
+            $('[data-path="phoneRaw"]').value = cfg.phoneRaw;
+        }
+        setDirty(true);
+    }
+    if (el.dataset?.vf) onVideoField(el);
+});
+
+/* ============================ Folder access ============================ */
+const kv = {
+    db: () => new Promise((res, rej) => { const r = indexedDB.open("site-admin", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }),
+    async get(k) { const db = await this.db(); return new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+    async set(k, v) { const db = await this.db(); return new Promise((res, rej) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); }
+};
+
+async function workbookDir(create) {
+    let d = dirHandle;
+    for (const part of cfg.workbookPath.split("/").filter(Boolean)) {
+        if (part === "." || part === "..") throw new Error("Workbook folder can't contain . or ..");
+        d = await d.getDirectoryHandle(part, { create });
+    }
+    return d;
+}
+async function existsInFolder(name) {
+    if (!dirHandle) return false;
+    try { await (await workbookDir(false)).getFileHandle(name); return true; } catch { return false; }
+}
+async function writeImage(name, file) {
+    const fh = await (await workbookDir(true)).getFileHandle(name, { create: true });
+    const w = await fh.createWritable();
+    await w.write(file);
+    await w.close();
+}
+
+function parseConfigText(text) {
+    const obj = new Function(text + "\n;return typeof SITE_CONFIG !== 'undefined' ? SITE_CONFIG : null;")();
+    if (!obj) throw new Error("No SITE_CONFIG found in that file.");
+    return obj;
+}
+function loadConfig(obj) {
+    cfg = normalize(obj);
+    previews.forEach(u => URL.revokeObjectURL(u));
+    previews.clear();
+    setDirty(false);
+    refreshForms();
+    renderImages();
+    renderVideos();
+}
+
+async function loadFromFolder() {
+    try {
+        const fh = await dirHandle.getFileHandle("config.js");
+        loadConfig(parseConfigText(await (await fh.getFile()).text()));
+        toast("Loaded config.js from the folder.");
+    } catch (e) {
+        if (e.name === "NotFoundError") toast("No config.js in that folder yet. One will be created on save.", "warn");
+        else toast("Couldn't read config.js: " + e.message, "error");
+    }
+    // Move any uploads made before connecting into the folder
+    for (const [name, file] of [...pending]) {
+        try { await writeImage(name, file); pending.delete(name); } catch (e) { toast(`Couldn't save ${name}: ${e.message}`, "error"); }
+    }
+    previews.forEach(u => URL.revokeObjectURL(u));
+    previews.clear();
+    renderImages();
+    updateStatus();
+}
+
+async function connect() {
+    if (!window.showDirectoryPicker) { toast("This browser can't open folders. Use Chrome or Edge, or the download options.", "warn"); return; }
+    try { dirHandle = await window.showDirectoryPicker({ mode: "readwrite" }); }
+    catch (e) { if (e.name !== "AbortError") toast(e.message, "error"); return; }
+    try { await kv.set("dir", dirHandle); } catch {}
+    $("#btn-reconnect").hidden = true;
+    await loadFromFolder();
+}
+
+async function reconnect() {
+    try {
+        if ((await savedHandle.requestPermission({ mode: "readwrite" })) !== "granted") { toast("Permission was not granted.", "warn"); return; }
+        dirHandle = savedHandle;
+        $("#btn-reconnect").hidden = true;
+        await loadFromFolder();
+    } catch (e) { toast(e.message, "error"); }
+}
+
+/* ============================ Save ============================ */
+function serialize() {
+    let s = JSON.stringify(cfg, null, 4).replace(/^(\s*)"([A-Za-z_$][\w$]*)":/gm, "$1$2:");
+    const notes = {
+        resumeFile: "// Target resume file name",
+        socials: "// Social links",
+        workbookImages: "// Workbook images: file names inside workbookPath",
+        showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)"
+    };
+    for (const [key, note] of Object.entries(notes)) {
+        s = s.replace(new RegExp("^    " + key + ":", "m"), m => `\n    ${note}\n${m}`);
+    }
+    return "const SITE_CONFIG = " + s + ";\n";
+}
+
+function download(name, data, type = "text/javascript") {
+    const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data], { type }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: name });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+async function save() {
+    const bad = cfg.showcaseVideos.findIndex(v => !String(v.id).trim());
+    if (bad >= 0) { toast(`Video ${bad + 1} has no ID. Fix or remove it first.`, "error"); return; }
+    const text = serialize();
+    if (dirHandle) {
+        try {
+            const fh = await dirHandle.getFileHandle("config.js", { create: true });
+            const w = await fh.createWritable();
+            await w.write(text);
+            await w.close();
+            setDirty(false);
+            toast("Saved config.js");
+        } catch (e) { toast("Couldn't save: " + e.message, "error"); }
+    } else {
+        download("config.js", text);
+        setDirty(false);
+        toast("Downloaded config.js. Replace the one in your project.", "warn");
+    }
+}
+
+/* ============================ Workbook images ============================ */
+const sanitizeName = n => n.trim().replace(/[^\w.\-]+/g, "_");
+
+async function uniqueName(name) {
+    const dot = name.lastIndexOf(".");
+    const base = dot > 0 ? name.slice(0, dot) : name, ext = dot > 0 ? name.slice(dot) : "";
+    let candidate = name, i = 1;
+    while (cfg.workbookImages.includes(candidate) || pending.has(candidate) || await existsInFolder(candidate)) {
+        candidate = `${base}-${i++}${ext}`;
+    }
+    return candidate;
+}
+
+async function previewFor(name) {
+    if (previews.has(name)) return previews.get(name);
+    let url = null;
+    try {
+        if (pending.has(name)) url = URL.createObjectURL(pending.get(name));
+        else if (dirHandle) url = URL.createObjectURL(await (await (await workbookDir(false)).getFileHandle(name)).getFile());
+        else url = cfg.workbookPath + encodeURIComponent(name);   // works when served from the site root
+    } catch { /* not found */ }
+    if (url) previews.set(name, url);
+    return url;
+}
+
+function renderImages() {
+    const box = $("#tiles");
+    if (!cfg.workbookImages.length) { box.innerHTML = '<p class="empty">No images yet. Upload some above.</p>'; return; }
+    box.innerHTML = "";
+    cfg.workbookImages.forEach((name, i) => {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.innerHTML = `
+            <div class="tile-thumb"><img alt="" hidden><span class="missing" hidden>File not found in folder</span></div>
+            <input type="text" value="${esc(name)}" data-img-name="${i}" aria-label="File name for image ${i + 1}" spellcheck="false">
+            <div class="row-actions">
+                <button class="btn sm" data-act="img-left" data-i="${i}" aria-label="Move earlier" ${i === 0 ? "disabled" : ""}>←</button>
+                <button class="btn sm" data-act="img-right" data-i="${i}" aria-label="Move later" ${i === cfg.workbookImages.length - 1 ? "disabled" : ""}>→</button>
+                <button class="btn sm danger" data-act="img-remove" data-i="${i}" aria-label="Remove from list">✕</button>
+            </div>`;
+        box.appendChild(tile);
+        const img = $("img", tile), miss = $(".missing", tile);
+        img.onload = () => { img.hidden = false; miss.hidden = true; };
+        img.onerror = () => { img.hidden = true; miss.hidden = false; };
+        previewFor(name).then(url => { if (url) img.src = url; else miss.hidden = false; });
+    });
+}
+
+async function addFiles(fileList) {
+    const files = [...fileList].filter(f => f.type.startsWith("image/"));
+    if (!files.length) { toast("No image files in that selection.", "warn"); return; }
+    let added = 0;
+    for (const f of files) {
+        const name = await uniqueName(sanitizeName(f.name));
+        try {
+            if (dirHandle) await writeImage(name, f); else pending.set(name, f);
+            cfg.workbookImages.push(name);
+            added++;
+        } catch (e) { toast(`Couldn't save ${f.name}: ${e.message}`, "error"); }
+    }
+    if (added) {
+        setDirty(true); renderImages(); updateStatus();
+        toast(dirHandle ? `Saved ${added} image${added > 1 ? "s" : ""} to the folder. Press Save to update config.js.`
+                        : `Added ${added} image${added > 1 ? "s" : ""}. Download them and put them in ${cfg.workbookPath}`, dirHandle ? "" : "warn");
+    }
+}
+
+function addName() {
+    const input = $("#name-input");
+    const name = sanitizeName(input.value);
+    if (!name) return;
+    if (cfg.workbookImages.includes(name)) { toast("That name is already in the list.", "warn"); return; }
+    cfg.workbookImages.push(name);
+    input.value = "";
+    setDirty(true); renderImages();
+}
+
+const move = (arr, i, d) => { const j = i + d; if (j < 0 || j >= arr.length) return false; [arr[i], arr[j]] = [arr[j], arr[i]]; return true; };
+
+/* ============================ Videos ============================ */
+const pad = n => String(n).padStart(2, "0");
+
+function autoLink(v) {
+    if (v.platform === "youtube") return `https://youtu.be/${v.id}`;
+    return (cfg.socials.vimeo || "").includes("/showcase/")
+        ? `${cfg.socials.vimeo.split("?")[0]}?video=${v.id}`
+        : `https://vimeo.com/${v.id}`;
+}
+
+function parseVideoUrl(raw) {
+    let u;
+    try { u = new URL(raw.trim()); } catch { return null; }
+    const h = u.hostname.replace(/^www\./, "");
+    if (h === "youtu.be") return { platform: "youtube", id: u.pathname.slice(1).split("/")[0] };
+    if (h.endsWith("youtube.com")) {
+        const m = u.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]{6,})/);
+        const id = u.searchParams.get("v") || (m && m[1]);
+        return id ? { platform: "youtube", id } : null;
+    }
+    if (h.endsWith("vimeo.com")) {
+        const id = u.searchParams.get("video") || (u.pathname.match(/\/(\d{6,})(?:\/|$)/) || [])[1];
+        return id ? { platform: "vimeo", id } : null;
+    }
+    return null;
+}
+
+async function vimeoMeta(id) {
+    if (vimeoCache.has(id)) return vimeoCache.get(id);
+    let m = null;
+    try {
+        const r = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent("https://vimeo.com/" + id)}`);
+        if (r.ok) m = await r.json();
+    } catch {}
+    vimeoCache.set(id, m);
+    return m;
+}
+async function youtubeTitle(id) {
+    try {
+        const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent("https://www.youtube.com/watch?v=" + id)}`);
+        if (r.ok) return (await r.json()).title || "";
+    } catch {}
+    return "";
+}
+
+function setThumb(el, v) {
+    el.textContent = "No preview";
+    const show = src => { el.innerHTML = `<img alt="" src="${esc(src)}">`; };
+    if (v.platform === "youtube" && v.id) show(`https://img.youtube.com/vi/${encodeURIComponent(v.id)}/mqdefault.jpg`);
+    else if (v.platform === "vimeo" && v.id) vimeoMeta(v.id).then(m => { if (m?.thumbnail_url && v.id === el.dataset.id) show(m.thumbnail_url); });
+    el.dataset.id = v.id;
+}
+
+function renumberTags() {
+    cfg.showcaseVideos.forEach((v, i) => {
+        if (/^\s*\d+\s*\//.test(v.tag || "")) v.tag = v.tag.replace(/^\s*\d+\s*\/\s*/, `${pad(i + 1)} / `);
+    });
+}
+const maybeRenumber = () => { if ($("#auto-renumber").checked) renumberTags(); };
+
+function renderVideos() {
+    const box = $("#videos");
+    if (!cfg.showcaseVideos.length) { box.innerHTML = '<p class="empty">No videos yet. Paste a link above.</p>'; return; }
+    box.innerHTML = "";
+    cfg.showcaseVideos.forEach((v, i) => {
+        const n = cfg.showcaseVideos.length;
+        const card = document.createElement("div");
+        card.className = "video";
+        card.innerHTML = `
+            <div class="vthumb"></div>
+            <div class="vfields">
+                <label class="f">Platform
+                    <select data-vf="platform" data-i="${i}">
+                        <option value="youtube" ${v.platform === "youtube" ? "selected" : ""}>YouTube</option>
+                        <option value="vimeo" ${v.platform === "vimeo" ? "selected" : ""}>Vimeo</option>
+                    </select>
+                </label>
+                <label class="f">Video ID
+                    <input type="text" data-vf="id" data-i="${i}" value="${esc(v.id)}" spellcheck="false">
+                </label>
+                <label class="f">Tag
+                    <input type="text" data-vf="tag" data-i="${i}" value="${esc(v.tag)}">
+                </label>
+                <label class="f">Title
+                    <input type="text" data-vf="title" data-i="${i}" value="${esc(v.title)}">
+                </label>
+                <label class="f wide">Link
+                    <input type="text" data-vf="link" data-i="${i}" value="${esc(v.link)}" spellcheck="false">
+                </label>
+            </div>
+            <div class="vactions">
+                <button class="btn sm" data-act="vid-up" data-i="${i}" aria-label="Move up" ${i === 0 ? "disabled" : ""}>↑</button>
+                <button class="btn sm" data-act="vid-down" data-i="${i}" aria-label="Move down" ${i === n - 1 ? "disabled" : ""}>↓</button>
+                <button class="btn sm danger" data-act="vid-remove" data-i="${i}" aria-label="Remove video">✕</button>
+            </div>`;
+        box.appendChild(card);
+        setThumb($(".vthumb", card), v);
+    });
+}
+
+function onVideoField(el) {
+    const i = +el.dataset.i, f = el.dataset.vf, v = cfg.showcaseVideos[i];
+    if (!v) return;
+    const linkWasAuto = (f === "id" || f === "platform") && v.link === autoLink(v);
+    v[f] = el.value;
+    if (linkWasAuto) {
+        v.link = autoLink(v);
+        $(`[data-vf="link"][data-i="${i}"]`).value = v.link;
+    }
+    if (f === "id" || f === "platform") setThumb(el.closest(".video").querySelector(".vthumb"), v);
+    setDirty(true);
+}
+
+async function addVideo() {
+    const input = $("#video-url");
+    const parsed = parseVideoUrl(input.value);
+    if (!parsed) { toast("That doesn't look like a YouTube or Vimeo link.", "warn"); return; }
+    if (cfg.showcaseVideos.some(v => v.platform === parsed.platform && v.id === parsed.id)) { toast("That video is already in the list.", "warn"); return; }
+
+    const sameKind = [...cfg.showcaseVideos].reverse().find(v => v.platform === parsed.platform);
+    const label = sameKind ? (sameKind.tag.split("/").slice(1).join("/").trim() || parsed.platform.toUpperCase()) : parsed.platform.toUpperCase();
+    const video = { platform: parsed.platform, id: parsed.id, tag: `${pad(cfg.showcaseVideos.length + 1)} / ${label}`, title: "", link: "" };
+    video.link = autoLink(video);
+
+    $("#btn-add-video").disabled = true;
+    video.title = parsed.platform === "youtube" ? await youtubeTitle(parsed.id) : ((await vimeoMeta(parsed.id))?.title || "");
+    $("#btn-add-video").disabled = false;
+
+    cfg.showcaseVideos.push(video);
+    input.value = "";
+    maybeRenumber(); setDirty(true); renderVideos();
+    if (!video.title) {
+        toast("Added. Couldn't fetch the title, so type it in.", "warn");
+        const last = $("#videos").lastElementChild?.querySelector('[data-vf="title"]');
+        last?.focus(); last?.scrollIntoView({ block: "center" });
+    }
+}
+
+/* ============================ Events ============================ */
+document.addEventListener("click", e => {
+    const b = e.target.closest("[data-act]");
+    if (!b) return;
+    const i = +b.dataset.i, act = b.dataset.act;
+    const imgs = cfg.workbookImages, vids = cfg.showcaseVideos;
+    if (act === "img-left" && move(imgs, i, -1)) { setDirty(true); renderImages(); }
+    if (act === "img-right" && move(imgs, i, 1)) { setDirty(true); renderImages(); }
+    if (act === "img-remove") {
+        const [name] = imgs.splice(i, 1);
+        if (pending.has(name) && !imgs.includes(name)) { pending.delete(name); URL.revokeObjectURL(previews.get(name)); previews.delete(name); updateStatus(); }
+        setDirty(true); renderImages();
+    }
+    if (act === "vid-up" && move(vids, i, -1)) { maybeRenumber(); setDirty(true); renderVideos(); }
+    if (act === "vid-down" && move(vids, i, 1)) { maybeRenumber(); setDirty(true); renderVideos(); }
+    if (act === "vid-remove") {
+        const v = vids[i];
+        if (!confirm(`Remove “${v.title || v.id}”?`)) return;
+        vids.splice(i, 1); maybeRenumber(); setDirty(true); renderVideos();
+    }
+});
+
+document.addEventListener("change", e => {
+    if (e.target.dataset?.imgName !== undefined) {
+        const i = +e.target.dataset.imgName;
+        const name = sanitizeName(e.target.value);
+        const old = cfg.workbookImages[i];
+        if (!name) { e.target.value = old; return; }
+        if (name !== old) {
+            if (pending.has(old)) { pending.set(name, pending.get(old)); pending.delete(old); }
+            cfg.workbookImages[i] = name;
+            setDirty(true);
+            toast("Name changed in the list only. Rename the file in the folder to match.", "warn");
+        }
+        renderImages();
+    }
+});
+
+$("#btn-connect").onclick = connect;
+$("#btn-reconnect").onclick = reconnect;
+$("#btn-save").onclick = save;
+$("#btn-open").onclick = () => $("#file-config").click();
+$("#file-config").onchange = async e => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try { loadConfig(parseConfigText(await f.text())); toast(`Loaded ${f.name}`); }
+    catch (err) { toast("Couldn't read that file: " + err.message, "error"); }
+};
+
+const drop = $("#drop");
+drop.onclick = () => $("#file-images").click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#file-images").click(); } };
+$("#file-images").onchange = e => { addFiles(e.target.files); e.target.value = ""; };
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+
+$("#btn-add-name").onclick = addName;
+$("#name-input").onkeydown = e => { if (e.key === "Enter") addName(); };
+$("#btn-add-video").onclick = addVideo;
+$("#video-url").onkeydown = e => { if (e.key === "Enter") addVideo(); };
+$("#btn-renumber").onclick = () => { renumberTags(); setDirty(true); renderVideos(); toast("Tags renumbered."); };
+
+$("#btn-pending").onclick = async () => {
+    for (const [name, file] of pending) { download(name, file, file.type); await new Promise(r => setTimeout(r, 350)); }
+    toast(`Put the downloaded images in ${cfg.workbookPath}`, "warn");
+};
+
+window.addEventListener("keydown", e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
+});
+
+/* ============================ Init ============================ */
+(async function init() {
+    buildForms();
+    renderImages();
+    renderVideos();
+    updateStatus();
+
+    if (!window.showDirectoryPicker) {
+        $("#unsupported").hidden = false;
+        $("#btn-connect").hidden = true;
+        return;
+    }
+    try {
+        const h = await kv.get("dir");
+        if (!h) return;
+        savedHandle = h;
+        if ((await h.queryPermission({ mode: "readwrite" })) === "granted") {
+            dirHandle = h;
+            await loadFromFolder();
+        } else {
+            const b = $("#btn-reconnect");
+            b.textContent = `Reconnect “${h.name}”`;
+            b.hidden = false;
+        }
+    } catch {}
+    updateStatus();
+})();
+})();
+</script>
+</body>
+</html>

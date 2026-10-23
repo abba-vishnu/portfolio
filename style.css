@@ -46,6 +46,7 @@ a:hover {
 
 section {
     margin: 64px 0;
+    scroll-margin-top: var(--header-height, 80px); /* Falls back to 80px if JS is disabled */
 }
 
 h2 {
@@ -331,6 +332,34 @@ a.card-link {
 
 .card:hover .play-overlay svg {
     fill: #111313;
+}
+
+/* True Pinterest Masonry Layout for Workbook */
+.grid:has(.image-card) {
+    display: block;
+    column-count: 3;
+    column-gap: 24px;
+}
+
+.grid:has(.image-card) .card {
+    break-inside: avoid;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.thumb-container.image-thumb {
+    height: auto;
+    padding-bottom: 0;
+    aspect-ratio: auto;
+    background: transparent;
+}
+
+.thumb-container.image-thumb img {
+    position: static;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
 .view-all-btn {

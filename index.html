@@ -19,40 +19,25 @@
 
     <!-- True Edge-to-Edge Hero Section -->
     <section class="hero-section">
-        <div class="hero-top-bar">
-            <!-- Left Side: Large Name -->
-            <div class="hero-left" style="display: flex; align-items: center; gap: 16px;">
-                <img src="assets/images/logo_white.png" alt="Abba Vishnu Logo" style="height: 48px; width: auto; display: block;">
-                <h1 class="hero-name" id="hero-name">Abba Vishnu</h1>
-        </div>
-            
-            <!-- Divider / Separator -->
-            <div class="hero-separator"></div>
-
-            <!-- Right Side: Designation Badge & Tagline Container -->
-            <div class="hero-right">
-                <span class="hero-badge" id="hero-badge">Lead Motion Designer · Chennai, India</span>
-                <p class="hero-tagline">Over a decade of motion design and visual storytelling, translating complex digital products into clear product films, explainers, and brand systems.</p>
-            </div>
-        </div>
+        <!-- Dynamically Injected Hero Banner Header -->
+        <div id="hero-top-bar" class="hero-top-bar"></div>
         
         <!-- Full-Width Edge-to-Edge Video Container -->
-<div class="video-container edge-video">
-    <!-- Filler Poster Image (Displays until video loads) -->
-    <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster">
-    
-    <iframe src="https://player.vimeo.com/video/581244671?autoplay=1&muted=1&loop=1&controls=0&playsinline=1" 
-            title="Showreel" 
-            allow="autoplay; fullscreen; picture-in-picture" 
-            allowfullscreen>
-    </iframe>
-</div>
+        <div class="video-container edge-video">
+            <!-- Filler Poster Image (Displays until video loads) -->
+            <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster">
+            
+            <iframe src="https://player.vimeo.com/video/581244671?autoplay=1&muted=1&loop=1&controls=0&playsinline=1" 
+                    title="Showreel" 
+                    allow="autoplay; fullscreen; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
+        </div>
     </section>
 
     <div class="container">
 
         <!-- Showcase / Selected Work -->
-
         <section id="work">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <h2>SHOWCASE</h2>
@@ -181,6 +166,20 @@
                     <div class="card-tag" style="margin-bottom: 0;">Figma · Adobe Firefly · Unity3D · C#</div>
                 </div>
             </div>
+        </section>
+
+        <!-- Workbook Section -->
+        <section id="workbook">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <h2>WORKBOOK</h2>
+                <span style="color: var(--text-secondary); font-size: 12px; letter-spacing: -0.02em;">SKETCHBOOK &amp; STUDIES</span>
+            </div>
+            <p class="subtitle" style="margin-top: 10px; margin-bottom: 0;">Drawings, character studies, visual explorations, and ideas in progress.</p>
+
+            <!-- Auto-generated from SITE_CONFIG.workbookImages (see script.js) -->
+            <div class="grid" id="workbook-grid-container" data-limit="6"></div>
+
+            <a class="btn view-all-btn" href="workbook/index.html">View all sketches &amp; studies &gt;&gt;</a>
         </section>
 
         <!-- Toolkit -->
