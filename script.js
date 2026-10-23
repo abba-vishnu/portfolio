@@ -330,3 +330,54 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { passive: false });
     });
 });
+
+
+//-------------- 6. Universal Image Lightbox Viewer across all pages ------------------------------
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Automatically create and inject the modal container if it doesn't exist
+    if (!document.getElementById('image-lightbox')) {
+        const lightboxModal = document.createElement('div');
+        lightboxModal.id = 'image-lightbox';
+        lightboxModal.className = 'lightbox-modal';
+        lightboxModal.innerHTML = `
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-img" src="" alt="Zoomed view">
+        `;
+        document.body.appendChild(lightboxModal);
+    }
+
+    // 2. Event listener: Open lightbox on clicking any workbook image or image card
+    document.addEventListener('click', function (e) {
+        const imgTarget = e.target.closest('.image-card img, .thumb-container.image-thumb img, .workbook-item img');
+        if (imgTarget) {
+            e.preventDefault();
+            const lightbox = document.getElementById('image-lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            if (lightbox && lightboxImg) {
+                lightboxImg.src = imgTarget.src;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Lock background scrolling
+            }
+        }
+    });
+
+    // 3. Event listener: Close lightbox when clicking close button, background, or pressing Escape key
+    document.addEventListener('click', function (e) {
+        const lightbox = document.getElementById('image-lightbox');
+        if (lightbox && (e.target.id === 'image-lightbox' || e.target.classList.contains('lightbox-close'))) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Restore background scrolling
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            const lightbox = document.getElementById('image-lightbox');
+            if (lightbox && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+    });
+});
