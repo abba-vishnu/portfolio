@@ -53,7 +53,13 @@ const SITE_CONFIG = {
 
     // Lottie animations: file names inside lottiePath (add more file names here)
     lottieFiles: [
-        "MazeAnim.json"
+        "MazeAnim.json",
+        "botSurfing.json",
+        "WM_Hero_Banner_Anim.json",
+        "AI-app-creation-V1.json",
+        "AI-App-Creation-V03.json",
+        "AI-app-creation-with-apis.json",
+        "BlinkLogoAnimation.json"
     ],
     lottiePath: "assets/lottie/",
 
