@@ -23,14 +23,15 @@
         <!-- Dynamically Injected Hero Banner Header -->
         <div id="hero-top-bar" class="hero-top-bar"></div>
         
-        <!-- Full-Width Edge-to-Edge Video Container -->
+        <!-- Full-Width Edge-to-Edge Video Container (src filled in from SITE_CONFIG.heroVideo / heroPoster by script.js) -->
         <div class="video-container edge-video">
             <!-- Filler Poster Image (Displays until video loads) -->
-            <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster">
-            
-            <iframe src="https://player.vimeo.com/video/581244671?autoplay=1&muted=1&loop=1&controls=0&playsinline=1" 
-                    title="Showreel" 
-                    allow="autoplay; fullscreen; picture-in-picture" 
+            <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster" id="hero-poster">
+
+            <iframe id="hero-video-iframe"
+                    title="Showreel"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
             </iframe>
         </div>

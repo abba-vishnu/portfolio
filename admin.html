@@ -129,6 +129,14 @@ details { margin-top: 20px; }
 summary { cursor: pointer; color: var(--muted); font-size: 13px; }
 details .fields { margin-top: 14px; }
 
+/* ---------- Field previews (fallback image, poster, etc.) ---------- */
+.field-preview { margin-top: 2px; }
+.field-preview img { max-width: 96px; max-height: 96px; border-radius: 4px; border: 1px solid var(--border); display: block; object-fit: contain; background: #000; }
+.field-preview .missing-sm { font-size: 11px; color: var(--warn); }
+
+/* ---------- Lottie tiles (no visual preview available) ---------- */
+.tile-thumb.lottie-badge { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .08em; }
+
 /* ---------- Toasts ---------- */
 #toasts { position: fixed; right: 20px; bottom: 20px; display: grid; gap: 8px; z-index: 100; max-width: min(420px, calc(100vw - 40px)); }
 .toast { background: #232727; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 14px; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
@@ -151,12 +159,14 @@ details .fields { margin-top: 14px; }
     <div class="bar-actions">
         <button class="btn" id="btn-reconnect" hidden></button>
         <button class="btn" id="btn-connect">Connect site folder</button>
+        <button class="btn" id="btn-preview">Preview site ↗</button>
         <button class="btn" id="btn-open">Open config.js</button>
         <button class="btn" id="btn-pending" hidden></button>
         <button class="btn primary" id="btn-save">Save</button>
     </div>
     <input type="file" id="file-config" accept=".js,text/javascript" hidden>
     <input type="file" id="file-images" accept="image/*" multiple hidden>
+    <input type="file" id="file-lottie" accept=".json,application/json" multiple hidden>
 </div>
 
 <main>
@@ -174,6 +184,32 @@ details .fields { margin-top: 14px; }
         <h2>Links</h2>
         <p class="hint">Social profiles and the resume file the buttons point to.</p>
         <div class="fields" id="form-links"></div>
+    </section>
+
+    <section class="panel">
+        <h2>Hero banner</h2>
+        <p class="hint">The full-width video that autoplays at the top of the home page.</p>
+
+        <div class="add-video" style="margin-bottom: 16px;">
+            <input type="text" id="hero-video-url" placeholder="Paste a YouTube or Vimeo link" aria-label="Hero video link">
+            <button class="btn primary" id="btn-set-hero-video">Set video</button>
+        </div>
+
+        <div class="video" style="grid-template-columns: 168px 1fr;">
+            <div class="vthumb" id="hero-vthumb"></div>
+            <div>
+                <p class="hint" style="margin: 0 0 4px;">Current video</p>
+                <p id="hero-video-current" style="margin: 0; font-size: 14px;"></p>
+            </div>
+        </div>
+
+        <div class="fields" style="margin-top: 20px;" id="form-hero"></div>
+    </section>
+
+    <section class="panel">
+        <h2>Assets</h2>
+        <p class="hint">Settings that apply across every page of the site.</p>
+        <div class="fields" id="form-assets"></div>
     </section>
 
     <section class="panel">
@@ -195,6 +231,28 @@ details .fields { margin-top: 14px; }
         <details>
             <summary>Folder settings</summary>
             <div class="fields" id="form-workbook"></div>
+        </details>
+    </section>
+
+    <section class="panel">
+        <h2>Lottie animations</h2>
+        <p class="hint">Files are saved to the Lottie folder. Order here is the order on the site and on the home page preview (which shows the first 6). Removing an animation only takes it out of the list; the file stays in the folder.</p>
+
+        <div class="drop" id="drop-lottie" tabindex="0" role="button" aria-label="Upload Lottie JSON files">
+            <strong>Drop .json files here or click to choose</strong>
+            <span>Several at once is fine</span>
+        </div>
+
+        <div class="add-name">
+            <input type="text" id="name-input-lottie" placeholder="Already in the folder? Type the file name, e.g. Loader.json" aria-label="File name to add">
+            <button class="btn" id="btn-add-name-lottie">Add name</button>
+        </div>
+
+        <div class="tiles" id="tiles-lottie"></div>
+
+        <details>
+            <summary>Folder settings</summary>
+            <div class="fields" id="form-lottie"></div>
         </details>
     </section>
 
@@ -226,9 +284,13 @@ const DEFAULTS = {
     name: "", title: "", location: "", email: "", phone: "", phoneRaw: "",
     resumeFile: "assets/Resume.docx",
     socials: { linkedin: "", vimeo: "" },
+    heroVideo: { platform: "vimeo", id: "" },
+    heroPoster: "assets/images/home/hero_poster.png",
     workbookImages: [],
     workbookPath: "assets/images/workbook/",
-    workbookFallback: "assets/images/home/hero_poster.png",
+    fallbackImage: "assets/images/home/missing_asset_fallback.png",
+    lottieFiles: [],
+    lottiePath: "assets/lottie/",
     showcaseVideos: []
 };
 
@@ -236,7 +298,8 @@ let cfg = normalize(typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {});
 let dirHandle = null;       // connected project folder
 let savedHandle = null;     // remembered from a previous visit, needs re-permission
 let dirty = false;
-const pending = new Map();      // name -> File (uploads waiting to be downloaded; no folder connected)
+const pending = new Map();        // name -> File (workbook image uploads waiting to be downloaded; no folder connected)
+const pendingLottie = new Map();  // name -> File (Lottie JSON uploads waiting to be downloaded; no folder connected)
 const previews = new Map();     // name -> object URL
 const vimeoCache = new Map();   // id -> oEmbed json | null
 
@@ -247,8 +310,13 @@ const setPath = (o, p, v) => { const ks = p.split("."); const last = ks.pop(); k
 
 function normalize(obj) {
     const o = structuredClone(obj || {});
-    const out = { ...structuredClone(DEFAULTS), ...o, socials: { ...DEFAULTS.socials, ...(o.socials || {}) } };
+    const out = {
+        ...structuredClone(DEFAULTS), ...o,
+        socials: { ...DEFAULTS.socials, ...(o.socials || {}) },
+        heroVideo: { ...DEFAULTS.heroVideo, ...(o.heroVideo || {}) }
+    };
     if (!Array.isArray(out.workbookImages)) out.workbookImages = [];
+    if (!Array.isArray(out.lottieFiles)) out.lottieFiles = [];
     if (!Array.isArray(out.showcaseVideos)) out.showcaseVideos = [];
     return out;
 }
@@ -270,9 +338,9 @@ function updateStatus() {
     $("#status-text").textContent = dirHandle
         ? `Connected to “${dirHandle.name}”. Save writes config.js there.`
         : "Not connected. Save downloads config.js.";
-    const n = pending.size;
+    const n = pending.size + pendingLottie.size;
     $("#btn-pending").hidden = n === 0;
-    $("#btn-pending").textContent = `Download ${n} new image${n === 1 ? "" : "s"}`;
+    $("#btn-pending").textContent = `Download ${n} new file${n === 1 ? "" : "s"}`;
 }
 window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
 
@@ -288,24 +356,46 @@ const FORMS = {
         ["socials.vimeo", "Vimeo showcase URL"],
         ["resumeFile", "Resume file path", "text", "Relative to the site root."]
     ],
+    "#form-hero": [
+        ["heroPoster", "Poster image path", "text", "Shown before the video loads. Relative to the site root.", true]
+    ],
+    "#form-assets": [
+        ["fallbackImage", "Fallback image", "text", "Shown across the whole site whenever an image or animation fails to load.", true]
+    ],
     "#form-workbook": [
-        ["workbookPath", "Workbook folder", "text", "Uploads are saved here. Keep the trailing slash."],
-        ["workbookFallback", "Fallback image", "text", "Shown when an image file is missing."]
+        ["workbookPath", "Workbook folder", "text", "Uploads are saved here. Keep the trailing slash."]
+    ],
+    "#form-lottie": [
+        ["lottiePath", "Lottie folder", "text", "Uploads are saved here. Keep the trailing slash."]
     ]
 };
 
 function buildForms() {
     for (const [sel, fields] of Object.entries(FORMS)) {
-        $(sel).innerHTML = fields.map(([path, label, type = "text", note]) => `
+        $(sel).innerHTML = fields.map(([path, label, type = "text", note, preview]) => `
             <label class="f">${esc(label)}
                 <input type="${type}" data-path="${path}" autocomplete="off" spellcheck="false">
                 ${note ? `<small>${esc(note)}</small>` : ""}
+                ${preview ? `<span class="field-preview"><img data-preview-for="${path}" alt="" hidden><span class="missing-sm" hidden>Not found at that path</span></span>` : ""}
             </label>`).join("");
     }
     refreshForms();
 }
+function updateFieldPreview(path) {
+    const img = document.querySelector(`[data-preview-for="${CSS.escape(path)}"]`);
+    if (!img) return;
+    const val = getPath(cfg, path);
+    const missing = img.nextElementSibling;
+    if (!val) { img.hidden = true; if (missing) missing.hidden = true; return; }
+    img.onload = () => { img.hidden = false; if (missing) missing.hidden = true; };
+    img.onerror = () => { img.hidden = true; if (missing) missing.hidden = false; };
+    img.src = val; // resolved relative to admin.html, same folder as the site root
+}
 function refreshForms() {
-    document.querySelectorAll("[data-path]").forEach(el => { el.value = getPath(cfg, el.dataset.path) ?? ""; });
+    document.querySelectorAll("[data-path]").forEach(el => {
+        el.value = getPath(cfg, el.dataset.path) ?? "";
+        updateFieldPreview(el.dataset.path);
+    });
 }
 const dial = p => { const d = String(p).replace(/[^\d]/g, ""); return d ? "+" + d : ""; };
 
@@ -320,6 +410,7 @@ document.addEventListener("input", e => {
             $('[data-path="phoneRaw"]').value = cfg.phoneRaw;
         }
         setDirty(true);
+        updateFieldPreview(path);
     }
     if (el.dataset?.vf) onVideoField(el);
 });
@@ -331,24 +422,28 @@ const kv = {
     async set(k, v) { const db = await this.db(); return new Promise((res, rej) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); }
 };
 
-async function workbookDir(create) {
+async function dirFor(path, create) {
     let d = dirHandle;
-    for (const part of cfg.workbookPath.split("/").filter(Boolean)) {
-        if (part === "." || part === "..") throw new Error("Workbook folder can't contain . or ..");
+    for (const part of path.split("/").filter(Boolean)) {
+        if (part === "." || part === "..") throw new Error("Folder path can't contain . or ..");
         d = await d.getDirectoryHandle(part, { create });
     }
     return d;
 }
-async function existsInFolder(name) {
+async function existsInFolder(path, name) {
     if (!dirHandle) return false;
-    try { await (await workbookDir(false)).getFileHandle(name); return true; } catch { return false; }
+    try { await (await dirFor(path, false)).getFileHandle(name); return true; } catch { return false; }
 }
-async function writeImage(name, file) {
-    const fh = await (await workbookDir(true)).getFileHandle(name, { create: true });
+async function writeFileTo(path, name, file) {
+    const fh = await (await dirFor(path, true)).getFileHandle(name, { create: true });
     const w = await fh.createWritable();
     await w.write(file);
     await w.close();
 }
+const workbookDir = create => dirFor(cfg.workbookPath, create);
+const lottieDir = create => dirFor(cfg.lottiePath, create);
+const writeImage = (name, file) => writeFileTo(cfg.workbookPath, name, file);
+const writeLottieFile = (name, file) => writeFileTo(cfg.lottiePath, name, file);
 
 function parseConfigText(text) {
     const obj = new Function(text + "\n;return typeof SITE_CONFIG !== 'undefined' ? SITE_CONFIG : null;")();
@@ -362,7 +457,9 @@ function loadConfig(obj) {
     setDirty(false);
     refreshForms();
     renderImages();
+    renderLotties();
     renderVideos();
+    renderHeroVideo();
 }
 
 async function loadFromFolder() {
@@ -378,9 +475,13 @@ async function loadFromFolder() {
     for (const [name, file] of [...pending]) {
         try { await writeImage(name, file); pending.delete(name); } catch (e) { toast(`Couldn't save ${name}: ${e.message}`, "error"); }
     }
+    for (const [name, file] of [...pendingLottie]) {
+        try { await writeLottieFile(name, file); pendingLottie.delete(name); } catch (e) { toast(`Couldn't save ${name}: ${e.message}`, "error"); }
+    }
     previews.forEach(u => URL.revokeObjectURL(u));
     previews.clear();
     renderImages();
+    renderLotties();
     updateStatus();
 }
 
@@ -408,7 +509,10 @@ function serialize() {
     const notes = {
         resumeFile: "// Target resume file name",
         socials: "// Social links",
+        heroVideo: "// Hero banner video (plays full-width at the top of the home page)",
         workbookImages: "// Workbook images: file names inside workbookPath",
+        fallbackImage: "// Shown in place of ANY image or animation that fails to load, on every page",
+        lottieFiles: "// Lottie animations: file names inside lottiePath (add more file names here)",
         showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)"
     };
     for (const [key, note] of Object.entries(notes)) {
@@ -427,6 +531,9 @@ function download(name, data, type = "text/javascript") {
 async function save() {
     const bad = cfg.showcaseVideos.findIndex(v => !String(v.id).trim());
     if (bad >= 0) { toast(`Video ${bad + 1} has no ID. Fix or remove it first.`, "error"); return; }
+    if (!cfg.heroVideo || !String(cfg.heroVideo.id).trim()) {
+        toast("No hero video set — the home page banner will be blank until you add one.", "warn");
+    }
     const text = serialize();
     if (dirHandle) {
         try {
@@ -447,15 +554,17 @@ async function save() {
 /* ============================ Workbook images ============================ */
 const sanitizeName = n => n.trim().replace(/[^\w.\-]+/g, "_");
 
-async function uniqueName(name) {
+async function uniqueNameIn(list, pendingMap, folderPath, name) {
     const dot = name.lastIndexOf(".");
     const base = dot > 0 ? name.slice(0, dot) : name, ext = dot > 0 ? name.slice(dot) : "";
     let candidate = name, i = 1;
-    while (cfg.workbookImages.includes(candidate) || pending.has(candidate) || await existsInFolder(candidate)) {
+    while (list.includes(candidate) || pendingMap.has(candidate) || await existsInFolder(folderPath, candidate)) {
         candidate = `${base}-${i++}${ext}`;
     }
     return candidate;
 }
+const uniqueName = name => uniqueNameIn(cfg.workbookImages, pending, cfg.workbookPath, name);
+const uniqueLottieName = name => uniqueNameIn(cfg.lottieFiles, pendingLottie, cfg.lottiePath, name);
 
 async function previewFor(name) {
     if (previews.has(name)) return previews.get(name);
@@ -522,6 +631,76 @@ function addName() {
 }
 
 const move = (arr, i, d) => { const j = i + d; if (j < 0 || j >= arr.length) return false; [arr[i], arr[j]] = [arr[j], arr[i]]; return true; };
+
+/* ============================ Lottie animations ============================ */
+function renderLotties() {
+    const box = $("#tiles-lottie");
+    if (!cfg.lottieFiles.length) { box.innerHTML = '<p class="empty">No animations yet. Add a .json file above.</p>'; return; }
+    box.innerHTML = "";
+    cfg.lottieFiles.forEach((name, i) => {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.innerHTML = `
+            <div class="tile-thumb lottie-badge">JSON</div>
+            <input type="text" value="${esc(name)}" data-lottie-name="${i}" aria-label="File name for animation ${i + 1}" spellcheck="false">
+            <div class="row-actions">
+                <button class="btn sm" data-act="lottie-left" data-i="${i}" aria-label="Move earlier" ${i === 0 ? "disabled" : ""}>←</button>
+                <button class="btn sm" data-act="lottie-right" data-i="${i}" aria-label="Move later" ${i === cfg.lottieFiles.length - 1 ? "disabled" : ""}>→</button>
+                <button class="btn sm danger" data-act="lottie-remove" data-i="${i}" aria-label="Remove from list">✕</button>
+            </div>`;
+        box.appendChild(tile);
+    });
+}
+
+async function addLottieFiles(fileList) {
+    const files = [...fileList].filter(f => /\.json$/i.test(f.name) || f.type === "application/json");
+    if (!files.length) { toast("No .json files in that selection.", "warn"); return; }
+    let added = 0;
+    for (const f of files) {
+        const name = await uniqueLottieName(sanitizeName(f.name));
+        try {
+            if (dirHandle) await writeLottieFile(name, f); else pendingLottie.set(name, f);
+            cfg.lottieFiles.push(name);
+            added++;
+        } catch (e) { toast(`Couldn't save ${f.name}: ${e.message}`, "error"); }
+    }
+    if (added) {
+        setDirty(true); renderLotties(); updateStatus();
+        toast(dirHandle ? `Saved ${added} animation${added > 1 ? "s" : ""} to the folder. Press Save to update config.js.`
+                        : `Added ${added} animation${added > 1 ? "s" : ""}. Download them and put them in ${cfg.lottiePath}`, dirHandle ? "" : "warn");
+    }
+}
+
+function addLottieName() {
+    const input = $("#name-input-lottie");
+    let name = sanitizeName(input.value);
+    if (!name) return;
+    if (!/\.json$/i.test(name)) name += ".json";
+    if (cfg.lottieFiles.includes(name)) { toast("That name is already in the list.", "warn"); return; }
+    cfg.lottieFiles.push(name);
+    input.value = "";
+    setDirty(true); renderLotties();
+}
+
+/* ============================ Hero banner video ============================ */
+function renderHeroVideo() {
+    const hv = cfg.heroVideo;
+    $("#hero-video-current").textContent = hv && hv.id
+        ? `${hv.platform === "youtube" ? "YouTube" : "Vimeo"} · ${hv.id}`
+        : "No video set. The banner will be blank until you add one.";
+    setThumb($("#hero-vthumb"), hv && hv.id ? hv : { platform: "", id: "" });
+}
+
+function setHeroVideoFromInput() {
+    const input = $("#hero-video-url");
+    const parsed = parseVideoUrl(input.value);
+    if (!parsed) { toast("That doesn't look like a YouTube or Vimeo link.", "warn"); return; }
+    cfg.heroVideo = parsed;
+    input.value = "";
+    setDirty(true);
+    renderHeroVideo();
+    toast("Hero video updated. Press Save to write it to config.js.");
+}
 
 /* ============================ Videos ============================ */
 const pad = n => String(n).padStart(2, "0");
@@ -681,6 +860,15 @@ document.addEventListener("click", e => {
         if (!confirm(`Remove “${v.title || v.id}”?`)) return;
         vids.splice(i, 1); maybeRenumber(); setDirty(true); renderVideos();
     }
+
+    const lots = cfg.lottieFiles;
+    if (act === "lottie-left" && move(lots, i, -1)) { setDirty(true); renderLotties(); }
+    if (act === "lottie-right" && move(lots, i, 1)) { setDirty(true); renderLotties(); }
+    if (act === "lottie-remove") {
+        const [name] = lots.splice(i, 1);
+        if (pendingLottie.has(name) && !lots.includes(name)) { pendingLottie.delete(name); updateStatus(); }
+        setDirty(true); renderLotties();
+    }
 });
 
 document.addEventListener("change", e => {
@@ -697,9 +885,24 @@ document.addEventListener("change", e => {
         }
         renderImages();
     }
+    if (e.target.dataset?.lottieName !== undefined) {
+        const i = +e.target.dataset.lottieName;
+        let name = sanitizeName(e.target.value);
+        if (name && !/\.json$/i.test(name)) name += ".json";
+        const old = cfg.lottieFiles[i];
+        if (!name) { e.target.value = old; return; }
+        if (name !== old) {
+            if (pendingLottie.has(old)) { pendingLottie.set(name, pendingLottie.get(old)); pendingLottie.delete(old); }
+            cfg.lottieFiles[i] = name;
+            setDirty(true);
+            toast("Name changed in the list only. Rename the file in the folder to match.", "warn");
+        }
+        renderLotties();
+    }
 });
 
 $("#btn-connect").onclick = connect;
+$("#btn-preview").onclick = () => window.open("index.html", "_blank", "noopener");
 $("#btn-reconnect").onclick = reconnect;
 $("#btn-save").onclick = save;
 $("#btn-open").onclick = () => $("#file-config").click();
@@ -724,9 +927,24 @@ $("#btn-add-video").onclick = addVideo;
 $("#video-url").onkeydown = e => { if (e.key === "Enter") addVideo(); };
 $("#btn-renumber").onclick = () => { renumberTags(); setDirty(true); renderVideos(); toast("Tags renumbered."); };
 
+$("#btn-set-hero-video").onclick = setHeroVideoFromInput;
+$("#hero-video-url").onkeydown = e => { if (e.key === "Enter") setHeroVideoFromInput(); };
+
+const dropLottie = $("#drop-lottie");
+dropLottie.onclick = () => $("#file-lottie").click();
+dropLottie.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#file-lottie").click(); } };
+$("#file-lottie").onchange = e => { addLottieFiles(e.target.files); e.target.value = ""; };
+["dragenter", "dragover"].forEach(ev => dropLottie.addEventListener(ev, e => { e.preventDefault(); dropLottie.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => dropLottie.addEventListener(ev, e => { e.preventDefault(); dropLottie.classList.remove("over"); }));
+dropLottie.addEventListener("drop", e => addLottieFiles(e.dataTransfer.files));
+
+$("#btn-add-name-lottie").onclick = addLottieName;
+$("#name-input-lottie").onkeydown = e => { if (e.key === "Enter") addLottieName(); };
+
 $("#btn-pending").onclick = async () => {
     for (const [name, file] of pending) { download(name, file, file.type); await new Promise(r => setTimeout(r, 350)); }
-    toast(`Put the downloaded images in ${cfg.workbookPath}`, "warn");
+    for (const [name, file] of pendingLottie) { download(name, file, file.type || "application/json"); await new Promise(r => setTimeout(r, 350)); }
+    toast(`Put the downloaded images in ${cfg.workbookPath} and the animations in ${cfg.lottiePath}`, "warn");
 };
 
 window.addEventListener("keydown", e => {
@@ -737,7 +955,9 @@ window.addEventListener("keydown", e => {
 (async function init() {
     buildForms();
     renderImages();
+    renderLotties();
     renderVideos();
+    renderHeroVideo();
     updateStatus();
 
     if (!window.showDirectoryPicker) {

@@ -15,6 +15,13 @@ const SITE_CONFIG = {
         vimeo: "https://vimeo.com/showcase/10034777"
     },
 
+    // Hero banner video (plays full-width at the top of the home page)
+    heroVideo: {
+        platform: "youtube",
+        id: "60-JCTDcWNc"
+    },
+    heroPoster: "assets/images/home/hero_poster.png",
+
     // Workbook images: file names inside workbookPath
     workbookImages: [
         "190624-Animals-Final.jpg",
@@ -40,7 +47,6 @@ const SITE_CONFIG = {
         "Character-02.png"
     ],
     workbookPath: "assets/images/workbook/",
-    workbookFallback: "assets/images/missing_asset_fallback.png",
 
     // Shown in place of ANY image or animation that fails to load, on every page
     fallbackImage: "assets/images/missing_asset_fallback.png",

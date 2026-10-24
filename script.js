@@ -174,6 +174,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- C0. Hero Banner Video (home page only) ---
+    const heroIframe = document.getElementById("hero-video-iframe");
+    if (heroIframe && SITE_CONFIG.heroVideo && SITE_CONFIG.heroVideo.id) {
+        const hv = SITE_CONFIG.heroVideo;
+        heroIframe.src = hv.platform === "youtube"
+            ? `https://www.youtube-nocookie.com/embed/${hv.id}?autoplay=1&mute=1&loop=1&controls=0&playsinline=1&playlist=${hv.id}`
+            : `https://player.vimeo.com/video/${hv.id}?autoplay=1&muted=1&loop=1&controls=0&playsinline=1`;
+        heroIframe.referrerPolicy = "strict-origin-when-cross-origin";
+    }
+    const heroPoster = document.getElementById("hero-poster");
+    if (heroPoster && SITE_CONFIG.heroPoster) {
+        heroPoster.src = `${rootPath}${SITE_CONFIG.heroPoster}`;
+    }
+
     // --- C. Dynamic Banner Hero Injector ---
     const heroBar = document.getElementById("hero-top-bar");
     if (heroBar) {
@@ -291,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const images = Number.isNaN(limit)
             ? SITE_CONFIG.workbookImages
             : SITE_CONFIG.workbookImages.slice(0, limit);
-        const fallbackSrc = `${rootPath}${SITE_CONFIG.workbookFallback || SITE_CONFIG.fallbackImage}`;
+        const fallbackSrc = `${rootPath}${SITE_CONFIG.fallbackImage}`;
 
         workbookContainer.innerHTML = "";
 
