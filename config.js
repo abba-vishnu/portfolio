@@ -17,8 +17,8 @@ const SITE_CONFIG = {
 
     // Hero banner video (plays full-width at the top of the home page)
     heroVideo: {
-        platform: "youtube",
-        id: "60-JCTDcWNc"
+        platform: "vimeo",
+        id: "1239136069"
     },
     heroPoster: "assets/images/home/hero_poster.png",
 
