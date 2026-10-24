@@ -806,3 +806,20 @@ a.view-all {
     color: var(--accent);
     transform: scale(1.1);
 }
+/* ==========================================================================
+   LOTTIE CARD LIST
+   ========================================================================== */
+
+.lottie-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #000;
+    overflow: hidden;
+}
+
+.lottie-thumb svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}

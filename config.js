@@ -40,7 +40,16 @@ const SITE_CONFIG = {
         "Character-02.png"
     ],
     workbookPath: "assets/images/workbook/",
-    workbookFallback: "assets/images/home/hero_poster.png",
+    workbookFallback: "assets/images/missing_asset_fallback.png",
+
+    // Shown in place of ANY image or animation that fails to load, on every page
+    fallbackImage: "assets/images/missing_asset_fallback.png",
+
+    // Lottie animations: file names inside lottiePath (add more file names here)
+    lottieFiles: [
+        "MazeAnim.json"
+    ],
+    lottiePath: "assets/lottie/",
 
     // Unified Showcase List (YouTube & Vimeo Mixed)
     showcaseVideos: [

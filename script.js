@@ -37,6 +37,65 @@ if (head) {
 }
 
 
+//-------------- 2b. Universal Missing-Asset Fallback ----------------------------
+// Any <img> that fails to load (on any page) is swapped for the fallback image.
+const FALLBACK_SRC = `${rootPath}${SITE_CONFIG.fallbackImage}`;
+const FALLBACK_ABS = new URL(FALLBACK_SRC, document.baseURI).href;
+
+function applyImageFallback(img) {
+    if (img.src === FALLBACK_ABS) return; // already the fallback: avoid an endless loop
+    img.removeAttribute("srcset");
+    img.src = FALLBACK_SRC;
+}
+
+// "error" events don't bubble, but they can be caught in the capture phase.
+// This also covers images that are added later by JavaScript.
+document.addEventListener("error", (e) => {
+    if (e.target && e.target.tagName === "IMG") applyImageFallback(e.target);
+}, true);
+
+// Catch images that already failed before this script started running
+window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("img").forEach(img => {
+        if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) {
+            applyImageFallback(img);
+        }
+    });
+});
+
+// Replaces a Lottie container's contents with the fallback image
+function showLottieFallback(container) {
+    container.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = FALLBACK_SRC;
+    img.alt = "Missing animation";
+    img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;";
+    container.appendChild(img);
+}
+
+// Loads a Lottie file; shows the fallback if the JSON is missing or broken
+function loadLottieSafely(container, path, loop = true, autoplay = true) {
+    if (typeof lottie === "undefined") {
+        console.warn("lottie.js is not loaded. Check the <script> tag in the page.");
+        showLottieFallback(container);
+        return;
+    }
+    try {
+        const anim = lottie.loadAnimation({ container, renderer: "svg", loop, autoplay, path });
+        anim.addEventListener("data_failed", () => {
+            console.error(
+                `Lottie file could not be loaded: ${new URL(path, document.baseURI).href}\n` +
+                `If this page's address starts with file://, open the site through a local server instead (see notes).`
+            );
+            showLottieFallback(container);
+        });
+    } catch (err) {
+        console.error("Lottie rendering failed for:", path, err);
+        showLottieFallback(container);
+    }
+}
+
+
 //-------------- 3. DOM-Dependent Initializers & UI Injectors ------------------
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -185,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (video.platform === "youtube") {
                 thumbSrc = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
             } else if (video.platform === "vimeo") {
-                thumbSrc = ""; 
+                thumbSrc = FALLBACK_SRC; // placeholder until the Vimeo thumbnail arrives
                 dataAttr = `data-vimeo-id="${video.id}"`;
             }
 
@@ -232,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const images = Number.isNaN(limit)
             ? SITE_CONFIG.workbookImages
             : SITE_CONFIG.workbookImages.slice(0, limit);
-        const fallbackSrc = `${rootPath}${SITE_CONFIG.workbookFallback}`;
+        const fallbackSrc = `${rootPath}${SITE_CONFIG.workbookFallback || SITE_CONFIG.fallbackImage}`;
 
         workbookContainer.innerHTML = "";
 
@@ -271,6 +330,52 @@ document.addEventListener("DOMContentLoaded", () => {
             workbookContainer.appendChild(card);
         });
     }
+});
+
+
+//-------------- 3b. Lottie Card List Generator (lottie/index.html) -------------
+document.addEventListener("DOMContentLoaded", () => {
+    const lottieContainer = document.getElementById("lottie-grid-container");
+    if (!lottieContainer || !SITE_CONFIG.lottieFiles) return;
+
+    lottieContainer.innerHTML = "";
+
+    // Only start each animation when its card scrolls into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+
+            loadLottieSafely(entry.target, entry.target.dataset.src);
+        });
+    }, { rootMargin: "100px", threshold: 0.01 });
+
+    // data-limit="6" on the container shows only the first 6; no attribute shows all
+    const lottieLimit = parseInt(lottieContainer.dataset.limit, 10);
+    const lottieList = Number.isNaN(lottieLimit)
+        ? SITE_CONFIG.lottieFiles
+        : SITE_CONFIG.lottieFiles.slice(0, lottieLimit);
+
+    lottieList.forEach((fileName, i) => {
+        // "MazeAnim.json" -> "MazeAnim"
+        const label = fileName.replace(/\.json$/i, "");
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="lottie-thumb"></div>
+            <div class="card-content">
+                <div class="card-tag">${String(i + 1).padStart(2, "0")} / LOTTIE</div>
+                <h3>${label}</h3>
+            </div>
+        `;
+
+        const stage = card.querySelector(".lottie-thumb");
+        stage.dataset.src = `${rootPath}${SITE_CONFIG.lottiePath}${fileName}`;
+
+        lottieContainer.appendChild(card);
+        observer.observe(stage);
+    });
 });
 
 
@@ -405,3 +510,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+//-------------- 7. Automatic Lottie Animation Injector ------------------------------
+
+// --- Bulletproof & Lazy-Loaded Custom Lottie Web Component ---
+class LottieBox extends HTMLElement {
+    connectedCallback() {
+        try {
+            // 1. Safe Styling Setup
+            this.style.display = 'block';
+            this.style.width = this.getAttribute('width') || '100%';
+            this.style.maxWidth = this.getAttribute('max-width') || '800px';
+            this.style.height = this.getAttribute('height') || '600px';
+            this.style.margin = this.getAttribute('margin') || '0 auto';
+
+            const jsonFile = this.getAttribute('src') || 'MazeAnim.json';
+            // Uses the global rootPath variable established at the top of your script
+            const jsonPath = jsonFile.startsWith('http') ? jsonFile : `${rootPath}${jsonFile}`;
+            
+            const loopVal = this.getAttribute('loop') !== 'false';
+            const autoplayVal = this.getAttribute('autoplay') !== 'false';
+
+            // 2. Intersection Observer for Performance & Viewport Triggering
+            const observerOptions = {
+                root: null,
+                rootMargin: '100px', // Starts loading slightly before it enters the screen
+                threshold: 0.01
+            };
+
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        observerInstance.unobserve(entry.target); // Stop observing once triggered
+                        
+                        // 3. Safe Execution Check
+                        loadLottieSafely(this, jsonPath, loopVal, autoplayVal);
+                    }
+                });
+            }, observerOptions);
+
+            observer.observe(this);
+
+        } catch (initError) {
+            console.error("LottieBox component failed to initialize:", initError);
+        }
+    }
+}
+
+// Register the custom element safely
+if (!customElements.get('lottie-box')) {
+    customElements.define('lottie-box', LottieBox);
+}
