@@ -229,6 +229,21 @@ details .fields { margin-top: 14px; }
         <h2>Workbook images &amp; videos</h2>
         <p class="hint">Files are saved to the workbook folder. Images, .webm and .mp4 videos are all supported (use a video instead of a GIF: smaller and sharper). Drag a thumbnail to reorder (or use the arrows). Order here is the order on the site. Removing an item only takes it out of the list; the file stays in the folder.</p>
 
+        <div class="fields" style="margin: 0 0 20px;">
+            <label class="f">Masonry columns
+                <input type="number" min="1" max="8" step="1" value="4" data-number-path="workbookMasonryColumns">
+                <small>Desktop/tablet column count. Phones automatically use 2 columns.</small>
+            </label>
+            <label class="f" style="display:flex; flex-direction:row; align-items:center; gap:10px;">
+                <input type="checkbox" data-bool-path="workbookShowTitles" style="width:16px; height:16px;">
+                <span>Show image titles</span>
+            </label>
+            <label class="f" style="display:flex; flex-direction:row; align-items:center; gap:10px;">
+                <input type="checkbox" data-bool-path="workbookShowTags" style="width:16px; height:16px;">
+                <span>Show image tags</span>
+            </label>
+        </div>
+
         <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload images or videos">
             <strong>Drop images or videos (.webm, .mp4) here or click to choose</strong>
             <span>Several at once is fine</span>
@@ -239,6 +254,9 @@ details .fields { margin-top: 14px; }
             <button class="btn" id="btn-add-name">Add name</button>
         </div>
 
+        <div style="display:flex; justify-content:flex-end; margin:-6px 0 10px;">
+            <button class="btn sm" id="toggle-workbook-filenames" type="button" aria-expanded="false">Show file names</button>
+        </div>
         <div class="tiles" id="tiles"></div>
 
         <details>
@@ -261,6 +279,9 @@ details .fields { margin-top: 14px; }
             <button class="btn" id="btn-add-name-lottie">Add name</button>
         </div>
 
+        <div style="display:flex; justify-content:flex-end; margin:-6px 0 10px;">
+            <button class="btn sm" id="toggle-lottie-filenames" type="button" aria-expanded="false">Show file names</button>
+        </div>
         <div class="tiles" id="tiles-lottie"></div>
 
         <details>
@@ -280,6 +301,7 @@ details .fields { margin-top: 14px; }
         <div class="toolbar">
             <label><input type="checkbox" id="auto-renumber" checked> Keep tag numbers in order</label>
             <button class="btn sm" id="btn-renumber">Renumber now</button>
+            <button class="btn sm" id="toggle-video-technical" type="button" aria-expanded="false">Show platform &amp; video IDs</button>
         </div>
 
         <div class="videos" id="videos"></div>
@@ -300,6 +322,9 @@ const DEFAULTS = {
     socials: { linkedin: "", vimeo: "" },
     heroVideo: { platform: "vimeo", id: "" },
     heroPoster: "assets/images/home/hero_poster.png",
+    workbookMasonryColumns: 4,
+    workbookShowTitles: false,
+    workbookShowTags: false,
     workbookImages: [],
     workbookPath: "assets/images/workbook/",
     fallbackImage: "assets/images/home/missing_asset_fallback.png",
@@ -313,6 +338,11 @@ let cfg = normalize(typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {});
 let dirHandle = null;       // connected project folder
 let savedHandle = null;     // remembered from a previous visit, needs re-permission
 let dirty = false;
+// Technical identifiers stay hidden on every fresh admin-page load; toggles are session-only.
+let showWorkbookFilenames = false;
+let showLottieFilenames = false;
+let showVideoTechnicalFields = false;
+
 const pending = new Map();        // name -> File (workbook image uploads waiting to be downloaded; no folder connected)
 const pendingLottie = new Map();  // name -> File (Lottie JSON uploads waiting to be downloaded; no folder connected)
 const previews = new Map();     // name -> object URL
@@ -412,6 +442,13 @@ function refreshForms() {
     document.querySelectorAll("[data-path]").forEach(el => {
         el.value = getPath(cfg, el.dataset.path) ?? "";
         updateFieldPreview(el.dataset.path);
+    });
+    document.querySelectorAll("[data-bool-path]").forEach(el => {
+        el.checked = getPath(cfg, el.dataset.boolPath) === true;
+    });
+    document.querySelectorAll("[data-number-path]").forEach(el => {
+        const value = Number(getPath(cfg, el.dataset.numberPath));
+        el.value = Number.isFinite(value) && value > 0 ? String(value) : "4";
     });
 }
 const dial = p => { const d = String(p).replace(/[^\d]/g, ""); return d ? "+" + d : ""; };
@@ -528,6 +565,9 @@ function serialize() {
         resumeFile: "// Target resume file name",
         socials: "// Social links",
         heroVideo: "// Hero banner video (plays full-width at the top of the home page)",
+        workbookMasonryColumns: "// Number of masonry columns on desktop/tablet (mobile automatically uses 2)",
+        workbookShowTitles: "// Show image titles under Workbook cards",
+        workbookShowTags: "// Show image tags under Workbook cards",
         workbookImages: "// Workbook images: each entry has a file name, a tag label, and a display title",
         fallbackImage: "// Shown in place of ANY image or animation that fails to load, on every page",
         lottieFiles: "// Lottie animations: each entry has a file name, a tag label, and a display title",
@@ -615,7 +655,7 @@ function renderImages() {
         tile.dataset.idx = i;
         tile.innerHTML = `
             <div class="tile-thumb" draggable="true" title="Drag to reorder">${isVideoName(name) ? '<video muted loop playsinline preload="metadata" hidden></video>' : '<img alt="" hidden>'}<span class="missing" hidden>File not found in folder</span></div>
-            <label class="f" style="font-size:11px;color:var(--muted);">File name
+            <label class="f" style="font-size:11px;color:var(--muted);" ${showWorkbookFilenames ? "" : "hidden"}>File name
                 <input type="text" value="${esc(name)}" data-img-name="${i}" aria-label="File name for image ${i + 1}" spellcheck="false">
             </label>
             <label class="f" style="font-size:11px;color:var(--muted);">Tag
@@ -696,7 +736,7 @@ function renderLotties() {
         tile.dataset.idx = i;
         tile.innerHTML = `
             <div class="tile-thumb lottie-badge" draggable="true" title="Drag to reorder">JSON</div>
-            <label class="f" style="font-size:11px;color:var(--muted);">File name
+            <label class="f" style="font-size:11px;color:var(--muted);" ${showLottieFilenames ? "" : "hidden"}>File name
                 <input type="text" value="${esc(name)}" data-lottie-name="${i}" aria-label="File name for animation ${i + 1}" spellcheck="false">
             </label>
             <label class="f" style="font-size:11px;color:var(--muted);">Tag
@@ -838,13 +878,13 @@ function renderVideos() {
         card.innerHTML = `
             <div class="vthumb" draggable="true" title="Drag to reorder"></div>
             <div class="vfields">
-                <label class="f">Platform
+                <label class="f" ${showVideoTechnicalFields ? "" : "hidden"}>Platform
                     <select data-vf="platform" data-i="${i}">
                         <option value="youtube" ${v.platform === "youtube" ? "selected" : ""}>YouTube</option>
                         <option value="vimeo" ${v.platform === "vimeo" ? "selected" : ""}>Vimeo</option>
                     </select>
                 </label>
-                <label class="f">Video ID
+                <label class="f" ${showVideoTechnicalFields ? "" : "hidden"}>Video ID
                     <input type="text" data-vf="id" data-i="${i}" value="${esc(v.id)}" spellcheck="false">
                 </label>
                 <label class="f">Tag
@@ -941,6 +981,23 @@ document.addEventListener("click", e => {
 });
 
 document.addEventListener("change", e => {
+    const control = e.target;
+    if (control.dataset?.boolPath) {
+        setPath(cfg, control.dataset.boolPath, control.checked);
+        setDirty(true);
+    }
+    if (control.dataset?.numberPath) {
+        const parsed = Number.parseInt(control.value, 10);
+        if (!Number.isFinite(parsed) || parsed < 1) {
+            control.value = String(getPath(cfg, control.dataset.numberPath) || 4);
+        } else {
+            const value = Math.min(8, parsed);
+            control.value = String(value);
+            setPath(cfg, control.dataset.numberPath, value);
+            setDirty(true);
+        }
+    }
+
     // Helper: ensure a workbook entry is always an object
     const imgObj = i => {
         const e2 = cfg.workbookImages[i];
@@ -1037,6 +1094,34 @@ $("#name-input").onkeydown = e => { if (e.key === "Enter") addName(); };
 $("#btn-add-video").onclick = addVideo;
 $("#video-url").onkeydown = e => { if (e.key === "Enter") addVideo(); };
 $("#btn-renumber").onclick = () => { renumberTags(); setDirty(true); renderVideos(); toast("Tags renumbered."); };
+
+function syncTechnicalFieldToggles() {
+    const settings = [
+        ["#toggle-workbook-filenames", showWorkbookFilenames, "Show file names", "Hide file names"],
+        ["#toggle-lottie-filenames", showLottieFilenames, "Show file names", "Hide file names"],
+        ["#toggle-video-technical", showVideoTechnicalFields, "Show platform & video IDs", "Hide platform & video IDs"]
+    ];
+    settings.forEach(([selector, shown, showText, hideText]) => {
+        const button = $(selector);
+        if (!button) return;
+        button.textContent = shown ? hideText : showText;
+        button.setAttribute("aria-expanded", String(shown));
+    });
+}
+
+$("#toggle-workbook-filenames").onclick = () => {
+    showWorkbookFilenames = !showWorkbookFilenames;
+    renderImages(); syncTechnicalFieldToggles();
+};
+$("#toggle-lottie-filenames").onclick = () => {
+    showLottieFilenames = !showLottieFilenames;
+    renderLotties(); syncTechnicalFieldToggles();
+};
+$("#toggle-video-technical").onclick = () => {
+    showVideoTechnicalFields = !showVideoTechnicalFields;
+    renderVideos(); syncTechnicalFieldToggles();
+};
+syncTechnicalFieldToggles();
 
 $("#btn-set-hero-video").onclick = setHeroVideoFromInput;
 $("#hero-video-url").onkeydown = e => { if (e.key === "Enter") setHeroVideoFromInput(); };

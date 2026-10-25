@@ -385,36 +385,49 @@ a.card-link {
     fill: #111313;
 }
 
-/* True Pinterest Masonry Layout for Workbook */
+/* Pinterest-style masonry for the full Workbook page.
+   Desktop/tablet column count is configured by SITE_CONFIG.workbookMasonryColumns. */
 .grid:has(.image-card) {
     display: block;
-    column-count: 3;
-    column-gap: 24px;
+    column-count: var(--workbook-masonry-columns, 4);
+    column-gap: clamp(14px, 1.6vw, 24px);
 }
 
-.grid:has(.image-card) .card {
+.grid:has(.image-card) .image-card {
+    display: inline-block;
+    vertical-align: top;
     break-inside: avoid;
-    margin-bottom: 24px;
     width: 100%;
+    margin: 0 0 clamp(14px, 1.6vw, 24px);
 }
 
 .thumb-container.image-thumb {
     height: auto;
     padding-bottom: 0;
     aspect-ratio: auto;
-    background: #e8e9e4; /* light neutral — shows while the image loads and behind transparent areas */
+    background: #e8e9e4;
     overflow: hidden;
 }
 
 .thumb-container.image-thumb img,
 .thumb-container.image-thumb video {
     position: static;
-    width: 100%;
-    /* height must stay auto so the image never stretches beyond its natural size */
-    height: auto;
-    max-height: 100%; /* respect the JS-set maxHeight on the container */
     display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
     object-fit: contain;
+}
+
+/* Keep the grid usable on phones; the config controls larger screens. */
+@media (max-width: 560px) {
+    .grid:has(.image-card) {
+        column-count: 2;
+        column-gap: 10px;
+    }
+    .grid:has(.image-card) .image-card {
+        margin-bottom: 10px;
+    }
 }
 
 .view-all-btn {
@@ -784,9 +797,6 @@ a.view-all {
     .nav-links.mobile-active {
         display: flex;
     }
-    .grid:has(.image-card) {
-        column-count: 1;
-     }
 }
 
 /* ==========================================================================

@@ -25,6 +25,13 @@ const SITE_CONFIG = {
     },
     heroPoster: "assets/images/home/hero_poster.png",
 
+    // Number of masonry columns on desktop/tablet (mobile automatically uses 2)
+    workbookMasonryColumns: 4,
+
+    // Show text labels under Workbook image cards
+    workbookShowTitles: false,
+    workbookShowTags: true,
+
     // Workbook images: each entry has a file name, a tag label, and a display title
     workbookImages: [
         {

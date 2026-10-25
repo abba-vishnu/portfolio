@@ -308,6 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const workbookContainer = document.getElementById("workbook-grid-container");
 
     if (workbookContainer && SITE_CONFIG.workbookImages) {
+        const masonryColumns = Number.parseInt(SITE_CONFIG.workbookMasonryColumns, 10);
+        if (!Number.isNaN(masonryColumns) && masonryColumns > 0) {
+            workbookContainer.style.setProperty("--workbook-masonry-columns", String(Math.min(8, masonryColumns)));
+        }
         const limit = parseInt(workbookContainer.dataset.limit, 10);
         const isPreview = !Number.isNaN(limit);
         const images = isPreview
@@ -419,34 +423,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.className = "card image-card";
                 thumb.className = "thumb-container image-thumb";
 
-                // Let the image/video set its own natural ratio once loaded;
-                // don't preset an aspect-ratio that fights the real dimensions.
-                if (isVideo) {
-                    media.addEventListener("loadedmetadata", () => {
-                        if (!usingFallback && media.videoHeight) {
-                            thumb.style.maxHeight = media.videoHeight + "px";
-                        }
-                    });
-                } else {
-                    media.addEventListener("load", () => {
-                        if (!usingFallback && media.naturalWidth && media.naturalHeight) {
-                            // Force the container to match the image's natural size so it
-                            // never stretches beyond the actual pixel dimensions.
-                            thumb.style.maxHeight = media.naturalHeight + "px";
-                        }
-                    });
-                }
+                // Let CSS masonry determine the column width; the media keeps its
+                // natural aspect ratio and the card avoids splitting across columns.
 
-                const content = document.createElement("div");
-                content.className = "card-content";
-                content.innerHTML = `
-                    <div class="card-tag card-tag--image">${entry.tag}</div>
-                    <h3>${entry.title}</h3>
-                `;
+                const showTag = SITE_CONFIG.workbookShowTags !== false;
+                const showTitle = SITE_CONFIG.workbookShowTitles !== false;
+                let contentHTML = "";
+                if (showTag) contentHTML += `<div class="card-tag card-tag--image">${entry.tag}</div>`;
+                if (showTitle) contentHTML += `<h3>${entry.title}</h3>`;
 
                 thumb.appendChild(media);
                 card.appendChild(thumb);
-                card.appendChild(content);
+                if (contentHTML) {
+                    const content = document.createElement("div");
+                    content.className = "card-content";
+                    content.innerHTML = contentHTML;
+                    card.appendChild(content);
+                }
             }
 
             workbookContainer.appendChild(card);
