@@ -294,6 +294,13 @@ details .fields { margin-top: 14px; }
         <h2>Showcase videos</h2>
         <p class="hint">YouTube and Vimeo videos shown in the showcase grid.</p>
 
+        <div class="fields" style="margin: 0 0 20px;">
+            <label class="f">Showcase columns
+                <input type="number" min="1" max="8" step="1" value="5" data-number-path="showcaseVideoColumns">
+                <small>Desktop column count. Screens below 1200px use 2 columns, and phones use 1.</small>
+            </label>
+        </div>
+
         <div class="add-video">
             <input type="text" id="video-url" placeholder="Paste a YouTube or Vimeo link" aria-label="Video link">
             <button class="btn primary" id="btn-add-video">Add video</button>
@@ -323,6 +330,7 @@ const DEFAULTS = {
     heroVideo: { platform: "vimeo", id: "" },
     heroPoster: "assets/images/home/hero_poster.png",
     workbookMasonryColumns: 4,
+    showcaseVideoColumns: 5,
     workbookShowTitles: false,
     workbookShowTags: false,
     workbookImages: [],
@@ -566,6 +574,7 @@ function serialize() {
         socials: "// Social links",
         heroVideo: "// Hero banner video (plays full-width at the top of the home page)",
         workbookMasonryColumns: "// Number of masonry columns on desktop/tablet (mobile automatically uses 2)",
+        showcaseVideoColumns: "// Number of columns in the Showcase video grid on desktop; responsive breakpoints reduce it",
         workbookShowTitles: "// Show image titles under Workbook cards",
         workbookShowTags: "// Show image tags under Workbook cards",
         workbookImages: "// Workbook images: each entry has a file name, a tag label, and a display title",

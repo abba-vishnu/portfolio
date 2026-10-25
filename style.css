@@ -267,7 +267,7 @@ header.header-visible {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--showcase-video-columns, 3), minmax(0, 1fr));
     gap: 32px;
     margin-top: 32px;
 }
@@ -385,49 +385,36 @@ a.card-link {
     fill: #111313;
 }
 
-/* Pinterest-style masonry for the full Workbook page.
-   Desktop/tablet column count is configured by SITE_CONFIG.workbookMasonryColumns. */
+/* True Pinterest Masonry Layout for Workbook */
 .grid:has(.image-card) {
     display: block;
-    column-count: var(--workbook-masonry-columns, 4);
-    column-gap: clamp(14px, 1.6vw, 24px);
+    column-count: 3;
+    column-gap: 24px;
 }
 
-.grid:has(.image-card) .image-card {
-    display: inline-block;
-    vertical-align: top;
+.grid:has(.image-card) .card {
     break-inside: avoid;
+    margin-bottom: 24px;
     width: 100%;
-    margin: 0 0 clamp(14px, 1.6vw, 24px);
 }
 
 .thumb-container.image-thumb {
     height: auto;
     padding-bottom: 0;
     aspect-ratio: auto;
-    background: #e8e9e4;
+    background: #e8e9e4; /* light neutral — shows while the image loads and behind transparent areas */
     overflow: hidden;
 }
 
 .thumb-container.image-thumb img,
 .thumb-container.image-thumb video {
     position: static;
-    display: block;
     width: 100%;
+    /* height must stay auto so the image never stretches beyond its natural size */
     height: auto;
-    max-height: none;
+    max-height: 100%; /* respect the JS-set maxHeight on the container */
+    display: block;
     object-fit: contain;
-}
-
-/* Keep the grid usable on phones; the config controls larger screens. */
-@media (max-width: 560px) {
-    .grid:has(.image-card) {
-        column-count: 2;
-        column-gap: 10px;
-    }
-    .grid:has(.image-card) .image-card {
-        margin-bottom: 10px;
-    }
 }
 
 .view-all-btn {
@@ -453,6 +440,12 @@ a.card-link {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.capability-card h3 {
+    margin-top: 0;
+	margin-bottom:0;
+    color: var(--accent);
 }
 
 .capability-card p {
@@ -797,6 +790,9 @@ a.view-all {
     .nav-links.mobile-active {
         display: flex;
     }
+    .grid:has(.image-card) {
+        column-count: 1;
+     }
 }
 
 /* ==========================================================================

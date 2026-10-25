@@ -142,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${rootPath}index.html#capabilities">Capabilities</a>
 				<a href="${rootPath}index.html#workbook">Workbook</a>
                 <a href="${rootPath}index.html#toolkit">Toolkit</a>
-                <a href="${rootPath}index.html#ai-toolkit">AI</a>
                 <a href="${rootPath}index.html#journey">Journey</a>
                 <a href="${rootPath}index.html#contact">Contact</a>
             </nav>
@@ -255,6 +254,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (container && typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.showcaseVideos) {
         container.innerHTML = ""; // Clear existing placeholder content
+		
+		const showcaseColumns = Number(SITE_CONFIG.showcaseVideoColumns) || 3;
+		container.style.setProperty(
+			"--showcase-video-columns",
+			Math.max(1, Math.min(8, showcaseColumns))
+		);
 
         SITE_CONFIG.showcaseVideos.forEach(video => {
             let thumbSrc = "";

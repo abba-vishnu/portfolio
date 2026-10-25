@@ -10,7 +10,11 @@ const SITE_CONFIG = {
     footerText: "Visual design, in motion.",
 
     // Target resume file name
-    resumeFile: "assets/Abba_Vishnu_Resume.docx",
+    resumeFile: "assets/Abba_Vishnu_Resume.pdf",//"assets/Abba_Vishnu_Resume.docx",
+	
+	// Target resume file paths
+	resumePdf: "assets/Abba_Vishnu_Resume.pdf",
+	resumeDocx: "assets/Abba_Vishnu_Resume.docx",
 
     // Social links
     socials: {
@@ -27,9 +31,14 @@ const SITE_CONFIG = {
 
     // Number of masonry columns on desktop/tablet (mobile automatically uses 2)
     workbookMasonryColumns: 4,
-
-    // Show text labels under Workbook image cards
+	
+	// Number of video columns on desktop/tablet (mobile automatically uses 1)
+	showcaseVideoColumns: 4,
+	
+    // Show image titles under Workbook cards
     workbookShowTitles: false,
+
+    // Show image tags under Workbook cards
     workbookShowTags: true,
 
     // Workbook images: each entry has a file name, a tag label, and a display title
@@ -297,45 +306,45 @@ const SITE_CONFIG = {
     showcaseVideos: [
         {
             platform: "youtube",
-            id: "lJBK13uBVaA",
+            id: "60-JCTDcWNc",
             tag: "01 / WAVEMAKER",
+            title: "Abba Vishun Demo Reel 2026",
+            link: "https://youtu.be/60-JCTDcWNc"
+        },
+        {
+            platform: "youtube",
+            id: "gymmZqbyyKc",
+            tag: "02 / WAVEMAKER",
+            title: "DemoReel LogoAnimations",
+            link: "https://youtu.be/gymmZqbyyKc"
+        },
+        {
+            platform: "youtube",
+            id: "lJBK13uBVaA",
+            tag: "03 / WAVEMAKER",
             title: "WaveMaker Design to Code | Build Pixel-Perfect Enterprise Apps from Figma with AI",
             link: "https://youtu.be/lJBK13uBVaA"
         },
         {
             platform: "youtube",
             id: "UEyhNRlB-6M",
-            tag: "02 / WAVEMAKER",
+            tag: "04 / WAVEMAKER",
             title: "WaveMaker AI - Agentic App Generation Platform",
             link: "https://youtu.be/UEyhNRlB-6M"
         },
         {
             platform: "youtube",
-            id: "3A0COvpltP0",
-            tag: "03 / WAVEMAKER",
-            title: "WaveMaker Suite Overview: Everything You Need to Build Modern Apps",
-            link: "https://youtu.be/3A0COvpltP0"
-        },
-        {
-            platform: "youtube",
-            id: "3k5LUZ--Zws",
-            tag: "04 / WAVEMAKER",
-            title: "WaveMaker Studio for React Native: Build Native Mobile Apps 2X Faster",
-            link: "https://youtu.be/3k5LUZ--Zws"
-        },
-        {
-            platform: "youtube",
-            id: "XH-i9ZNfil8",
-            tag: "05 / WAVEMAKER",
-            title: "WaveMaker for Enterprises: Accelerating Modern, Composable Applications",
-            link: "https://youtu.be/XH-i9ZNfil8"
-        },
-        {
-            platform: "youtube",
             id: "-r8uLPYdjSE",
-            tag: "06 / WAVEMAKER",
+            tag: "05 / WAVEMAKER",
             title: "WaveMaker launches a sleek, brand-new, upgraded documentation website",
             link: "https://youtu.be/-r8uLPYdjSE"
+        },
+        {
+            platform: "youtube",
+            id: "3A0COvpltP0",
+            tag: "06 / WAVEMAKER",
+            title: "WaveMaker Suite Overview: Everything You Need to Build Modern Apps",
+            link: "https://youtu.be/3A0COvpltP0"
         },
         {
             platform: "youtube",
@@ -346,73 +355,234 @@ const SITE_CONFIG = {
         },
         {
             platform: "youtube",
-            id: "zKwFZZUPv0c",
+            id: "3k5LUZ--Zws",
             tag: "08 / WAVEMAKER",
+            title: "WaveMaker Studio for React Native: Build Native Mobile Apps 2X Faster",
+            link: "https://youtu.be/3k5LUZ--Zws"
+        },
+        {
+            platform: "youtube",
+            id: "XH-i9ZNfil8",
+            tag: "09 / WAVEMAKER",
+            title: "WaveMaker for Enterprises: Accelerating Modern, Composable Applications",
+            link: "https://youtu.be/XH-i9ZNfil8"
+        },
+        {
+            platform: "youtube",
+            id: "zKwFZZUPv0c",
+            tag: "10 / WAVEMAKER",
             title: "Banking as a Service (BaaS) with WaveMaker Low-Code Platform",
             link: "https://youtu.be/zKwFZZUPv0c"
         },
         {
             platform: "youtube",
             id: "yS6h3LBCz0c",
-            tag: "09 / WAVEMAKER",
+            tag: "11 / WAVEMAKER",
             title: "WaveMaker does",
             link: "https://youtu.be/yS6h3LBCz0c"
         },
         {
             platform: "youtube",
+            id: "BCsLB-p9SxM",
+            tag: "12 / WAVEMAKER",
+            title: "SwimWithWaveMaker V1",
+            link: "https://youtu.be/BCsLB-p9SxM"
+        },
+        {
+            platform: "youtube",
             id: "E1R_iKbjxww",
-            tag: "10 / WAVEMAKER",
+            tag: "13 / WAVEMAKER",
             title: "Build with WaveMaker",
             link: "https://youtu.be/E1R_iKbjxww"
         },
         {
+            platform: "youtube",
+            id: "r_0z-c8JP5Q",
+            tag: "14 / WAVEMAKER",
+            title: "WM Banner",
+            link: "https://youtu.be/r_0z-c8JP5Q"
+        },
+        {
+            platform: "youtube",
+            id: "SDYdp2ggJQ8",
+            tag: "15 / WAVEMAKER",
+            title: "Logo Annual Day 2023",
+            link: "https://youtu.be/SDYdp2ggJQ8"
+        },
+        {
+            platform: "youtube",
+            id: "aYzfgnqXA3w",
+            tag: "16 / WAVEMAKER",
+            title: "Logo AutoCode V2",
+            link: "https://youtu.be/aYzfgnqXA3w"
+        },
+        {
+            platform: "youtube",
+            id: "ShrCxjOeBaE",
+            tag: "17 / WAVEMAKER",
+            title: "Logo AutoCode V1",
+            link: "https://youtu.be/ShrCxjOeBaE"
+        },
+        {
+            platform: "youtube",
+            id: "cub3-7mHdno",
+            tag: "18 / WAVEMAKER",
+            title: "LogoApplied Intelligence",
+            link: "https://youtu.be/cub3-7mHdno"
+        },
+        {
+            platform: "youtube",
+            id: "5tm66WJuV4I",
+            tag: "19 / WAVEMAKER",
+            title: "Logo Annual Day 2021",
+            link: "https://youtu.be/5tm66WJuV4I"
+        },
+        {
+            platform: "youtube",
+            id: "fafAjcOxqL4",
+            tag: "20 / WAVEMAKER",
+            title: "Logo Groupe io",
+            link: "https://youtu.be/fafAjcOxqL4"
+        },
+        {
             platform: "vimeo",
-            id: "670228081",
-            tag: "11 / VIMEO",
-            title: "SpotCues - Micro Transformation Animation",
-            link: "https://vimeo.com/showcase/10034777?video=670228081"
+            id: "803883521",
+            tag: "21 / VIMEO",
+            title: "Vimeo Study - 803883521",
+            link: "https://vimeo.com/showcase/10034777?video=803883521"
         },
         {
             platform: "vimeo",
             id: "670225098",
-            tag: "12 / VIMEO",
+            tag: "22 / VIMEO",
             title: "Vimeo Study - 670225098",
             link: "https://vimeo.com/showcase/10034777?video=670225098"
         },
         {
             platform: "vimeo",
             id: "670239142",
-            tag: "13 / VIMEO",
+            tag: "23 / VIMEO",
             title: "Vimeo Study - 670239142",
             link: "https://vimeo.com/showcase/10034777?video=670239142"
         },
         {
             platform: "vimeo",
+            id: "670228081",
+            tag: "24 / VIMEO",
+            title: "SpotCues - Micro Transformation Animation",
+            link: "https://vimeo.com/showcase/10034777?video=670228081"
+        },
+        {
+            platform: "youtube",
+            id: "4kG0HfzXscI",
+            tag: "25 / WAVEMAKER",
+            title: "Infinity 2020 Teaser",
+            link: "https://youtu.be/4kG0HfzXscI"
+        },
+        {
+            platform: "youtube",
+            id: "Ef0UA_3UV4c",
+            tag: "26 / WAVEMAKER",
+            title: "Banking Application",
+            link: "https://youtu.be/Ef0UA_3UV4c"
+        },
+        {
+            platform: "vimeo",
             id: "670246054",
-            tag: "14 / VIMEO",
+            tag: "27 / VIMEO",
             title: "Vimeo Study - 670246054",
             link: "https://vimeo.com/showcase/10034777?video=670246054"
         },
         {
-            platform: "vimeo",
-            id: "803883521",
-            tag: "15 / VIMEO",
-            title: "Vimeo Study - 803883521",
-            link: "https://vimeo.com/showcase/10034777?video=803883521"
+            platform: "youtube",
+            id: "9T58a7SOfA0",
+            tag: "28 / WAVEMAKER",
+            title: "Ledgerline",
+            link: "https://youtu.be/9T58a7SOfA0"
         },
         {
-            platform: "vimeo",
-            id: "668544003",
-            tag: "16 / VIMEO",
-            title: "Vimeo Study - 668544003",
-            link: "https://vimeo.com/showcase/10034777?video=668544003"
+            platform: "youtube",
+            id: "XuACUrcBa78",
+            tag: "29 / WAVEMAKER",
+            title: "BFS Introduction",
+            link: "https://youtu.be/XuACUrcBa78"
         },
         {
-            platform: "vimeo",
-            id: "670229823",
-            tag: "17 / VIMEO",
-            title: "Vimeo Study - 670229823",
-            link: "https://vimeo.com/showcase/10034777?video=670229823"
+            platform: "youtube",
+            id: "uqanq0xHVpU",
+            tag: "30 / WAVEMAKER",
+            title: "DataAnimation",
+            link: "https://youtu.be/uqanq0xHVpU"
+        },
+        {
+            platform: "youtube",
+            id: "50IyxsydWlY",
+            tag: "31 / WAVEMAKER",
+            title: "Cardboard Animation",
+            link: "https://youtu.be/50IyxsydWlY"
+        },
+        {
+            platform: "youtube",
+            id: "6Ext801lpTM",
+            tag: "32 / WAVEMAKER",
+            title: "Hyscale Kubernetes Troubleshooting",
+            link: "https://youtu.be/6Ext801lpTM"
+        },
+        {
+            platform: "youtube",
+            id: "BbRa2NMlr_E",
+            tag: "33 / WAVEMAKER",
+            title: "Modernizatoin Woes V1",
+            link: "https://youtu.be/BbRa2NMlr_E"
+        },
+        {
+            platform: "youtube",
+            id: "s33uYuRnfIE",
+            tag: "34 / WAVEMAKER",
+            title: "Modernizatoin Woes V2",
+            link: "https://youtu.be/s33uYuRnfIE"
+        },
+        {
+            platform: "youtube",
+            id: "_GQU1DLxpvA",
+            tag: "35 / WAVEMAKER",
+            title: "ThumbSignIn",
+            link: "https://youtu.be/_GQU1DLxpvA"
+        },
+        {
+            platform: "youtube",
+            id: "cgz0gIUcYnQ",
+            tag: "36 / WAVEMAKER",
+            title: "ThumbSignIn Loop",
+            link: "https://youtu.be/cgz0gIUcYnQ"
+        },
+        {
+            platform: "youtube",
+            id: "v-AFz1mS2kQ",
+            tag: "37 / WAVEMAKER",
+            title: "PersonalizedBankingApps V2",
+            link: "https://youtu.be/v-AFz1mS2kQ"
+        },
+        {
+            platform: "youtube",
+            id: "aq7Ap8_I1NI",
+            tag: "38 / WAVEMAKER",
+            title: "WaveXD Intro",
+            link: "https://youtu.be/aq7Ap8_I1NI"
+        },
+        {
+            platform: "youtube",
+            id: "_m020SQef1s",
+            tag: "39 / WAVEMAKER",
+            title: "Speed with Control V3",
+            link: "https://youtu.be/_m020SQef1s"
+        },
+        {
+            platform: "youtube",
+            id: "M8_Yxr8F9M8",
+            tag: "40 / WAVEMAKER",
+            title: "Ad for video creation",
+            link: "https://youtu.be/M8_Yxr8F9M8"
         }
     ]
 };
