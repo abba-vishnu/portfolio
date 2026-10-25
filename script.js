@@ -231,9 +231,37 @@ document.addEventListener("DOMContentLoaded", () => {
         el.href = `mailto:${SITE_CONFIG.email}`;
     });
 
-    document.querySelectorAll(".resume-btn").forEach(el => {
-        el.href = SITE_CONFIG.resumeFile;
+    document.querySelectorAll(".resume-pdf-btn").forEach(el => {
+        const fileUrl = `${rootPath}${SITE_CONFIG.resumePdf}`;
+        el.href = fileUrl;
+
+        el.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent browser from navigating or opening it inline
+            const fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1) || 'Abba_Vishnu_Resume.pdf';
+
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(() => {
+                    // Fallback: opens in a new tab if strict CORS policies block the fetch
+                    window.open(fileUrl, '_blank');
+                });
+        });
     });
+
+	document.querySelectorAll(".resume-docx-btn").forEach(el => {
+		el.href = `${rootPath}${SITE_CONFIG.resumeDocx}`;
+	});
 
     document.querySelectorAll("a[href^='tel:']").forEach(el => {
         el.textContent = SITE_CONFIG.phone;

@@ -10,7 +10,7 @@ const SITE_CONFIG = {
     footerText: "Visual design, in motion.",
 
     // Target resume file name
-    resumeFile: "assets/Abba_Vishnu_Resume.pdf",//"assets/Abba_Vishnu_Resume.docx",
+    //resumeFile: "assets/Abba_Vishnu_Resume.pdf",//"assets/Abba_Vishnu_Resume.docx",
 	
 	// Target resume file paths
 	resumePdf: "assets/Abba_Vishnu_Resume.pdf",
