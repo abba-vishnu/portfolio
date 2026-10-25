@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <a href="${rootPath}index.html#workbook">Workbook</a>
                 <a href="${rootPath}index.html#capabilities">Capabilities</a>
                 <a href="${rootPath}index.html#toolkit">Toolkit</a>
+                <a href="${rootPath}index.html#ai-toolkit">AI</a>
                 <a href="${rootPath}index.html#journey">Journey</a>
                 <a href="${rootPath}index.html#contact">Contact</a>
             </nav>
