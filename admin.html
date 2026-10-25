@@ -291,6 +291,7 @@ const DEFAULTS = {
     fallbackImage: "assets/images/home/missing_asset_fallback.png",
     lottieFiles: [],
     lottiePath: "assets/lottie/",
+    lottiePlayerSrc: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js",
     showcaseVideos: []
 };
 
@@ -366,7 +367,8 @@ const FORMS = {
         ["workbookPath", "Workbook folder", "text", "Uploads are saved here. Keep the trailing slash."]
     ],
     "#form-lottie": [
-        ["lottiePath", "Lottie folder", "text", "Uploads are saved here. Keep the trailing slash."]
+        ["lottiePath", "Lottie folder", "text", "Uploads are saved here. Keep the trailing slash."],
+        ["lottiePlayerSrc", "Lottie player URL", "text", "The animation library both pages load. Browse versions at cdnjs.com/libraries/lottie-web."]
     ]
 };
 
@@ -513,6 +515,7 @@ function serialize() {
         workbookImages: "// Workbook images: file names inside workbookPath",
         fallbackImage: "// Shown in place of ANY image or animation that fails to load, on every page",
         lottieFiles: "// Lottie animations: file names inside lottiePath (add more file names here)",
+        lottiePlayerSrc: "// The Lottie player library every page loads",
         showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)"
     };
     for (const [key, note] of Object.entries(notes)) {

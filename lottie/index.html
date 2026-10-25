@@ -11,7 +11,8 @@
 
     <!-- Order matters: config, then the Lottie player, then the main script -->
     <script src="../config.js"></script>
-    <script src="../lottie.js"></script>
+    <!-- Lottie player: its URL lives in SITE_CONFIG.lottiePlayerSrc (config.js), so it only changes in one place -->
+    <script>document.write('<script src="' + SITE_CONFIG.lottiePlayerSrc + '"><\/script>');</script>
     <script src="../script.js" defer></script>
 </head>
 <body>

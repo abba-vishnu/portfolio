@@ -57,12 +57,17 @@ const SITE_CONFIG = {
         "AI-app-creation-with-apis.json",
         "AI-app-creation-V1.json",
         "AI-App-Creation-V03.json",
-        "MazeAnim.json",
         "BlinkLogoAnimation.json",
-        "botSurfing.json"
+        "botSurfing.json",
+		"MazeAnim.json"
     ],
+	
     lottiePath: "assets/lottie/",
-
+	// The Lottie player library every page loads. Change the version number here only —
+    // both index.html and lottie/index.html read this value instead of hardcoding it.
+    // Browse versions at https://cdnjs.com/libraries/lottie-web
+    lottiePlayerSrc: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js",
+	
     // Unified Showcase List (YouTube & Vimeo Mixed)
     showcaseVideos: [
         {
