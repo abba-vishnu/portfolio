@@ -515,9 +515,9 @@ function serialize() {
         resumeFile: "// Target resume file name",
         socials: "// Social links",
         heroVideo: "// Hero banner video (plays full-width at the top of the home page)",
-        workbookImages: "// Workbook images: file names inside workbookPath",
+        workbookImages: "// Workbook images: each entry has a file name, a tag label, and a display title",
         fallbackImage: "// Shown in place of ANY image or animation that fails to load, on every page",
-        lottieFiles: "// Lottie animations: file names inside lottiePath (add more file names here)",
+        lottieFiles: "// Lottie animations: each entry has a file name, a tag label, and a display title",
         lottiePlayerSrc: "// The Lottie player library every page loads",
         showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)"
     };
@@ -564,7 +564,8 @@ async function uniqueNameIn(list, pendingMap, folderPath, name) {
     const dot = name.lastIndexOf(".");
     const base = dot > 0 ? name.slice(0, dot) : name, ext = dot > 0 ? name.slice(dot) : "";
     let candidate = name, i = 1;
-    while (list.includes(candidate) || pendingMap.has(candidate) || await existsInFolder(folderPath, candidate)) {
+    const listHas = n => list.some(e => (typeof e === "string" ? e : e.file) === n);
+    while (listHas(candidate) || pendingMap.has(candidate) || await existsInFolder(folderPath, candidate)) {
         candidate = `${base}-${i++}${ext}`;
     }
     return candidate;
@@ -588,12 +589,25 @@ function renderImages() {
     const box = $("#tiles");
     if (!cfg.workbookImages.length) { box.innerHTML = '<p class="empty">No images yet. Upload some above.</p>'; return; }
     box.innerHTML = "";
-    cfg.workbookImages.forEach((name, i) => {
+    cfg.workbookImages.forEach((entry, i) => {
+        // Normalise: accept both legacy plain strings and new { file, tag, title } objects
+        const name  = typeof entry === "string" ? entry : (entry.file  || "");
+        const tag   = typeof entry === "string" ? "WORKBOOK" : (entry.tag   || "WORKBOOK");
+        const title = typeof entry === "string" ? "" : (entry.title || "");
+
         const tile = document.createElement("div");
         tile.className = "tile";
         tile.innerHTML = `
             <div class="tile-thumb"><img alt="" hidden><span class="missing" hidden>File not found in folder</span></div>
-            <input type="text" value="${esc(name)}" data-img-name="${i}" aria-label="File name for image ${i + 1}" spellcheck="false">
+            <label class="f" style="font-size:11px;color:var(--muted);">File name
+                <input type="text" value="${esc(name)}" data-img-name="${i}" aria-label="File name for image ${i + 1}" spellcheck="false">
+            </label>
+            <label class="f" style="font-size:11px;color:var(--muted);">Tag
+                <input type="text" value="${esc(tag)}" data-img-tag="${i}" aria-label="Tag for image ${i + 1}" spellcheck="false" placeholder="e.g. BANNER">
+            </label>
+            <label class="f" style="font-size:11px;color:var(--muted);">Title
+                <input type="text" value="${esc(title)}" data-img-title="${i}" aria-label="Title for image ${i + 1}" spellcheck="false" placeholder="Display title">
+            </label>
             <div class="row-actions">
                 <button class="btn sm" data-act="img-left" data-i="${i}" aria-label="Move earlier" ${i === 0 ? "disabled" : ""}>←</button>
                 <button class="btn sm" data-act="img-right" data-i="${i}" aria-label="Move later" ${i === cfg.workbookImages.length - 1 ? "disabled" : ""}>→</button>
@@ -615,7 +629,9 @@ async function addFiles(fileList) {
         const name = await uniqueName(sanitizeName(f.name));
         try {
             if (dirHandle) await writeImage(name, f); else pending.set(name, f);
-            cfg.workbookImages.push(name);
+            // Derive a default title from the filename
+            let base = name.replace(/\.[^.]+$/, "").replace(/^\d{4,8}(-\d{1,6})?-/, "").replace(/[-_]+/g, " ").trim();
+            cfg.workbookImages.push({ file: name, tag: "WORKBOOK", title: base || name });
             added++;
         } catch (e) { toast(`Couldn't save ${f.name}: ${e.message}`, "error"); }
     }
@@ -630,8 +646,9 @@ function addName() {
     const input = $("#name-input");
     const name = sanitizeName(input.value);
     if (!name) return;
-    if (cfg.workbookImages.includes(name)) { toast("That name is already in the list.", "warn"); return; }
-    cfg.workbookImages.push(name);
+    if (cfg.workbookImages.some(e => (typeof e === "string" ? e : e.file) === name)) { toast("That name is already in the list.", "warn"); return; }
+    let base = name.replace(/\.[^.]+$/, "").replace(/^\d{4,8}(-\d{1,6})?-/, "").replace(/[-_]+/g, " ").trim();
+    cfg.workbookImages.push({ file: name, tag: "WORKBOOK", title: base || name });
     input.value = "";
     setDirty(true); renderImages();
 }
@@ -643,12 +660,25 @@ function renderLotties() {
     const box = $("#tiles-lottie");
     if (!cfg.lottieFiles.length) { box.innerHTML = '<p class="empty">No animations yet. Add a .json file above.</p>'; return; }
     box.innerHTML = "";
-    cfg.lottieFiles.forEach((name, i) => {
+    cfg.lottieFiles.forEach((entry, i) => {
+        // Normalise: accept both legacy plain strings and new { file, tag, title } objects
+        const name  = typeof entry === "string" ? entry : (entry.file  || "");
+        const tag   = typeof entry === "string" ? "LOTTIE" : (entry.tag   || "LOTTIE");
+        const title = typeof entry === "string" ? "" : (entry.title || "");
+
         const tile = document.createElement("div");
         tile.className = "tile";
         tile.innerHTML = `
             <div class="tile-thumb lottie-badge">JSON</div>
-            <input type="text" value="${esc(name)}" data-lottie-name="${i}" aria-label="File name for animation ${i + 1}" spellcheck="false">
+            <label class="f" style="font-size:11px;color:var(--muted);">File name
+                <input type="text" value="${esc(name)}" data-lottie-name="${i}" aria-label="File name for animation ${i + 1}" spellcheck="false">
+            </label>
+            <label class="f" style="font-size:11px;color:var(--muted);">Tag
+                <input type="text" value="${esc(tag)}" data-lottie-tag="${i}" aria-label="Tag for animation ${i + 1}" spellcheck="false" placeholder="e.g. BRAND">
+            </label>
+            <label class="f" style="font-size:11px;color:var(--muted);">Title
+                <input type="text" value="${esc(title)}" data-lottie-title="${i}" aria-label="Title for animation ${i + 1}" spellcheck="false" placeholder="Display title">
+            </label>
             <div class="row-actions">
                 <button class="btn sm" data-act="lottie-left" data-i="${i}" aria-label="Move earlier" ${i === 0 ? "disabled" : ""}>←</button>
                 <button class="btn sm" data-act="lottie-right" data-i="${i}" aria-label="Move later" ${i === cfg.lottieFiles.length - 1 ? "disabled" : ""}>→</button>
@@ -666,7 +696,8 @@ async function addLottieFiles(fileList) {
         const name = await uniqueLottieName(sanitizeName(f.name));
         try {
             if (dirHandle) await writeLottieFile(name, f); else pendingLottie.set(name, f);
-            cfg.lottieFiles.push(name);
+            const label = name.replace(/\.json$/i, "").replace(/[-_]+/g, " ").trim();
+            cfg.lottieFiles.push({ file: name, tag: "LOTTIE", title: label || name });
             added++;
         } catch (e) { toast(`Couldn't save ${f.name}: ${e.message}`, "error"); }
     }
@@ -682,8 +713,9 @@ function addLottieName() {
     let name = sanitizeName(input.value);
     if (!name) return;
     if (!/\.json$/i.test(name)) name += ".json";
-    if (cfg.lottieFiles.includes(name)) { toast("That name is already in the list.", "warn"); return; }
-    cfg.lottieFiles.push(name);
+    if (cfg.lottieFiles.some(e => (typeof e === "string" ? e : e.file) === name)) { toast("That name is already in the list.", "warn"); return; }
+    const label = name.replace(/\.json$/i, "").replace(/[-_]+/g, " ").trim();
+    cfg.lottieFiles.push({ file: name, tag: "LOTTIE", title: label || name });
     input.value = "";
     setDirty(true); renderLotties();
 }
@@ -855,8 +887,10 @@ document.addEventListener("click", e => {
     if (act === "img-left" && move(imgs, i, -1)) { setDirty(true); renderImages(); }
     if (act === "img-right" && move(imgs, i, 1)) { setDirty(true); renderImages(); }
     if (act === "img-remove") {
-        const [name] = imgs.splice(i, 1);
-        if (pending.has(name) && !imgs.includes(name)) { pending.delete(name); URL.revokeObjectURL(previews.get(name)); previews.delete(name); updateStatus(); }
+        const [removed] = imgs.splice(i, 1);
+        const removedName = typeof removed === "string" ? removed : removed.file;
+        const stillUsed = imgs.some(e => (typeof e === "string" ? e : e.file) === removedName);
+        if (pending.has(removedName) && !stillUsed) { pending.delete(removedName); URL.revokeObjectURL(previews.get(removedName)); previews.delete(removedName); updateStatus(); }
         setDirty(true); renderImages();
     }
     if (act === "vid-up" && move(vids, i, -1)) { maybeRenumber(); setDirty(true); renderVideos(); }
@@ -871,39 +905,83 @@ document.addEventListener("click", e => {
     if (act === "lottie-left" && move(lots, i, -1)) { setDirty(true); renderLotties(); }
     if (act === "lottie-right" && move(lots, i, 1)) { setDirty(true); renderLotties(); }
     if (act === "lottie-remove") {
-        const [name] = lots.splice(i, 1);
-        if (pendingLottie.has(name) && !lots.includes(name)) { pendingLottie.delete(name); updateStatus(); }
+        const [removed] = lots.splice(i, 1);
+        const removedName = typeof removed === "string" ? removed : removed.file;
+        const stillUsed = lots.some(e => (typeof e === "string" ? e : e.file) === removedName);
+        if (pendingLottie.has(removedName) && !stillUsed) { pendingLottie.delete(removedName); updateStatus(); }
         setDirty(true); renderLotties();
     }
 });
 
 document.addEventListener("change", e => {
+    // Helper: ensure a workbook entry is always an object
+    const imgObj = i => {
+        const e2 = cfg.workbookImages[i];
+        if (typeof e2 === "string") { cfg.workbookImages[i] = { file: e2, tag: "WORKBOOK", title: "" }; }
+        return cfg.workbookImages[i];
+    };
+    // Helper: ensure a lottie entry is always an object
+    const lotObj = i => {
+        const e2 = cfg.lottieFiles[i];
+        if (typeof e2 === "string") { cfg.lottieFiles[i] = { file: e2, tag: "LOTTIE", title: "" }; }
+        return cfg.lottieFiles[i];
+    };
+
+    // --- Workbook image: file name ---
     if (e.target.dataset?.imgName !== undefined) {
         const i = +e.target.dataset.imgName;
-        const name = sanitizeName(e.target.value);
-        const old = cfg.workbookImages[i];
-        if (!name) { e.target.value = old; return; }
-        if (name !== old) {
-            if (pending.has(old)) { pending.set(name, pending.get(old)); pending.delete(old); }
-            cfg.workbookImages[i] = name;
+        const obj = imgObj(i);
+        const oldName = obj.file;
+        const newName = sanitizeName(e.target.value);
+        if (!newName) { e.target.value = oldName; return; }
+        if (newName !== oldName) {
+            if (pending.has(oldName)) { pending.set(newName, pending.get(oldName)); pending.delete(oldName); }
+            obj.file = newName;
             setDirty(true);
             toast("Name changed in the list only. Rename the file in the folder to match.", "warn");
         }
         renderImages();
     }
+    // --- Workbook image: tag ---
+    if (e.target.dataset?.imgTag !== undefined) {
+        const i = +e.target.dataset.imgTag;
+        imgObj(i).tag = e.target.value.trim();
+        setDirty(true);
+    }
+    // --- Workbook image: title ---
+    if (e.target.dataset?.imgTitle !== undefined) {
+        const i = +e.target.dataset.imgTitle;
+        imgObj(i).title = e.target.value.trim();
+        setDirty(true);
+    }
+
+    // --- Lottie: file name ---
     if (e.target.dataset?.lottieName !== undefined) {
         const i = +e.target.dataset.lottieName;
-        let name = sanitizeName(e.target.value);
-        if (name && !/\.json$/i.test(name)) name += ".json";
-        const old = cfg.lottieFiles[i];
-        if (!name) { e.target.value = old; return; }
-        if (name !== old) {
-            if (pendingLottie.has(old)) { pendingLottie.set(name, pendingLottie.get(old)); pendingLottie.delete(old); }
-            cfg.lottieFiles[i] = name;
+        const obj = lotObj(i);
+        const oldName = obj.file;
+        let newName = sanitizeName(e.target.value);
+        if (newName && !/\.json$/i.test(newName)) newName += ".json";
+        if (!newName) { e.target.value = oldName; return; }
+        if (newName !== oldName) {
+            if (pendingLottie.has(oldName)) { pendingLottie.set(newName, pendingLottie.get(oldName)); pendingLottie.delete(oldName); }
+            obj.file = newName;
             setDirty(true);
             toast("Name changed in the list only. Rename the file in the folder to match.", "warn");
         }
         renderLotties();
+    }
+    // --- Lottie: tag ---
+    if (e.target.dataset?.lottieTag !== undefined) {
+        const i = +e.target.dataset.lottieTag;
+        lotObj(i).tag = e.target.value.trim();
+        setDirty(true);
+    }
+    // --- Lottie: title ---
+    if (e.target.dataset?.lottieTitle !== undefined) {
+        const i = +e.target.dataset.lottieTitle;
+        lotObj(i).title = e.target.value.trim();
+        setDirty(true);
     }
 });
 

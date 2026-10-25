@@ -400,13 +400,16 @@ a.card-link {
     height: auto;
     padding-bottom: 0;
     aspect-ratio: auto;
-    background: transparent;
+    background: #e8e9e4; /* light neutral — shows while the image loads and behind transparent areas */
+    overflow: hidden;
 }
 
 .thumb-container.image-thumb img {
     position: static;
     width: 100%;
+    /* height must stay auto so the image never stretches beyond its natural size */
     height: auto;
+    max-height: 100%; /* respect the JS-set maxHeight on the container */
     display: block;
     object-fit: contain;
 }

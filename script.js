@@ -314,17 +314,28 @@ document.addEventListener("DOMContentLoaded", () => {
             : SITE_CONFIG.workbookImages;
         const fallbackSrc = `${rootPath}${SITE_CONFIG.fallbackImage}`;
 
-        // "190624-Animals-Final.jpg" -> "Animals Final"
-        const titleFromFileName = (fileName) => {
-            let base = fileName.replace(/\.[^.]+$/, "");
-            base = base.replace(/^\d{4,8}(-\d{1,6})?-/, ""); // drop a leading date/time-like prefix
-            base = base.replace(/[-_]+/g, " ").trim();
-            return base || fileName;
+        // Normalise an entry: accepts both the legacy plain-string format and the new
+        // object format { file, tag, title }.
+        const normalizeEntry = (entry, i) => {
+            if (typeof entry === "string") {
+                // Legacy: derive a human title from the filename
+                let base = entry.replace(/\.[^.]+$/, "");
+                base = base.replace(/^\d{4,8}(-\d{1,6})?-/, "");
+                base = base.replace(/[-_]+/g, " ").trim();
+                return { file: entry, tag: "WORKBOOK", title: base || entry };
+            }
+            return {
+                file:  entry.file  || "",
+                tag:   entry.tag   || "WORKBOOK",
+                title: entry.title || entry.file || `Image ${i + 1}`
+            };
         };
 
         workbookContainer.innerHTML = "";
 
-        images.forEach((fileName, i) => {
+        images.forEach((rawEntry, i) => {
+            const entry = normalizeEntry(rawEntry, i);
+
             const card = document.createElement("div");
             const thumb = document.createElement("div");
             const img = document.createElement("img");
@@ -336,46 +347,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let usingFallback = false;
             img.addEventListener("error", () => {
-                if (usingFallback) return; // avoid infinite error loop
+                if (usingFallback) return;
                 usingFallback = true;
                 img.src = fallbackSrc;
             });
-            img.src = `${rootPath}${SITE_CONFIG.workbookPath}${fileName}`;
+            img.src = `${rootPath}${SITE_CONFIG.workbookPath}${entry.file}`;
 
             if (isPreview) {
-                // Same shape as the Showcase/Lottie cards: fixed 16:9 thumb + tag + title
+                // Homepage preview: fixed 16:9 card matching Showcase/Lottie cards
                 card.className = "card";
                 thumb.className = "thumb-container";
-                img.alt = titleFromFileName(fileName);
+                img.alt = entry.title;
 
                 const content = document.createElement("div");
                 content.className = "card-content";
                 content.innerHTML = `
-                    <div class="card-tag">${String(i + 1).padStart(2, "0")} / WORKBOOK</div>
-                    <h3>${titleFromFileName(fileName)}</h3>
+                    <div class="card-tag">${entry.tag}</div>
+                    <h3>${entry.title}</h3>
                 `;
 
                 thumb.appendChild(img);
                 card.appendChild(thumb);
                 card.appendChild(content);
             } else {
-                // Full workbook page: image-only masonry tile, natural aspect ratio
+                // Full workbook page: masonry tile, natural aspect ratio, light bg,
+                // tag + title shown below image
                 card.className = "card image-card";
                 thumb.className = "thumb-container image-thumb";
-                thumb.style.setProperty("--ar", "1 / 1");
-                img.alt = `Workbook ${String(i + 1).padStart(2, "0")}`;
 
+                img.alt = entry.title;
+
+                // Let the image set its own natural ratio once loaded;
+                // don't preset an aspect-ratio that fights the image dimensions.
                 img.addEventListener("load", () => {
                     if (!usingFallback && img.naturalWidth && img.naturalHeight) {
-                        thumb.style.setProperty("--ar", `${img.naturalWidth} / ${img.naturalHeight}`);
+                        // Force the container to match the image's natural size so it
+                        // never stretches beyond the actual pixel dimensions.
+                        thumb.style.maxHeight = img.naturalHeight + "px";
                     }
                 });
-                img.addEventListener("error", () => {
-                    thumb.style.setProperty("--ar", "1 / 1");
-                });
+
+                const content = document.createElement("div");
+                content.className = "card-content";
+                content.innerHTML = `
+                    <div class="card-tag card-tag--image">${entry.tag}</div>
+                    <h3>${entry.title}</h3>
+                `;
 
                 thumb.appendChild(img);
                 card.appendChild(thumb);
+                card.appendChild(content);
             }
 
             workbookContainer.appendChild(card);
@@ -407,22 +428,34 @@ document.addEventListener("DOMContentLoaded", () => {
         ? SITE_CONFIG.lottieFiles
         : SITE_CONFIG.lottieFiles.slice(0, lottieLimit);
 
-    lottieList.forEach((fileName, i) => {
-        // "MazeAnim.json" -> "MazeAnim"
-        const label = fileName.replace(/\.json$/i, "");
+    // Normalise a Lottie entry: accepts both the legacy plain-string format and the
+    // new object format { file, tag, title }.
+    const normalizeLottieEntry = (entry, i) => {
+        if (typeof entry === "string") {
+            return { file: entry, tag: "LOTTIE", title: entry.replace(/\.json$/i, "") };
+        }
+        return {
+            file:  entry.file  || "",
+            tag:   entry.tag   || "LOTTIE",
+            title: entry.title || (entry.file || "").replace(/\.json$/i, "") || `Animation ${i + 1}`
+        };
+    };
+
+    lottieList.forEach((rawEntry, i) => {
+        const entry = normalizeLottieEntry(rawEntry, i);
 
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
             <div class="lottie-thumb"></div>
             <div class="card-content">
-                <div class="card-tag">${String(i + 1).padStart(2, "0")} / LOTTIE</div>
-                <h3>${label}</h3>
+                <div class="card-tag">${entry.tag}</div>
+                <h3>${entry.title}</h3>
             </div>
         `;
 
         const stage = card.querySelector(".lottie-thumb");
-        stage.dataset.src = `${rootPath}${SITE_CONFIG.lottiePath}${fileName}`;
+        stage.dataset.src = `${rootPath}${SITE_CONFIG.lottiePath}${entry.file}`;
 
         lottieContainer.appendChild(card);
         observer.observe(stage);
