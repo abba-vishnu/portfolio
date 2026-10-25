@@ -6,6 +6,9 @@ const SITE_CONFIG = {
     phone: "+91 85478 71997",
     phoneRaw: "+918547871997",
 
+    // Footer tagline (shown after "© year Name •" on every page; edit from admin.html)
+    footerText: "Visual design, in motion.",
+
     // Target resume file name
     resumeFile: "assets/Abba_Vishnu_Resume.docx",
 
@@ -24,27 +27,51 @@ const SITE_CONFIG = {
 
     // Workbook images: file names inside workbookPath
     workbookImages: [
-        "190624-Animals-Final.jpg",
-        "Gig-Illustration.png",
-        "190325-Apitive-APICallTracing.jpg",
-        "190325-Apitive-DesignFirst.jpg",
-        "190730-Spotcues-BlogBanner-02.jpg",
-        "191116-2035-how-to-convert-identifiers.gif",
-        "190325-Apitive-DeveloperPortal.jpg",
-        "190325-Apitive-Gateway.jpg",
-        "210310-Corridor-We-are-about-V2.png",
-        "190325-Apitive-PersonaBasedWorkflow.jpg",
-        "191115-2155-import-product-identifiers.gif",
-        "190325-Apitive-PowerfulPolicyEngine.jpg",
-        "Image-Gig-Icons.png",
-        "191116-1455-export-product-info.gif",
-        "190325-Apitive-ResponseCaching.jpg",
-        "191116-1457-export-listing-info.gif",
-        "200908-LowCode-vs-LowCode.png",
-        "191116-1500-export-deselect-all.gif",
-        "Character-01.png",
-        "JumpstartDesign.png",
-        "Character-02.png"
+        "Animals-RunWild.webp",
+        "Apitive-APICallTracing.webp",
+        "Apitive-DesignFirst.webp",
+        "Apitive-DeveloperPortal.webp",
+        "Apitive-Gateway.webp",
+        "Apitive-PersonaBasedWorkflow.webp",
+        "Apitive-PowerfulPolicyEngine.webp",
+        "Apitive-ResponseCaching.webp",
+        "Cartoon-WrongTool-Cars.webp",
+        "Cartoon-WrongTool-Digging.webp",
+        "Character-01.webp",
+        "Character-02.webp",
+        "Composability.webp",
+        "Corridor-We-are-about-V2.webp",
+        "export-deselect-all.webp",
+        "export-listing-info.webp",
+        "export-product-info.webp",
+        "full-stack-01.webp",
+        "full-stack-02.webp",
+        "full-stack-03.webp",
+        "full-stack-04.webp",
+        "Gig-Illustration.webp",
+        "HeroBanner-V2.webp",
+        "how-to-convert-identifiers.webp",
+        "Image-Banner-aPaaS.webp",
+        "Image-Banner-EnterpriseSoftwareDevelopment.webp",
+        "Image-Banner-ExpertServices.webp",
+        "Image-Banner-NewAppDevelopment.webp",
+        "Image-Banner-PillarPage-AppModernization.webp",
+        "Image-Banner-Prefabs.webp",
+        "Image-Banner-RAD-Studio.webp",
+        "Image-Banner-Solutions-Enterprises.webp",
+        "Image-Banner-Telecom.webp",
+        "Image-Banner-Training.webp",
+        "Image-Banner-WM-Studio-App.webp",
+        "Image-Gig-Icons.webp",
+        "Image-Partner-SalesAndPreSales.webp",
+        "import-product-identifiers.webp",
+        "JumpstartDesign.webp",
+        "LowCode-vs-LowCode.webp",
+        "Madras-High-Court.webp",
+        "Mascot-new-gen-yogi.webp",
+        "People.webp",
+        "Prefabs-Banner-V01.webp",
+        "Spotcues-BlogBanner-02.webp"
     ],
     workbookPath: "assets/images/workbook/",
 
@@ -59,15 +86,13 @@ const SITE_CONFIG = {
         "AI-App-Creation-V03.json",
         "BlinkLogoAnimation.json",
         "botSurfing.json",
-		"MazeAnim.json"
+        "MazeAnim.json"
     ],
-	
     lottiePath: "assets/lottie/",
-	// The Lottie player library every page loads. Change the version number here only —
-    // both index.html and lottie/index.html read this value instead of hardcoding it.
-    // Browse versions at https://cdnjs.com/libraries/lottie-web
+
+    // The Lottie player library every page loads
     lottiePlayerSrc: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js",
-	
+
     // Unified Showcase List (YouTube & Vimeo Mixed)
     showcaseVideos: [
         {

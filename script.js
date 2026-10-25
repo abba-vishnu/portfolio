@@ -218,8 +218,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroName = document.getElementById("hero-name");
     if (heroName) heroName.textContent = SITE_CONFIG.name;
 
-    const footerName = document.getElementById("footer-name");
-    if (footerName) footerName.textContent = SITE_CONFIG.name;
+    // Footer: built entirely from config so every page just needs an empty .footer-bottom div
+    document.querySelectorAll(".footer-bottom").forEach(el => {
+        const year = new Date().getFullYear();
+        const tagline = SITE_CONFIG.footerText || "Visual design, in motion.";
+        el.innerHTML = `<p>&copy; ${year} ${SITE_CONFIG.name} &bull; ${tagline}</p>`;
+    });
 
     // Contact & Social Data Binding
     document.querySelectorAll(".contact-email").forEach(el => {
@@ -266,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="card">
                     <a href="${video.link}" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="${thumbSrc}" ${dataAttr} alt="${video.title}">
+                            <img src="${thumbSrc}" ${dataAttr} alt="${video.title}" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -297,50 +301,83 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- F. Workbook Image Cards (single class, auto aspect ratio) ---
+    // --- F. Workbook Image Cards ---
+    // Homepage preview (has data-limit): fixed 16:9 card, matching the Showcase/Lottie cards.
+    // Full workbook page (no data-limit): masonry, image-only, auto aspect ratio — unchanged.
     const workbookContainer = document.getElementById("workbook-grid-container");
 
     if (workbookContainer && SITE_CONFIG.workbookImages) {
         const limit = parseInt(workbookContainer.dataset.limit, 10);
-        const images = Number.isNaN(limit)
-            ? SITE_CONFIG.workbookImages
-            : SITE_CONFIG.workbookImages.slice(0, limit);
+        const isPreview = !Number.isNaN(limit);
+        const images = isPreview
+            ? SITE_CONFIG.workbookImages.slice(0, limit)
+            : SITE_CONFIG.workbookImages;
         const fallbackSrc = `${rootPath}${SITE_CONFIG.fallbackImage}`;
+
+        // "190624-Animals-Final.jpg" -> "Animals Final"
+        const titleFromFileName = (fileName) => {
+            let base = fileName.replace(/\.[^.]+$/, "");
+            base = base.replace(/^\d{4,8}(-\d{1,6})?-/, ""); // drop a leading date/time-like prefix
+            base = base.replace(/[-_]+/g, " ").trim();
+            return base || fileName;
+        };
 
         workbookContainer.innerHTML = "";
 
         images.forEach((fileName, i) => {
             const card = document.createElement("div");
-            card.className = "card image-card";
-
             const thumb = document.createElement("div");
-            thumb.className = "thumb-container image-thumb";
-            thumb.style.setProperty("--ar", "1 / 1");
-
             const img = document.createElement("img");
-            img.alt = `Workbook ${String(i + 1).padStart(2, "0")}`;
+
             img.loading = "lazy";
+            img.decoding = "async";
+            img.fetchPriority = "low";
+            img.classList.add("js-lightbox");
 
             let usingFallback = false;
-
-            img.addEventListener("load", () => {
-                // Fallback stays square; real images use their own ratio
-                if (!usingFallback && img.naturalWidth && img.naturalHeight) {
-                    thumb.style.setProperty("--ar", `${img.naturalWidth} / ${img.naturalHeight}`);
-                }
-            });
-
             img.addEventListener("error", () => {
                 if (usingFallback) return; // avoid infinite error loop
                 usingFallback = true;
-                thumb.style.setProperty("--ar", "1 / 1");
                 img.src = fallbackSrc;
             });
-
             img.src = `${rootPath}${SITE_CONFIG.workbookPath}${fileName}`;
 
-            thumb.appendChild(img);
-            card.appendChild(thumb);
+            if (isPreview) {
+                // Same shape as the Showcase/Lottie cards: fixed 16:9 thumb + tag + title
+                card.className = "card";
+                thumb.className = "thumb-container";
+                img.alt = titleFromFileName(fileName);
+
+                const content = document.createElement("div");
+                content.className = "card-content";
+                content.innerHTML = `
+                    <div class="card-tag">${String(i + 1).padStart(2, "0")} / WORKBOOK</div>
+                    <h3>${titleFromFileName(fileName)}</h3>
+                `;
+
+                thumb.appendChild(img);
+                card.appendChild(thumb);
+                card.appendChild(content);
+            } else {
+                // Full workbook page: image-only masonry tile, natural aspect ratio
+                card.className = "card image-card";
+                thumb.className = "thumb-container image-thumb";
+                thumb.style.setProperty("--ar", "1 / 1");
+                img.alt = `Workbook ${String(i + 1).padStart(2, "0")}`;
+
+                img.addEventListener("load", () => {
+                    if (!usingFallback && img.naturalWidth && img.naturalHeight) {
+                        thumb.style.setProperty("--ar", `${img.naturalWidth} / ${img.naturalHeight}`);
+                    }
+                });
+                img.addEventListener("error", () => {
+                    thumb.style.setProperty("--ar", "1 / 1");
+                });
+
+                thumb.appendChild(img);
+                card.appendChild(thumb);
+            }
+
             workbookContainer.appendChild(card);
         });
     }
@@ -362,7 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             loadLottieSafely(entry.target, entry.target.dataset.src);
         });
-    }, { rootMargin: "100px", threshold: 0.01 });
+    }, { rootMargin: "600px 0px", threshold: 0.01 }); // starts loading well before it's visible, but only once nearby — never during initial render
 
     // data-limit="6" on the container shows only the first 6; no attribute shows all
     const lottieLimit = parseInt(lottieContainer.dataset.limit, 10);
@@ -492,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 2. Event listener: Open lightbox on clicking any workbook image or image card
     document.addEventListener('click', function (e) {
-        const imgTarget = e.target.closest('.image-card img, .thumb-container.image-thumb img, .workbook-item img');
+        const imgTarget = e.target.closest('.image-card img, .thumb-container.image-thumb img, .workbook-item img, .js-lightbox');
         if (imgTarget) {
             e.preventDefault();
             const lightbox = document.getElementById('image-lightbox');
@@ -548,7 +585,7 @@ class LottieBox extends HTMLElement {
             // 2. Intersection Observer for Performance & Viewport Triggering
             const observerOptions = {
                 root: null,
-                rootMargin: '100px', // Starts loading slightly before it enters the screen
+                rootMargin: '600px 0px', // Starts loading well before it enters the screen, so it's ready by the time you scroll to it
                 threshold: 0.01
             };
 

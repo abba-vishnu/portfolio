@@ -9,6 +9,12 @@
     <!-- Shared Modular Stylesheet -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Warm up connections to external hosts used below the fold, ahead of time, without blocking anything here -->
+    <link rel="preconnect" href="https://img.youtube.com">
+    <link rel="preconnect" href="https://player.vimeo.com">
+    <link rel="preconnect" href="https://www.youtube-nocookie.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
     <!-- Config File & Modular Script -->
     <script src="config.js"></script>
     <!-- Lottie player: its URL lives in SITE_CONFIG.lottiePlayerSrc (config.js), so it only changes in one place -->
@@ -27,7 +33,7 @@
         <!-- Full-Width Edge-to-Edge Video Container (src filled in from SITE_CONFIG.heroVideo / heroPoster by script.js) -->
         <div class="video-container edge-video">
             <!-- Filler Poster Image (Displays until video loads) -->
-            <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster" id="hero-poster">
+            <img src="assets/images/home/hero_poster.png" alt="Showreel Cover" class="video-poster" id="hero-poster" fetchpriority="high" decoding="async">
 
             <iframe id="hero-video-iframe"
                     title="Showreel"
@@ -42,18 +48,18 @@
 
         <!-- Showcase / Selected Work -->
         <section id="work">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div class="section-header-row">
                 <h2>SHOWCASE</h2>
-                <span style="color: var(--text-secondary); font-size: 12px; letter-spacing: -0.02em;">FILMS · EXPLAINERS · PRODUCT STORIES</span>
+                <span class="section-eyebrow">FILMS · EXPLAINERS · PRODUCT STORIES</span>
             </div>
-            <p class="subtitle" style="margin-top: 10px; margin-bottom: 0;">A few selected stories—from SaaS product films to brand motion and personal experiments.</p>
+            <p class="subtitle">A few selected stories—from SaaS product films to brand motion and personal experiments.</p>
 
             <div class="grid">
                 <!-- Video 1 -->
                 <div class="card">
                     <a href="https://youtu.be/lJBK13uBVaA" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/lJBK13uBVaA/hqdefault.jpg" alt="WaveMaker Design to Code">
+                            <img src="https://img.youtube.com/vi/lJBK13uBVaA/hqdefault.jpg" alt="WaveMaker Design to Code" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -69,7 +75,7 @@
                 <div class="card">
                     <a href="https://youtu.be/UEyhNRlB-6M" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/UEyhNRlB-6M/hqdefault.jpg" alt="Agentic App Generation Platform">
+                            <img src="https://img.youtube.com/vi/UEyhNRlB-6M/hqdefault.jpg" alt="Agentic App Generation Platform" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -85,7 +91,7 @@
                 <div class="card">
                     <a href="https://youtu.be/3A0COvpltP0" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/3A0COvpltP0/hqdefault.jpg" alt="WaveMaker Suite Overview">
+                            <img src="https://img.youtube.com/vi/3A0COvpltP0/hqdefault.jpg" alt="WaveMaker Suite Overview" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -101,7 +107,7 @@
                 <div class="card">
                     <a href="https://youtu.be/3k5LUZ--Zws" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/3k5LUZ--Zws/hqdefault.jpg" alt="WaveMaker Studio for React Native">
+                            <img src="https://img.youtube.com/vi/3k5LUZ--Zws/hqdefault.jpg" alt="WaveMaker Studio for React Native" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -117,7 +123,7 @@
                 <div class="card">
                     <a href="https://youtu.be/XH-i9ZNfil8" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/XH-i9ZNfil8/hqdefault.jpg" alt="WaveMaker for Enterprises">
+                            <img src="https://img.youtube.com/vi/XH-i9ZNfil8/hqdefault.jpg" alt="WaveMaker for Enterprises" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -133,7 +139,7 @@
                 <div class="card">
                     <a href="https://youtu.be/-r8uLPYdjSE" target="_blank" rel="noopener" class="card-link">
                         <div class="thumb-container">
-                            <img src="https://img.youtube.com/vi/-r8uLPYdjSE/hqdefault.jpg" alt="WaveMaker Documentation Upgrade">
+                            <img src="https://img.youtube.com/vi/-r8uLPYdjSE/hqdefault.jpg" alt="WaveMaker Documentation Upgrade" loading="lazy" decoding="async">
                             <div class="play-overlay">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -156,28 +162,28 @@
                 <div class="capability-card">
                     <h3>Motion &amp; storytelling</h3>
                     <p>From the first storyboard to the final frame. Product explainers, marketing films, animation, and post-production.</p>
-                    <div class="card-tag" style="margin-bottom: 0;">After Effects · Premiere Pro · Illustrator</div>
+                    <div class="card-tag no-margin">After Effects · Premiere Pro · Illustrator</div>
                 </div>
                 <div class="capability-card">
                     <h3>Creative direction</h3>
                     <p>Cohesive visual identities and thoughtful collaboration across design, product, and marketing teams.</p>
-                    <div class="card-tag" style="margin-bottom: 0;">Brand identity · Art direction · Team leadership</div>
+                    <div class="card-tag no-margin">Brand identity · Art direction · Team leadership</div>
                 </div>
                 <div class="capability-card">
                     <h3>Design meets technology</h3>
                     <p>AI-enhanced workflows, creative automation, and a foundation in games and interactive experiences.</p>
-                    <div class="card-tag" style="margin-bottom: 0;">Figma · Adobe Firefly · Unity3D · C#</div>
+                    <div class="card-tag no-margin">Figma · Adobe Firefly · Unity3D · C#</div>
                 </div>
             </div>
         </section>
 
         <!-- Workbook Section -->
         <section id="workbook">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div class="section-header-row">
                 <h2>WORKBOOK</h2>
-                <span style="color: var(--text-secondary); font-size: 12px; letter-spacing: -0.02em;">SKETCHBOOK &amp; STUDIES</span>
+                <span class="section-eyebrow">SKETCHBOOK &amp; STUDIES</span>
             </div>
-            <p class="subtitle" style="margin-top: 10px; margin-bottom: 0;">Drawings, character studies, visual explorations, and ideas in progress.</p>
+            <p class="subtitle">Drawings, character studies, visual explorations, and ideas in progress.</p>
 
             <!-- Auto-generated from SITE_CONFIG.workbookImages (see script.js) -->
             <div class="grid" id="workbook-grid-container" data-limit="6"></div>
@@ -185,12 +191,12 @@
             <a class="btn view-all-btn" href="workbook/index.html">View all sketches &amp; studies &gt;&gt;</a>
 
             <!-- Lottie sub-section (auto-generated from SITE_CONFIG.lottieFiles, max 6) -->
-            <div id="lottie-section" style="margin-top: 80px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div id="lottie-section" class="subsection">
+                <div class="section-header-row">
                     <h2>LOTTIE</h2>
-                    <span style="color: var(--text-secondary); font-size: 12px; letter-spacing: -0.02em;">ANIMATION EXPERIMENTS</span>
+                    <span class="section-eyebrow">ANIMATION EXPERIMENTS</span>
                 </div>
-                <p class="subtitle" style="margin-top: 10px; margin-bottom: 0;">Lightweight vector animations, built for the web.</p>
+                <p class="subtitle">Lightweight vector animations, built for the web.</p>
 
                 <div class="grid" id="lottie-grid-container" data-limit="6"></div>
 
@@ -324,9 +330,9 @@
 
         <!-- The Journey -->
         <section id="journey">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div class="section-header-row">
                 <h2>THE JOURNEY</h2>
-                <span style="color: var(--text-secondary); font-size: 12px; letter-spacing: -0.02em; text-transform: uppercase;">A career in making things move.</span>
+                <span class="section-eyebrow uppercase">A career in making things move.</span>
             </div>
 
             <div class="journey-list">
@@ -334,7 +340,7 @@
                     <div class="journey-year">2023 — PRESENT</div>
                     <div class="journey-content">
                         <h3>Lead Visual Designer</h3>
-                        <div class="card-tag" style="margin: 4px 0 12px 0;">WaveMaker, Inc.</div>
+                        <div class="card-tag journey-tag">WaveMaker, Inc.</div>
                         <p>Leading SaaS films and visual direction, with AI-powered workflows that support creative production.</p>
                     </div>
                 </div>
@@ -343,7 +349,7 @@
                     <div class="journey-year">2018 — 2023</div>
                     <div class="journey-content">
                         <h3>Visual Designer to Creative Lead</h3>
-                        <div class="card-tag" style="margin: 4px 0 12px 0;">Pramati Technologies</div>
+                        <div class="card-tag journey-tag">Pramati Technologies</div>
                         <p>Grew from Visual Designer to Lead, shaping product stories across the Pramati portfolio.</p>
                     </div>
                 </div>
@@ -352,7 +358,7 @@
                     <div class="journey-year">2009 — 2018</div>
                     <div class="journey-content">
                         <h3>Animation &amp; interactive foundations</h3>
-                        <div class="card-tag" style="margin: 4px 0 12px 0;">Avaz · Evelyn Software Labs · Colours Animation</div>
+                        <div class="card-tag journey-tag">Avaz · Evelyn Software Labs · Colours Animation</div>
                         <p>Built a foundation in character animation, educational apps, and game design.</p>
                     </div>
                 </div>
@@ -391,9 +397,7 @@
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>&copy; 2026 <span id="footer-name">Abba Vishnu</span> &bull; Visual design, in motion.</p>
-            </div>
+            <div class="footer-bottom"></div>
         </section>
     </div>
 </body>

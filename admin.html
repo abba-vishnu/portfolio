@@ -282,6 +282,7 @@ details .fields { margin-top: 14px; }
 /* ============================ State ============================ */
 const DEFAULTS = {
     name: "", title: "", location: "", email: "", phone: "", phoneRaw: "",
+    footerText: "Visual design, in motion.",
     resumeFile: "assets/Resume.docx",
     socials: { linkedin: "", vimeo: "" },
     heroVideo: { platform: "vimeo", id: "" },
@@ -350,7 +351,8 @@ const FORMS = {
     "#form-profile": [
         ["name", "Name"], ["title", "Title"], ["location", "Location"],
         ["email", "Email", "email"], ["phone", "Phone"],
-        ["phoneRaw", "Phone, dial format", "text", "Used for the tel: link. Fills in automatically from Phone."]
+        ["phoneRaw", "Phone, dial format", "text", "Used for the tel: link. Fills in automatically from Phone."],
+        ["footerText", "Footer text", "text", "Shown at the bottom of every page, after \u201c\u00a9 year Name \u2022\u201d."]
     ],
     "#form-links": [
         ["socials.linkedin", "LinkedIn URL"],
@@ -509,6 +511,7 @@ async function reconnect() {
 function serialize() {
     let s = JSON.stringify(cfg, null, 4).replace(/^(\s*)"([A-Za-z_$][\w$]*)":/gm, "$1$2:");
     const notes = {
+        footerText: "// Footer tagline (shown after \"\u00a9 year Name \u2022\" on every page; edit from admin.html)",
         resumeFile: "// Target resume file name",
         socials: "// Social links",
         heroVideo: "// Hero banner video (plays full-width at the top of the home page)",

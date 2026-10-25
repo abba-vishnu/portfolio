@@ -57,6 +57,38 @@ h2 {
     margin: 0;
 }
 
+/* Repeated "heading + small label" row used above Showcase, Workbook, Lottie, Journey */
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-eyebrow {
+    color: var(--text-secondary);
+    font-size: 12px;
+    letter-spacing: -0.02em;
+}
+
+.section-eyebrow.uppercase {
+    text-transform: uppercase;
+}
+
+/* One-line description under a section heading */
+.subtitle {
+    margin: 10px 0 0 0;
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Spacer before a sub-section (e.g. Lottie block inside Workbook) */
+.subsection {
+    margin-top: 80px;
+}
+
 /* Layout Wrapper */
 .container {
     width: 100%;
@@ -267,6 +299,14 @@ header.header-visible {
     letter-spacing: -0.02em;
     margin-bottom: 8px;
     text-transform: uppercase;
+}
+
+.card-tag.no-margin {
+    margin-bottom: 0;
+}
+
+.card-tag.journey-tag {
+    margin: 4px 0 12px 0;
 }
 
 .card h3 {
@@ -750,7 +790,8 @@ a.view-all {
 /* Cursor hint to indicate images are zoomable */
 .image-card img, 
 .thumb-container.image-thumb img, 
-.workbook-item img {
+.workbook-item img,
+.js-lightbox {
     cursor: zoom-in;
 }
 
