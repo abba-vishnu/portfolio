@@ -97,12 +97,25 @@ input:focus, select:focus { border-color: var(--accent); outline: none; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; }
 .tile { background: var(--field); border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: grid; gap: 8px; align-content: start; }
 .tile-thumb { position: relative; aspect-ratio: 1; background: #000; border-radius: 4px; overflow: hidden; display: grid; place-items: center; }
-.tile-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.tile-thumb img, .tile-thumb video { width: 100%; height: 100%; object-fit: contain; display: block; }
 .tile-thumb .missing { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; text-align: center; color: var(--warn); font-size: 12px; background: #1a1810; }
 .tile input { font-size: 13px; padding: 6px 8px; }
 .row-actions { display: flex; gap: 6px; }
 .row-actions .btn { flex: 1; }
 .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+
+/* ---------- Drag to reorder ---------- */
+.tile-thumb[draggable="true"], .vthumb[draggable="true"] { cursor: grab; }
+.tile-thumb[draggable="true"]:active, .vthumb[draggable="true"]:active { cursor: grabbing; }
+.tile-thumb img, .tile-thumb video, .vthumb img { pointer-events: none; }   /* so the thumbnail box is what gets dragged, not the picture inside it */
+.tile.dragging, .video.dragging { opacity: .35; }
+.tile, .video { position: relative; }
+.tile.drop-before::before, .tile.drop-after::before { content: ""; position: absolute; top: 0; bottom: 0; width: 4px; border-radius: 2px; background: var(--accent); }
+.tile.drop-before::before { left: -10px; }
+.tile.drop-after::before  { right: -10px; }
+.video.drop-before::before, .video.drop-after::before { content: ""; position: absolute; left: 0; right: 0; height: 4px; border-radius: 2px; background: var(--accent); }
+.video.drop-before::before { top: -8px; }
+.video.drop-after::before  { bottom: -8px; }
 
 /* ---------- Videos ---------- */
 .add-video { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
@@ -165,7 +178,7 @@ details .fields { margin-top: 14px; }
         <button class="btn primary" id="btn-save">Save</button>
     </div>
     <input type="file" id="file-config" accept=".js,text/javascript" hidden>
-    <input type="file" id="file-images" accept="image/*" multiple hidden>
+    <input type="file" id="file-images" accept="image/*,video/webm,video/mp4,.webm,.mp4" multiple hidden>
     <input type="file" id="file-lottie" accept=".json,application/json" multiple hidden>
 </div>
 
@@ -213,16 +226,16 @@ details .fields { margin-top: 14px; }
     </section>
 
     <section class="panel">
-        <h2>Workbook images</h2>
-        <p class="hint">Files are saved to the workbook folder. Order here is the order on the site. Removing an image only takes it out of the list; the file stays in the folder.</p>
+        <h2>Workbook images &amp; videos</h2>
+        <p class="hint">Files are saved to the workbook folder. Images, .webm and .mp4 videos are all supported (use a video instead of a GIF: smaller and sharper). Drag a thumbnail to reorder (or use the arrows). Order here is the order on the site. Removing an item only takes it out of the list; the file stays in the folder.</p>
 
-        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload images">
-            <strong>Drop images here or click to choose</strong>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload images or videos">
+            <strong>Drop images or videos (.webm, .mp4) here or click to choose</strong>
             <span>Several at once is fine</span>
         </div>
 
         <div class="add-name">
-            <input type="text" id="name-input" placeholder="Already in the folder? Type the file name, e.g. sketch_07.jpg" aria-label="File name to add">
+            <input type="text" id="name-input" placeholder="Already in the folder? Type the file name, e.g. sketch_07.jpg or loop_01.webm" aria-label="File name to add">
             <button class="btn" id="btn-add-name">Add name</button>
         </div>
 
@@ -236,7 +249,7 @@ details .fields { margin-top: 14px; }
 
     <section class="panel">
         <h2>Lottie animations</h2>
-        <p class="hint">Files are saved to the Lottie folder. Order here is the order on the site and on the home page preview (which shows the first 6). Removing an animation only takes it out of the list; the file stays in the folder.</p>
+        <p class="hint">Files are saved to the Lottie folder. Drag a thumbnail to reorder (or use the arrows). Order here is the order on the site and on the home page preview (which shows the first 6). Removing an animation only takes it out of the list; the file stays in the folder.</p>
 
         <div class="drop" id="drop-lottie" tabindex="0" role="button" aria-label="Upload Lottie JSON files">
             <strong>Drop .json files here or click to choose</strong>
@@ -585,9 +598,11 @@ async function previewFor(name) {
     return url;
 }
 
+const isVideoName = n => /\.(webm|mp4)$/i.test(n || "");
+
 function renderImages() {
     const box = $("#tiles");
-    if (!cfg.workbookImages.length) { box.innerHTML = '<p class="empty">No images yet. Upload some above.</p>'; return; }
+    if (!cfg.workbookImages.length) { box.innerHTML = '<p class="empty">Nothing here yet. Upload some images or videos above.</p>'; return; }
     box.innerHTML = "";
     cfg.workbookImages.forEach((entry, i) => {
         // Normalise: accept both legacy plain strings and new { file, tag, title } objects
@@ -597,8 +612,9 @@ function renderImages() {
 
         const tile = document.createElement("div");
         tile.className = "tile";
+        tile.dataset.idx = i;
         tile.innerHTML = `
-            <div class="tile-thumb"><img alt="" hidden><span class="missing" hidden>File not found in folder</span></div>
+            <div class="tile-thumb" draggable="true" title="Drag to reorder">${isVideoName(name) ? '<video muted loop playsinline preload="metadata" hidden></video>' : '<img alt="" hidden>'}<span class="missing" hidden>File not found in folder</span></div>
             <label class="f" style="font-size:11px;color:var(--muted);">File name
                 <input type="text" value="${esc(name)}" data-img-name="${i}" aria-label="File name for image ${i + 1}" spellcheck="false">
             </label>
@@ -614,16 +630,25 @@ function renderImages() {
                 <button class="btn sm danger" data-act="img-remove" data-i="${i}" aria-label="Remove from list">✕</button>
             </div>`;
         box.appendChild(tile);
-        const img = $("img", tile), miss = $(".missing", tile);
-        img.onload = () => { img.hidden = false; miss.hidden = true; };
-        img.onerror = () => { img.hidden = true; miss.hidden = false; };
-        previewFor(name).then(url => { if (url) img.src = url; else miss.hidden = false; });
+        const miss = $(".missing", tile);
+        if (isVideoName(name)) {
+            const vid = $("video", tile);
+            vid.muted = true;
+            vid.onloadeddata = () => { vid.hidden = false; miss.hidden = true; const p = vid.play(); if (p && p.catch) p.catch(() => {}); };
+            vid.onerror = () => { vid.hidden = true; miss.hidden = false; };
+            previewFor(name).then(url => { if (url) vid.src = url; else miss.hidden = false; });
+        } else {
+            const img = $("img", tile);
+            img.onload = () => { img.hidden = false; miss.hidden = true; };
+            img.onerror = () => { img.hidden = true; miss.hidden = false; };
+            previewFor(name).then(url => { if (url) img.src = url; else miss.hidden = false; });
+        }
     });
 }
 
 async function addFiles(fileList) {
-    const files = [...fileList].filter(f => f.type.startsWith("image/"));
-    if (!files.length) { toast("No image files in that selection.", "warn"); return; }
+    const files = [...fileList].filter(f => f.type.startsWith("image/") || /^video\/(webm|mp4)$/.test(f.type) || /\.(webm|mp4)$/i.test(f.name));
+    if (!files.length) { toast("No image, .webm or .mp4 files in that selection.", "warn"); return; }
     let added = 0;
     for (const f of files) {
         const name = await uniqueName(sanitizeName(f.name));
@@ -637,8 +662,8 @@ async function addFiles(fileList) {
     }
     if (added) {
         setDirty(true); renderImages(); updateStatus();
-        toast(dirHandle ? `Saved ${added} image${added > 1 ? "s" : ""} to the folder. Press Save to update config.js.`
-                        : `Added ${added} image${added > 1 ? "s" : ""}. Download them and put them in ${cfg.workbookPath}`, dirHandle ? "" : "warn");
+        toast(dirHandle ? `Saved ${added} file${added > 1 ? "s" : ""} to the folder. Press Save to update config.js.`
+                        : `Added ${added} file${added > 1 ? "s" : ""}. Download them and put them in ${cfg.workbookPath}`, dirHandle ? "" : "warn");
     }
 }
 
@@ -668,8 +693,9 @@ function renderLotties() {
 
         const tile = document.createElement("div");
         tile.className = "tile";
+        tile.dataset.idx = i;
         tile.innerHTML = `
-            <div class="tile-thumb lottie-badge">JSON</div>
+            <div class="tile-thumb lottie-badge" draggable="true" title="Drag to reorder">JSON</div>
             <label class="f" style="font-size:11px;color:var(--muted);">File name
                 <input type="text" value="${esc(name)}" data-lottie-name="${i}" aria-label="File name for animation ${i + 1}" spellcheck="false">
             </label>
@@ -808,8 +834,9 @@ function renderVideos() {
         const n = cfg.showcaseVideos.length;
         const card = document.createElement("div");
         card.className = "video";
+        card.dataset.idx = i;
         card.innerHTML = `
-            <div class="vthumb"></div>
+            <div class="vthumb" draggable="true" title="Drag to reorder"></div>
             <div class="vfields">
                 <label class="f">Platform
                     <select data-vf="platform" data-i="${i}">
@@ -1035,9 +1062,79 @@ window.addEventListener("keydown", e => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
 });
 
+/* ============================ Drag to reorder ============================ */
+// Lets you drag a thumbnail to a new spot in any of the three lists.
+// A green bar shows where it will land; the page scrolls by itself near the top/bottom edge.
+function enableDragSort(boxSel, itemSel, axis, getList, afterMove) {
+    const box = $(boxSel);
+    let from = null, target = null;   // target = { idx, after }
+
+    const clearMarks = () => box.querySelectorAll(".drop-before, .drop-after, .dragging")
+        .forEach(el => el.classList.remove("drop-before", "drop-after", "dragging"));
+    const reset = () => { clearMarks(); from = null; target = null; };
+
+    box.addEventListener("dragstart", e => {
+        const item = e.target.closest ? e.target.closest(itemSel) : null;
+        // only start when the thumbnail itself is grabbed (not a text box)
+        if (!item || !e.target.matches('[draggable="true"]')) { return; }
+        from = +item.dataset.idx;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", String(from));
+        try { e.dataTransfer.setDragImage(item, 24, 24); } catch {}
+        setTimeout(() => item.classList.add("dragging"), 0);
+    });
+
+    box.addEventListener("dragover", e => {
+        if (from === null) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+
+        const item = e.target.closest ? e.target.closest(itemSel) : null;
+        if (item) {
+            const r = item.getBoundingClientRect();
+            const after = axis === "x" ? e.clientX > r.left + r.width / 2
+                                       : e.clientY > r.top + r.height / 2;
+            const idx = +item.dataset.idx;
+            if (!target || target.idx !== idx || target.after !== after) {
+                box.querySelectorAll(".drop-before, .drop-after").forEach(el => el.classList.remove("drop-before", "drop-after"));
+                item.classList.add(after ? "drop-after" : "drop-before");
+                target = { idx, after };
+            }
+        }
+
+        // auto-scroll when the pointer is near the top or bottom of the window
+        const edge = 90, speed = 18;
+        if (e.clientY < edge) window.scrollBy(0, -speed);
+        else if (window.innerHeight - e.clientY < edge) window.scrollBy(0, speed);
+    });
+
+    box.addEventListener("drop", e => {
+        if (from === null) return;
+        e.preventDefault();
+        if (target) {
+            const list = getList();
+            let pos = target.idx + (target.after ? 1 : 0);
+            if (from < pos) pos--;
+            if (pos !== from) {
+                const [moved] = list.splice(from, 1);
+                list.splice(pos, 0, moved);
+                reset();
+                afterMove();
+                return;
+            }
+        }
+        reset();
+    });
+
+    box.addEventListener("dragend", reset);
+}
+
 /* ============================ Init ============================ */
 (async function init() {
     buildForms();
+    enableDragSort("#tiles", ".tile", "x", () => cfg.workbookImages, () => { setDirty(true); renderImages(); });
+    enableDragSort("#tiles-lottie", ".tile", "x", () => cfg.lottieFiles, () => { setDirty(true); renderLotties(); });
+    enableDragSort("#videos", ".video", "y", () => cfg.showcaseVideos, () => { maybeRenumber(); setDirty(true); renderVideos(); });
     renderImages();
     renderLotties();
     renderVideos();

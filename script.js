@@ -332,33 +332,76 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         };
 
+        // .webm and .mp4 files are shown as silent looping videos (a lighter replacement for GIFs)
+        const isVideoFile = name => /\.(webm|mp4)$/i.test(name || "");
+
+        // One shared watcher: a video plays only while it is on screen, and pauses when scrolled away
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(en => {
+                const v = en.target;
+                if (en.isIntersecting) {
+                    const p = v.play();
+                    if (p && p.catch) p.catch(() => {});
+                } else {
+                    v.pause();
+                }
+            });
+        }, { rootMargin: "200px 0px", threshold: 0.01 });
+
         workbookContainer.innerHTML = "";
 
         images.forEach((rawEntry, i) => {
             const entry = normalizeEntry(rawEntry, i);
+            const isVideo = isVideoFile(entry.file);
 
             const card = document.createElement("div");
             const thumb = document.createElement("div");
-            const img = document.createElement("img");
+            const media = document.createElement(isVideo ? "video" : "img");
+            const fileSrc = `${rootPath}${SITE_CONFIG.workbookPath}${entry.file}`;
 
-            img.loading = "lazy";
-            img.decoding = "async";
-            img.fetchPriority = "low";
-            img.classList.add("js-lightbox");
+            media.classList.add("js-lightbox");
 
             let usingFallback = false;
-            img.addEventListener("error", () => {
-                if (usingFallback) return;
-                usingFallback = true;
-                img.src = fallbackSrc;
-            });
-            img.src = `${rootPath}${SITE_CONFIG.workbookPath}${entry.file}`;
+
+            if (isVideo) {
+                media.muted = true;
+                media.setAttribute("muted", "");
+                media.loop = true;
+                media.playsInline = true;
+                media.setAttribute("playsinline", "");
+                media.preload = "metadata";
+                media.setAttribute("aria-label", entry.title);
+
+                // If the video file is missing or broken, swap in the fallback image
+                media.addEventListener("error", () => {
+                    if (usingFallback) return;
+                    usingFallback = true;
+                    videoObserver.unobserve(media);
+                    const fb = document.createElement("img");
+                    fb.className = media.className;
+                    fb.alt = entry.title;
+                    fb.src = fallbackSrc;
+                    media.replaceWith(fb);
+                });
+                media.src = fileSrc;
+            } else {
+                media.loading = "lazy";
+                media.decoding = "async";
+                media.fetchPriority = "low";
+                media.alt = entry.title;
+
+                media.addEventListener("error", () => {
+                    if (usingFallback) return;
+                    usingFallback = true;
+                    media.src = fallbackSrc;
+                });
+                media.src = fileSrc;
+            }
 
             if (isPreview) {
                 // Homepage preview: fixed 16:9 card matching Showcase/Lottie cards
                 card.className = "card";
                 thumb.className = "thumb-container";
-                img.alt = entry.title;
 
                 const content = document.createElement("div");
                 content.className = "card-content";
@@ -367,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3>${entry.title}</h3>
                 `;
 
-                thumb.appendChild(img);
+                thumb.appendChild(media);
                 card.appendChild(thumb);
                 card.appendChild(content);
             } else {
@@ -376,17 +419,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.className = "card image-card";
                 thumb.className = "thumb-container image-thumb";
 
-                img.alt = entry.title;
-
-                // Let the image set its own natural ratio once loaded;
-                // don't preset an aspect-ratio that fights the image dimensions.
-                img.addEventListener("load", () => {
-                    if (!usingFallback && img.naturalWidth && img.naturalHeight) {
-                        // Force the container to match the image's natural size so it
-                        // never stretches beyond the actual pixel dimensions.
-                        thumb.style.maxHeight = img.naturalHeight + "px";
-                    }
-                });
+                // Let the image/video set its own natural ratio once loaded;
+                // don't preset an aspect-ratio that fights the real dimensions.
+                if (isVideo) {
+                    media.addEventListener("loadedmetadata", () => {
+                        if (!usingFallback && media.videoHeight) {
+                            thumb.style.maxHeight = media.videoHeight + "px";
+                        }
+                    });
+                } else {
+                    media.addEventListener("load", () => {
+                        if (!usingFallback && media.naturalWidth && media.naturalHeight) {
+                            // Force the container to match the image's natural size so it
+                            // never stretches beyond the actual pixel dimensions.
+                            thumb.style.maxHeight = media.naturalHeight + "px";
+                        }
+                    });
+                }
 
                 const content = document.createElement("div");
                 content.className = "card-content";
@@ -395,12 +444,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3>${entry.title}</h3>
                 `;
 
-                thumb.appendChild(img);
+                thumb.appendChild(media);
                 card.appendChild(thumb);
                 card.appendChild(content);
             }
 
             workbookContainer.appendChild(card);
+            if (isVideo) videoObserver.observe(media);
         });
     }
 });
@@ -589,44 +639,64 @@ document.addEventListener('DOMContentLoaded', function () {
         lightboxModal.innerHTML = `
             <span class="lightbox-close">&times;</span>
             <img id="lightbox-img" src="" alt="Zoomed view">
+            <video id="lightbox-video" muted loop playsinline controls style="display:none;"></video>
         `;
         document.body.appendChild(lightboxModal);
     }
 
-    // 2. Event listener: Open lightbox on clicking any workbook image or image card
+    const lightbox = document.getElementById('image-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxVideo = document.getElementById('lightbox-video');
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = ''; // Restore background scrolling
+        if (lightboxVideo) {
+            lightboxVideo.pause();
+            lightboxVideo.removeAttribute('src');
+            lightboxVideo.load();
+        }
+    }
+
+    // 2. Event listener: Open lightbox on clicking any workbook image/video or image card
     document.addEventListener('click', function (e) {
-        const imgTarget = e.target.closest('.image-card img, .thumb-container.image-thumb img, .workbook-item img, .js-lightbox');
-        if (imgTarget) {
+        const target = e.target.closest('.image-card img, .image-card video, .thumb-container.image-thumb img, .thumb-container.image-thumb video, .workbook-item img, .js-lightbox');
+        if (target && lightbox && lightboxImg) {
             e.preventDefault();
-            const lightbox = document.getElementById('image-lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            if (lightbox && lightboxImg) {
-                lightboxImg.src = imgTarget.src;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Lock background scrolling
+            if (target.tagName === 'VIDEO' && lightboxVideo) {
+                // Videos open in the lightbox as a looping player
+                lightboxImg.style.display = 'none';
+                lightboxVideo.style.display = 'block';
+                lightboxVideo.src = target.currentSrc || target.src;
+                const p = lightboxVideo.play();
+                if (p && p.catch) p.catch(() => {});
+            } else {
+                if (lightboxVideo) {
+                    lightboxVideo.pause();
+                    lightboxVideo.style.display = 'none';
+                }
+                lightboxImg.style.display = '';
+                lightboxImg.src = target.src;
             }
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Lock background scrolling
         }
     });
 
     // 3. Event listener: Close lightbox when clicking close button, background, or pressing Escape key
     document.addEventListener('click', function (e) {
-        const lightbox = document.getElementById('image-lightbox');
         if (lightbox && (e.target.id === 'image-lightbox' || e.target.classList.contains('lightbox-close'))) {
-            lightbox.classList.remove('active');
-            document.body.style.overflow = ''; // Restore background scrolling
+            closeLightbox();
         }
     });
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            const lightbox = document.getElementById('image-lightbox');
-            if (lightbox && lightbox.classList.contains('active')) {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+            closeLightbox();
         }
     });
 });
+
 
 //-------------- 7. Automatic Lottie Animation Injector ------------------------------
 

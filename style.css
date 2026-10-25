@@ -333,7 +333,8 @@ a.card-link {
     background-color: #000;
 }
 
-.thumb-container img {
+.thumb-container img,
+.thumb-container video {
     position: absolute;
     top: 0;
     left: 0;
@@ -343,7 +344,8 @@ a.card-link {
     transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-.card:hover .thumb-container img {
+.card:hover .thumb-container img,
+.card:hover .thumb-container video {
     transform: scale(1.04);
     filter: brightness(0.85);
 }
@@ -404,7 +406,8 @@ a.card-link {
     overflow: hidden;
 }
 
-.thumb-container.image-thumb img {
+.thumb-container.image-thumb img,
+.thumb-container.image-thumb video {
     position: static;
     width: 100%;
     /* height must stay auto so the image never stretches beyond its natural size */
@@ -480,7 +483,6 @@ a.card-link {
     cursor: grab;
     padding: 6px 0 16px 0;
     margin-bottom: 12px;
-	user-select: none;
 }
 
 .toolkit-track-wrapper::-webkit-scrollbar {
@@ -793,7 +795,9 @@ a.view-all {
 
 /* Cursor hint to indicate images are zoomable */
 .image-card img, 
+.image-card video, 
 .thumb-container.image-thumb img, 
+.thumb-container.image-thumb video, 
 .workbook-item img,
 .js-lightbox {
     cursor: zoom-in;
@@ -823,7 +827,8 @@ a.view-all {
 }
 
 /* Enlarged Full-Res Image Styling */
-.lightbox-modal img {
+.lightbox-modal img,
+.lightbox-modal video {
     max-width: 92%;
     max-height: 90vh;
     object-fit: contain;

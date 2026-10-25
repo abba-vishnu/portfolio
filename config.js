@@ -27,51 +27,216 @@ const SITE_CONFIG = {
 
     // Workbook images: each entry has a file name, a tag label, and a display title
     workbookImages: [
-        { file: "Animals-RunWild.webp",                              tag: "ILLUSTRATION",  title: "Animals — Run Wild" },
-        { file: "Apitive-APICallTracing.webp",                       tag: "PRODUCT UI",    title: "Apitive — API Call Tracing" },
-        { file: "Apitive-DesignFirst.webp",                          tag: "PRODUCT UI",    title: "Apitive — Design First" },
-        { file: "Apitive-DeveloperPortal.webp",                      tag: "PRODUCT UI",    title: "Apitive — Developer Portal" },
-        { file: "Apitive-Gateway.webp",                              tag: "PRODUCT UI",    title: "Apitive — Gateway" },
-        { file: "Apitive-PersonaBasedWorkflow.webp",                 tag: "PRODUCT UI",    title: "Apitive — Persona Based Workflow" },
-        { file: "Apitive-PowerfulPolicyEngine.webp",                 tag: "PRODUCT UI",    title: "Apitive — Powerful Policy Engine" },
-        { file: "Apitive-ResponseCaching.webp",                      tag: "PRODUCT UI",    title: "Apitive — Response Caching" },
-        { file: "Cartoon-WrongTool-Cars.webp",                       tag: "CARTOON",       title: "Wrong Tool — Cars" },
-        { file: "Cartoon-WrongTool-Digging.webp",                    tag: "CARTOON",       title: "Wrong Tool — Digging" },
-        { file: "Character-01.webp",                                 tag: "CHARACTER",     title: "Character Study 01" },
-        { file: "Character-02.webp",                                 tag: "CHARACTER",     title: "Character Study 02" },
-        { file: "Composability.webp",                                tag: "CONCEPT",       title: "Composability" },
-        { file: "Corridor-We-are-about-V2.webp",                     tag: "BRAND",         title: "Corridor — We Are About" },
-        { file: "export-deselect-all.webp",                          tag: "PRODUCT UI",    title: "Export — Deselect All" },
-        { file: "export-listing-info.webp",                          tag: "PRODUCT UI",    title: "Export — Listing Info" },
-        { file: "export-product-info.webp",                          tag: "PRODUCT UI",    title: "Export — Product Info" },
-        { file: "full-stack-01.webp",                                tag: "ILLUSTRATION",  title: "Full Stack 01" },
-        { file: "full-stack-02.webp",                                tag: "ILLUSTRATION",  title: "Full Stack 02" },
-        { file: "full-stack-03.webp",                                tag: "ILLUSTRATION",  title: "Full Stack 03" },
-        { file: "full-stack-04.webp",                                tag: "ILLUSTRATION",  title: "Full Stack 04" },
-        { file: "Gig-Illustration.webp",                             tag: "ILLUSTRATION",  title: "Gig Illustration" },
-        { file: "HeroBanner-V2.webp",                                tag: "BRAND",         title: "Hero Banner V2" },
-        { file: "how-to-convert-identifiers.webp",                   tag: "PRODUCT UI",    title: "How to Convert Identifiers" },
-        { file: "Image-Banner-aPaaS.webp",                           tag: "BANNER",        title: "aPaaS Banner" },
-        { file: "Image-Banner-EnterpriseSoftwareDevelopment.webp",   tag: "BANNER",        title: "Enterprise Software Development Banner" },
-        { file: "Image-Banner-ExpertServices.webp",                  tag: "BANNER",        title: "Expert Services Banner" },
-        { file: "Image-Banner-NewAppDevelopment.webp",               tag: "BANNER",        title: "New App Development Banner" },
-        { file: "Image-Banner-PillarPage-AppModernization.webp",     tag: "BANNER",        title: "App Modernization Banner" },
-        { file: "Image-Banner-Prefabs.webp",                         tag: "BANNER",        title: "Prefabs Banner" },
-        { file: "Image-Banner-RAD-Studio.webp",                      tag: "BANNER",        title: "RAD Studio Banner" },
-        { file: "Image-Banner-Solutions-Enterprises.webp",           tag: "BANNER",        title: "Solutions — Enterprises Banner" },
-        { file: "Image-Banner-Telecom.webp",                         tag: "BANNER",        title: "Telecom Banner" },
-        { file: "Image-Banner-Training.webp",                        tag: "BANNER",        title: "Training Banner" },
-        { file: "Image-Banner-WM-Studio-App.webp",                   tag: "BANNER",        title: "WM Studio App Banner" },
-        { file: "Image-Gig-Icons.webp",                              tag: "ILLUSTRATION",  title: "Gig Icons" },
-        { file: "Image-Partner-SalesAndPreSales.webp",               tag: "ILLUSTRATION",  title: "Partner — Sales & Pre-Sales" },
-        { file: "import-product-identifiers.webp",                   tag: "PRODUCT UI",    title: "Import Product Identifiers" },
-        { file: "JumpstartDesign.webp",                              tag: "CONCEPT",       title: "Jumpstart Design" },
-        { file: "LowCode-vs-LowCode.webp",                           tag: "CONCEPT",       title: "Low-Code vs Low-Code" },
-        { file: "Madras-High-Court.webp",                            tag: "ILLUSTRATION",  title: "Madras High Court" },
-        { file: "Mascot-new-gen-yogi.webp",                          tag: "CHARACTER",     title: "Mascot — New Gen Yogi" },
-        { file: "People.webp",                                       tag: "ILLUSTRATION",  title: "People" },
-        { file: "Prefabs-Banner-V01.webp",                           tag: "BANNER",        title: "Prefabs Banner V01" },
-        { file: "Spotcues-BlogBanner-02.webp",                       tag: "BRAND",         title: "SpotCues Blog Banner 02" }
+        {
+            file: "Animals-RunWild.webp",
+            tag: "ILLUSTRATION",
+            title: "Animals — Run Wild"
+        },
+        {
+            file: "Image-Banner-WM-Studio-App.webp",
+            tag: "BANNER",
+            title: "WM Studio App Banner"
+        },
+        {
+            file: "Gig-Illustration.webp",
+            tag: "ILLUSTRATION",
+            title: "Gig Illustration"
+        },
+        {
+            file: "People.webp",
+            tag: "ILLUSTRATION",
+            title: "People"
+        },
+        {
+            file: "Mascot-new-gen-yogi.webp",
+            tag: "CHARACTER",
+            title: "Mascot — New Gen Yogi"
+        },
+        {
+            file: "Image-Banner-RAD-Studio.webp",
+            tag: "BANNER",
+            title: "RAD Studio Banner"
+        },
+        {
+            file: "Cartoon-WrongTool-Cars.webp",
+            tag: "CARTOON",
+            title: "Wrong Tool — Cars"
+        },
+        {
+            file: "Apitive-DesignFirst.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Design First"
+        },
+        {
+            file: "Apitive-DeveloperPortal.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Developer Portal"
+        },
+        {
+            file: "Apitive-Gateway.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Gateway"
+        },
+        {
+            file: "Apitive-PowerfulPolicyEngine.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Powerful Policy Engine"
+        },
+        {
+            file: "Apitive-APICallTracing.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — API Call Tracing"
+        },
+        {
+            file: "Apitive-ResponseCaching.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Response Caching"
+        },
+        {
+            file: "Cartoon-WrongTool-Digging.webp",
+            tag: "CARTOON",
+            title: "Wrong Tool — Digging"
+        },
+        {
+            file: "Corridor-We-are-about-V2.webp",
+            tag: "BRAND",
+            title: "Corridor — We Are About"
+        },
+        {
+            file: "HeroBanner-V2.webp",
+            tag: "BRAND",
+            title: "Hero Banner V2"
+        },
+        {
+            file: "Composability.webp",
+            tag: "CONCEPT",
+            title: "Composability"
+        },
+        {
+            file: "Character-01.webp",
+            tag: "CHARACTER",
+            title: "Character Study 01"
+        },
+        {
+            file: "Spotcues-BlogBanner-02.webp",
+            tag: "BRAND",
+            title: "SpotCues Blog Banner 02"
+        },
+        {
+            file: "full-stack-01.webp",
+            tag: "ILLUSTRATION",
+            title: "Full Stack 01"
+        },
+        {
+            file: "Character-02.webp",
+            tag: "CHARACTER",
+            title: "Character Study 02"
+        },
+        {
+            file: "Image-Banner-aPaaS.webp",
+            tag: "BANNER",
+            title: "aPaaS Banner"
+        },
+        {
+            file: "Image-Banner-EnterpriseSoftwareDevelopment.webp",
+            tag: "BANNER",
+            title: "Enterprise Software Development Banner"
+        },
+        {
+            file: "Image-Banner-ExpertServices.webp",
+            tag: "BANNER",
+            title: "Expert Services Banner"
+        },
+        {
+            file: "Image-Banner-NewAppDevelopment.webp",
+            tag: "BANNER",
+            title: "New App Development Banner"
+        },
+        {
+            file: "Image-Banner-PillarPage-AppModernization.webp",
+            tag: "BANNER",
+            title: "App Modernization Banner"
+        },
+        {
+            file: "Image-Banner-Prefabs.webp",
+            tag: "BANNER",
+            title: "Prefabs Banner"
+        },
+        {
+            file: "Image-Banner-Solutions-Enterprises.webp",
+            tag: "BANNER",
+            title: "Solutions — Enterprises Banner"
+        },
+        {
+            file: "Image-Banner-Telecom.webp",
+            tag: "BANNER",
+            title: "Telecom Banner"
+        },
+        {
+            file: "Image-Banner-Training.webp",
+            tag: "BANNER",
+            title: "Training Banner"
+        },
+        {
+            file: "Image-Gig-Icons.webp",
+            tag: "ILLUSTRATION",
+            title: "Gig Icons"
+        },
+        {
+            file: "Image-Partner-SalesAndPreSales.webp",
+            tag: "ILLUSTRATION",
+            title: "Partner — Sales & Pre-Sales"
+        },
+        {
+            file: "Prefabs-Banner-V01.webp",
+            tag: "BANNER",
+            title: "Prefabs Banner V01"
+        },
+        {
+            file: "Madras-High-Court.webp",
+            tag: "ILLUSTRATION",
+            title: "Madras High Court"
+        },
+        {
+            file: "JumpstartDesign.webp",
+            tag: "CONCEPT",
+            title: "Jumpstart Design"
+        },
+        {
+            file: "LowCode-vs-LowCode.webp",
+            tag: "CONCEPT",
+            title: "Low-Code vs Low-Code"
+        },
+        {
+            file: "Apitive-PersonaBasedWorkflow.webp",
+            tag: "PRODUCT UI",
+            title: "Apitive — Persona Based Workflow"
+        },
+        {
+            file: "import-product-identifiers.webp",
+            tag: "PRODUCT UI",
+            title: "Import Product Identifiers"
+        },
+        {
+            file: "how-to-convert-identifiers.webp",
+            tag: "PRODUCT UI",
+            title: "How to Convert Identifiers"
+        },
+        {
+            file: "JustAskPooch.webm",
+            tag: "WORKBOOK",
+            title: "JustAskPooch"
+        },
+        {
+            file: "JustAskPoochCharacter.webm",
+            tag: "WORKBOOK",
+            title: "JustAskPoochCharacter"
+        },
+        {
+            file: "JustAskPoochCharacterAlone.webm",
+            tag: "WORKBOOK",
+            title: "JustAskPoochCharacterAlone"
+        }
     ],
     workbookPath: "assets/images/workbook/",
 
@@ -80,13 +245,41 @@ const SITE_CONFIG = {
 
     // Lottie animations: each entry has a file name, a tag label, and a display title
     lottieFiles: [
-        { file: "WM-Hero-Banner-Anim.json",          tag: "WAVEMAKER",  title: "WM Hero Banner Animation" },
-        { file: "AI-app-creation-with-apis.json",    tag: "AI",         title: "AI App Creation with APIs" },
-        { file: "AI-app-creation-V1.json",           tag: "AI",         title: "AI App Creation V1" },
-        { file: "AI-App-Creation-V03.json",          tag: "AI",         title: "AI App Creation V03" },
-        { file: "BlinkLogoAnimation.json",           tag: "BRAND",      title: "Blink Logo Animation" },
-        { file: "botSurfing.json",                   tag: "CHARACTER",  title: "Bot Surfing" },
-        { file: "MazeAnim.json",                     tag: "CONCEPT",    title: "Maze Animation" }
+        {
+            file: "WM-Hero-Banner-Anim.json",
+            tag: "WAVEMAKER",
+            title: "WM Hero Banner Animation"
+        },
+        {
+            file: "AI-app-creation-with-apis.json",
+            tag: "AI",
+            title: "AI App Creation with APIs"
+        },
+        {
+            file: "AI-app-creation-V1.json",
+            tag: "AI",
+            title: "AI App Creation V1"
+        },
+        {
+            file: "AI-App-Creation-V03.json",
+            tag: "AI",
+            title: "AI App Creation V03"
+        },
+        {
+            file: "BlinkLogoAnimation.json",
+            tag: "BRAND",
+            title: "Blink Logo Animation"
+        },
+        {
+            file: "botSurfing.json",
+            tag: "CHARACTER",
+            title: "Bot Surfing"
+        },
+        {
+            file: "MazeAnim.json",
+            tag: "CONCEPT",
+            title: "Maze Animation"
+        }
     ],
     lottiePath: "assets/lottie/",
 
