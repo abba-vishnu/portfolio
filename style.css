@@ -480,6 +480,7 @@ a.card-link {
     cursor: grab;
     padding: 6px 0 16px 0;
     margin-bottom: 12px;
+	user-select: none;
 }
 
 .toolkit-track-wrapper::-webkit-scrollbar {

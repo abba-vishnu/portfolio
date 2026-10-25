@@ -481,66 +481,98 @@ window.addEventListener('resize', updateHeaderOffset);
 document.addEventListener("DOMContentLoaded", () => {
     const wrappers = document.querySelectorAll('.toolkit-track-wrapper');
 
+    // Scroll speed in pixels per second. Lower = slower. (Old speed was about 60)
+    const PIXELS_PER_SECOND = 30;
+
     wrappers.forEach(wrapper => {
         const track = wrapper.querySelector('.toolkit-track');
         if (!wrapper || !track) return;
 
-        // Duplicate inner items for a seamless infinite loop
-        track.innerHTML += track.innerHTML;
+        const originals = Array.from(track.children);
+        if (originals.length === 0) return;
+        const count = originals.length;
 
-        let isPaused = false;
-        const speed = 1;
+        let setWidth = 0;   // width of ONE full set of items
+        let pos = 0;        // our own smooth scroll position
+        let lastSet = 0;    // the scroll position the browser last accepted
+        let isDown = false;
+        let startX = 0, scrollLeftStart = 0;
+        let lastTime = null;
 
-        function autoScroll() {
-            if (!isPaused) {
-                wrapper.scrollLeft += speed;
-                const halfWidth = track.scrollWidth / 2;
-                if (halfWidth > 0 && wrapper.scrollLeft >= halfWidth) {
-                    wrapper.scrollLeft = 0;
-                }
+        // Adds copies until the strip is long enough for ANY screen width
+        function measure() {
+            const first = track.children[0];
+            if (track.children.length === count) {
+                originals.forEach(el => track.appendChild(el.cloneNode(true)));
             }
-            requestAnimationFrame(autoScroll);
+            setWidth = track.children[count].offsetLeft - first.offsetLeft;
+            if (setWidth <= 0) return;
+
+            let guard = 0;
+            while (guard++ < 30) {
+                const last = track.children[track.children.length - 1];
+                const totalWidth = last.offsetLeft + last.offsetWidth - first.offsetLeft;
+                if (totalWidth >= setWidth + wrapper.clientWidth + 4) break;
+                originals.forEach(el => track.appendChild(el.cloneNode(true)));
+            }
         }
 
-        requestAnimationFrame(autoScroll);
+        measure();
+        window.addEventListener('load', measure);
+        window.addEventListener('resize', measure);
+        // Re-measure whenever an image inside the strip finishes loading
+        track.addEventListener('load', measure, true);
 
-        wrapper.addEventListener('mouseenter', () => { isPaused = true; });
-        wrapper.addEventListener('mouseleave', () => { isPaused = false; });
+        function tick(now) {
+            if (lastTime === null) lastTime = now;
+            const dt = Math.min(now - lastTime, 100);
+            lastTime = now;
 
-        let isDown = false;
-        let startX, scrollLeftStart;
+            if (setWidth > 0) {
+                const cur = wrapper.scrollLeft;
 
+                // If the user dragged or used the wheel, follow their position
+                if (Math.abs(cur - lastSet) > 0.01) {
+                    pos = cur;
+                    if (pos < 1) pos += setWidth;   // dragged to the left edge: jump to the matching spot
+                }
+
+                // Auto-scroll always runs, except while the mouse button is held down
+                if (!isDown) pos += PIXELS_PER_SECOND * dt / 1000;
+
+                // Seamless loop
+                if (pos >= setWidth) pos -= setWidth;
+
+                wrapper.scrollLeft = pos;
+                lastSet = wrapper.scrollLeft;
+            }
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+
+        // Drag to scrub
         wrapper.addEventListener('mousedown', (e) => {
             isDown = true;
-            isPaused = true;
             startX = e.pageX - wrapper.offsetLeft;
             scrollLeftStart = wrapper.scrollLeft;
         });
 
-        window.addEventListener('mouseup', () => {
-            if (isDown) {
-                isDown = false;
-                isPaused = false;
-            }
-        });
+        // Releasing anywhere (even outside the strip or window) resumes scrolling
+        const release = () => { isDown = false; };
+        window.addEventListener('mouseup', release);
+        window.addEventListener('blur', release);
+        document.addEventListener('mouseleave', release);
 
         wrapper.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - wrapper.offsetLeft;
-            const walk = (x - startX) * 1.5;
-            wrapper.scrollLeft = scrollLeftStart - walk;
+            wrapper.scrollLeft = scrollLeftStart - (x - startX) * 1.5;
         });
 
         wrapper.addEventListener('wheel', (e) => {
             e.preventDefault();
-            isPaused = true;
             wrapper.scrollLeft += e.deltaY * 0.5;
-
-            clearTimeout(wrapper.wheelTimeout);
-            wrapper.wheelTimeout = setTimeout(() => {
-                isPaused = false;
-            }, 800);
         }, { passive: false });
     });
 });
