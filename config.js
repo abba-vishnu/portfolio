@@ -10,11 +10,7 @@ const SITE_CONFIG = {
     footerText: "Visual design, in motion.",
 
     // Target resume file name
-    //resumeFile: "assets/Abba_Vishnu_Resume.pdf",//"assets/Abba_Vishnu_Resume.docx",
-	
-	// Target resume file paths
-	resumePdf: "assets/Abba_Vishnu_Resume.pdf",
-	resumeDocx: "assets/Abba_Vishnu_Resume.docx",
+    resumeFile: "assets/Resume.docx",
 
     // Social links
     socials: {
@@ -31,10 +27,10 @@ const SITE_CONFIG = {
 
     // Number of masonry columns on desktop/tablet (mobile automatically uses 2)
     workbookMasonryColumns: 4,
-	
-	// Number of video columns on desktop/tablet (mobile automatically uses 1)
-	showcaseVideoColumns: 4,
-	
+
+    // Number of columns in the Showcase video grid on desktop; responsive breakpoints reduce it
+    showcaseVideoColumns: 4,
+
     // Show image titles under Workbook cards
     workbookShowTitles: false,
 
@@ -52,6 +48,11 @@ const SITE_CONFIG = {
             file: "Image-Banner-WM-Studio-App.webp",
             tag: "BANNER",
             title: "WM Studio App Banner"
+        },
+        {
+            file: "Enterprise_Concept_Anim.mp4",
+            tag: "WORKBOOK",
+            title: "Enterprise Concept Anim"
         },
         {
             file: "Gig-Illustration.webp",
@@ -214,6 +215,16 @@ const SITE_CONFIG = {
             title: "Madras High Court"
         },
         {
+            file: "Storyboard.png",
+            tag: "WORKBOOK",
+            title: "Storyboard"
+        },
+        {
+            file: "Tetherfi-StoryBoard.jpg",
+            tag: "WORKBOOK",
+            title: "Tetherfi StoryBoard"
+        },
+        {
             file: "JumpstartDesign.webp",
             tag: "CONCEPT",
             title: "Jumpstart Design"
@@ -237,21 +248,6 @@ const SITE_CONFIG = {
             file: "how-to-convert-identifiers.webp",
             tag: "PRODUCT UI",
             title: "How to Convert Identifiers"
-        },
-        {
-            file: "JustAskPooch.webm",
-            tag: "WORKBOOK",
-            title: "JustAskPooch"
-        },
-        {
-            file: "JustAskPoochCharacter.webm",
-            tag: "WORKBOOK",
-            title: "JustAskPoochCharacter"
-        },
-        {
-            file: "JustAskPoochCharacterAlone.webm",
-            tag: "WORKBOOK",
-            title: "JustAskPoochCharacterAlone"
         }
     ],
     workbookPath: "assets/images/workbook/",
@@ -262,39 +258,89 @@ const SITE_CONFIG = {
     // Lottie animations: each entry has a file name, a tag label, and a display title
     lottieFiles: [
         {
+            file: "Enterprise-01.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 01"
+        },
+        {
+            file: "Enterprise-02.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 02"
+        },
+        {
+            file: "Enterprise-03.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 03"
+        },
+        {
+            file: "Enterprise-04.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 04"
+        },
+        {
+            file: "Enterprise-05.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 05"
+        },
+        {
+            file: "Enterprise-06.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 06"
+        },
+        {
+            file: "Enterprise-07.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 07"
+        },
+        {
+            file: "Enterprise-08.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 08"
+        },
+        {
+            file: "Enterprise-09.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 09"
+        },
+        {
+            file: "Enterprise-10.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 10"
+        },
+        {
+            file: "Enterprise-11.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 11"
+        },
+        {
+            file: "Enterprise-12.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 12"
+        },
+        {
             file: "WM-Hero-Banner-Anim.json",
             tag: "WAVEMAKER",
             title: "WM Hero Banner Animation"
         },
         {
             file: "AI-app-creation-with-apis.json",
-            tag: "AI",
+            tag: "WAVEMAKER",
             title: "AI App Creation with APIs"
         },
         {
             file: "AI-app-creation-V1.json",
-            tag: "AI",
+            tag: "WAVEMAKER",
             title: "AI App Creation V1"
         },
         {
             file: "AI-App-Creation-V03.json",
-            tag: "AI",
+            tag: "WAVEMAKER",
             title: "AI App Creation V03"
         },
         {
             file: "BlinkLogoAnimation.json",
             tag: "BRAND",
             title: "Blink Logo Animation"
-        },
-        {
-            file: "botSurfing.json",
-            tag: "CHARACTER",
-            title: "Bot Surfing"
-        },
-        {
-            file: "MazeAnim.json",
-            tag: "CONCEPT",
-            title: "Maze Animation"
         }
     ],
     lottiePath: "assets/lottie/",
@@ -459,130 +505,146 @@ const SITE_CONFIG = {
             link: "https://vimeo.com/showcase/10034777?video=670225098"
         },
         {
+            platform: "youtube",
+            id: "i0enBQraVjU",
+            tag: "23 / WAVEMAKER",
+            title: "",
+            link: "https://youtu.be/i0enBQraVjU"
+        },
+        {
             platform: "vimeo",
             id: "670239142",
-            tag: "23 / VIMEO",
+            tag: "24 / VIMEO",
             title: "Vimeo Study - 670239142",
             link: "https://vimeo.com/showcase/10034777?video=670239142"
         },
         {
             platform: "vimeo",
             id: "670228081",
-            tag: "24 / VIMEO",
+            tag: "25 / VIMEO",
             title: "SpotCues - Micro Transformation Animation",
             link: "https://vimeo.com/showcase/10034777?video=670228081"
         },
         {
             platform: "youtube",
             id: "4kG0HfzXscI",
-            tag: "25 / WAVEMAKER",
+            tag: "26 / WAVEMAKER",
             title: "Infinity 2020 Teaser",
             link: "https://youtu.be/4kG0HfzXscI"
         },
         {
             platform: "youtube",
             id: "Ef0UA_3UV4c",
-            tag: "26 / WAVEMAKER",
+            tag: "27 / WAVEMAKER",
             title: "Banking Application",
             link: "https://youtu.be/Ef0UA_3UV4c"
         },
         {
             platform: "vimeo",
             id: "670246054",
-            tag: "27 / VIMEO",
+            tag: "28 / VIMEO",
             title: "Vimeo Study - 670246054",
             link: "https://vimeo.com/showcase/10034777?video=670246054"
         },
         {
             platform: "youtube",
             id: "9T58a7SOfA0",
-            tag: "28 / WAVEMAKER",
+            tag: "29 / WAVEMAKER",
             title: "Ledgerline",
             link: "https://youtu.be/9T58a7SOfA0"
         },
         {
             platform: "youtube",
             id: "XuACUrcBa78",
-            tag: "29 / WAVEMAKER",
+            tag: "30 / WAVEMAKER",
             title: "BFS Introduction",
             link: "https://youtu.be/XuACUrcBa78"
         },
         {
             platform: "youtube",
             id: "uqanq0xHVpU",
-            tag: "30 / WAVEMAKER",
+            tag: "31 / WAVEMAKER",
             title: "DataAnimation",
             link: "https://youtu.be/uqanq0xHVpU"
         },
         {
             platform: "youtube",
             id: "50IyxsydWlY",
-            tag: "31 / WAVEMAKER",
+            tag: "32 / WAVEMAKER",
             title: "Cardboard Animation",
             link: "https://youtu.be/50IyxsydWlY"
         },
         {
             platform: "youtube",
+            id: "H5bo6vLCAXE",
+            tag: "33 / WAVEMAKER",
+            title: "",
+            link: "https://youtu.be/H5bo6vLCAXE"
+        },
+        {
+            platform: "youtube",
             id: "6Ext801lpTM",
-            tag: "32 / WAVEMAKER",
+            tag: "34 / WAVEMAKER",
             title: "Hyscale Kubernetes Troubleshooting",
             link: "https://youtu.be/6Ext801lpTM"
         },
         {
             platform: "youtube",
             id: "BbRa2NMlr_E",
-            tag: "33 / WAVEMAKER",
+            tag: "35 / WAVEMAKER",
             title: "Modernizatoin Woes V1",
             link: "https://youtu.be/BbRa2NMlr_E"
         },
         {
             platform: "youtube",
             id: "s33uYuRnfIE",
-            tag: "34 / WAVEMAKER",
+            tag: "36 / WAVEMAKER",
             title: "Modernizatoin Woes V2",
             link: "https://youtu.be/s33uYuRnfIE"
         },
         {
             platform: "youtube",
             id: "_GQU1DLxpvA",
-            tag: "35 / WAVEMAKER",
+            tag: "37 / WAVEMAKER",
             title: "ThumbSignIn",
             link: "https://youtu.be/_GQU1DLxpvA"
         },
         {
             platform: "youtube",
             id: "cgz0gIUcYnQ",
-            tag: "36 / WAVEMAKER",
+            tag: "38 / WAVEMAKER",
             title: "ThumbSignIn Loop",
             link: "https://youtu.be/cgz0gIUcYnQ"
         },
         {
             platform: "youtube",
             id: "v-AFz1mS2kQ",
-            tag: "37 / WAVEMAKER",
+            tag: "39 / WAVEMAKER",
             title: "PersonalizedBankingApps V2",
             link: "https://youtu.be/v-AFz1mS2kQ"
         },
         {
             platform: "youtube",
             id: "aq7Ap8_I1NI",
-            tag: "38 / WAVEMAKER",
+            tag: "40 / WAVEMAKER",
             title: "WaveXD Intro",
             link: "https://youtu.be/aq7Ap8_I1NI"
         },
         {
             platform: "youtube",
             id: "_m020SQef1s",
-            tag: "39 / WAVEMAKER",
+            tag: "41 / WAVEMAKER",
             title: "Speed with Control V3",
             link: "https://youtu.be/_m020SQef1s"
         },
         {
             platform: "youtube",
             id: "M8_Yxr8F9M8",
-            tag: "40 / WAVEMAKER",
+            tag: "42 / WAVEMAKER",
             title: "Ad for video creation",
             link: "https://youtu.be/M8_Yxr8F9M8"
         }
-    ]
+    ],
+    resumePdf: "assets/Abba_Vishnu_Resume.pdf",
+    resumeDocx: "assets/Abba_Vishnu_Resume.docx"
 };
