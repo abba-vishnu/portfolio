@@ -536,8 +536,21 @@ a.card-link {
    08. JOURNEY TIMELINE
    ========================================================================== */
 
-.journey-list {
+.journey-list-box {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0px 24px;
     margin-top: 32px;
+    display: flex;
+	flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.journey-list {
     display: flex;
     flex-direction: column;
 }
@@ -551,7 +564,11 @@ a.card-link {
 }
 
 .journey-item:first-child {
-    border-top: 1px solid var(--border-color);
+    //border-top: 1px solid var(--border-color);
+}
+
+.journey-item:last-child {
+    border-bottom: 0px solid var(--border-color);
 }
 
 .journey-year {
@@ -579,7 +596,7 @@ a.card-link {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    padding: 24px 32px;
+    padding: 24px;
     margin-top: 32px;
     display: flex;
     justify-content: space-between;
@@ -637,17 +654,11 @@ a.view-all {
    10. CONTACT & FOOTER
    ========================================================================== */
 
-.contact-section {
-    margin-top: 80px;
-    padding-top: 64px;
-    border-top: 1px solid var(--border-color);
-}
-
 .contact-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    padding: 40px;
+    padding: 24px;
     margin-top: 20px;
     transition: border-color 0.25s ease;
 }

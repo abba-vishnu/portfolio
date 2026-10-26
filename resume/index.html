@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Abba Vishnu — Resume</title>
-    <meta name="description" content="Interactive Motion Resume of Abba Vishnu, Lead Visual Designer specializing in SaaS motion graphics, product films, and AI-augmented workflows.">
+    <title id="page-title">Abba Vishnu | Resume</title>
+    <meta name="description" content="Interactive Motion Resume of Abba Vishnu, Lead Visual Designer specializing in SaaS motion graphics, product films, and AI workflows.">
 
     <!-- Shared Modular Stylesheet -->
     <link rel="stylesheet" href="../style.css">
@@ -14,7 +14,7 @@
     <script src="../script.js" defer></script>
 
     <style>
-        /* Restored Motion Designer AE Hero Box Styling */
+        /* Resume-Specific Hero Box Styling */
         .resume-hero-box {
             position: relative;
             background: linear-gradient(135deg, var(--card-bg) 0%, rgba(17,19,19,0.95) 100%);
@@ -46,7 +46,7 @@
             margin-bottom: 12px;
         }
 
-        /* Restored Glowing AE Timecode Tags */
+        /* Glowing Timecode Tags */
         .ae-timecode-tag {
             font-family: monospace;
             font-size: 0.78rem;
@@ -81,7 +81,7 @@
             display: block;
         }
 
-        /* Perfectly Aligned AE Vertical Timeline Track */
+        /* Vertical Timeline Track */
         .timeline-track-container {
             position: relative;
             padding-left: 36px;
@@ -115,8 +115,6 @@
 
         .journey-item {
             position: relative;
-            /* style.css already gives .journey-item 32px of padding top and bottom; the old 40px margin
-               stacked on top of that and pushed the diamond marker above its entry. Spacing is now set once, here. */
             padding: 0 0 32px 0;
             margin-bottom: 32px;
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -126,18 +124,15 @@
             padding-bottom: 0;
             margin-bottom: 0;
         }
-        /* date column + content column (phones keep style.css's single column) */
         @media (min-width: 810px) {
             .journey-item { grid-template-columns: 190px minmax(0, 1fr); }
         }
-        /* keep paragraphs a comfortable reading width on very large screens */
-        .journey-content p { max-width: 78ch; }
 
         .journey-item::before {
             content: '';
             position: absolute;
             left: -36px;
-            top: 9px;   /* lines the diamond up with the middle of the timecode tag */
+            top: 9px;
             width: 12px;
             height: 12px;
             background: var(--bg-color);
@@ -156,6 +151,7 @@
             transform: rotate(45deg) scale(1.25);
         }
 
+        /* Filter Tabs */
         .filter-tabs {
             display: flex;
             gap: 8px;
@@ -226,7 +222,6 @@
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 16px;
-            //border-bottom: 1px solid var(--border-color);
             padding-bottom: 8px;
             display: flex;
             justify-content: space-between;
@@ -235,7 +230,6 @@
 
         .journey-item.hidden { display: none; }
 
-        /* Education cards: fill the row instead of leaving an empty 3rd column */
         #sec-education .capabilities-grid {
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
@@ -251,7 +245,7 @@
     <section class="hero-section">
         <div id="hero-top-bar" class="hero-top-bar" 
              data-badge="RESUME" 
-             data-tagline="· 15+ Years · Motion Design 	· SaaS Marketing Films · Product Storytelling · AI Production Automation · Game UI & Animation">
+             data-tagline="15+ Years · Motion Design · SaaS Marketing Films · Product Storytelling · AI Production Automation · Game UI & Animation">
         </div>
     </section>
 
@@ -267,8 +261,7 @@
 					<h2 class="resume-section-title" style="margin-bottom: 0px;"> <span>SUMMARY</span> </h2>
 					<canvas id="audio-waveform"></canvas>
 				</div>
-				<p style="font-size: 0.98rem; line-height: 1.65; ; margin-bottom: 12px;"> Creative Motion Designer and Lead Visual Creator with 10+ years of experience crafting high-impact SaaS marketing videos, product explainers, and enterprise brand identities. Proven track record of leading creative teams, simplifying complex low-code/cloud
-					concepts through compelling visual storytelling, and integrating AI workflows to optimize production. Recognized Star Performer dedicated to bridging design and technology. </p>
+				<p style="font-size: 0.98rem; line-height: 1.65; margin-bottom: 12px;">Motion designer and lead visual creator with over 15 years of experience building SaaS product videos, explainer films, and brand motion. Experienced in directing creative projects, breaking down technical cloud and low-code software into clear visual explanations, and using AI tools to speed up production workflows.</p>
 				<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 0; margin-bottom: 0px;">
 					<a href="../assets/Abba_Vishnu_Resume.pdf" class="btn resume-pdf-btn" download>
 						<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -286,6 +279,8 @@
 						</svg> Download DOCX Resume </a>
 				</div>
 			</div>
+        </section>
+
         <!-- Experience Timeline Section -->
         <section id="sec-timeline" style="margin-bottom: 48px;">
             <div class="section-header-row" style="margin-bottom: 4px;">
@@ -308,14 +303,14 @@
                 <div class="journey-item" data-category="saas">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">08 - PRESENT</span><br>
-                        Apr 2023 — Present
+                        Apr 2023 - Present
                     </div>
                     <div class="journey-content">
                         <h3>Lead Visual Designer</h3>
                         <div class="card-tag journey-tag">WaveMaker, Inc.</div>
-                        <p>Lead creation of enterprise SaaS marketing videos, product walkthroughs, motion graphics, and illustrations that simplify complex cloud/low-code ideas and strengthen brand storytelling.</p>
-                        <p style="margin-top: 6px;">Oversee visual direction and collaborate with product and marketing teams to deliver cohesive, high-impact content across digital platforms and SaaS acquisition campaigns.</p>
-                        <p style="margin-top: 6px;">Developed custom automation scripts using AI to accelerate design workflows and improve production efficiency.</p>
+                        <p>Directing enterprise SaaS product videos, feature walkthroughs, and brand motion that explain cloud and low-code concepts clearly.</p>
+                        <p style="margin-top: 6px;">Collaborating with product and marketing teams to keep video style consistent across campaigns and product releases.</p>
+                        <p style="margin-top: 6px;">Writing custom automation scripts and integrating AI tools into daily workflows to speed up production.</p>
                     </div>
                 </div>
 
@@ -323,13 +318,13 @@
                 <div class="journey-item" data-category="saas">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">07 - LEAD</span><br>
-                        Nov 2021 — Mar 2023
+                        Nov 2021 - Mar 2023
                     </div>
                     <div class="journey-content">
                         <h3>Lead Visual Designer</h3>
                         <div class="card-tag journey-tag">Pramati Technologies</div>
-                        <p>Directed design of product videos and graphics for banking and low-code solutions, enhancing client presentations and product adoption.</p>
-                        <p style="margin-top: 6px;">Partnered with cross-functional teams to re-imagine banking solutions with WaveMaker’s low-code platform.</p>
+                        <p>Directed product videos and visual assets for banking and low-code software to help with client demos and product adoption.</p>
+                        <p style="margin-top: 6px;">Worked with cross-functional teams to update how banking solutions were presented using WaveMaker.</p>
                     </div>
                 </div>
 
@@ -337,13 +332,13 @@
                 <div class="journey-item" data-category="saas">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">06 - SENIOR</span><br>
-                        Oct 2019 — Nov 2021
+                        Oct 2019 - Nov 2021
                     </div>
                     <div class="journey-content">
                         <h3>Senior Visual Designer</h3>
                         <div class="card-tag journey-tag">Pramati Technologies</div>
-                        <p>Designed motion graphics and product videos for enterprise products including WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.</p>
-                        <p style="margin-top: 6px;">Simplified complex product concepts through clear visual storytelling, improving customer engagement. Explored AR/VR applications to enhance interactive design possibilities.</p>
+                        <p>Created motion graphics and product videos for enterprise tools like WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.</p>
+                        <p style="margin-top: 6px;">Turned technical product features into clear visual explanations to improve engagement, alongside early AR/VR design tests.</p>
                     </div>
                 </div>
 
@@ -351,12 +346,12 @@
                 <div class="journey-item" data-category="saas">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">05 - DESIGNER</span><br>
-                        Apr 2018 — Oct 2019
+                        Apr 2018 - Oct 2019
                     </div>
                     <div class="journey-content">
                         <h3>Visual Designer</h3>
                         <div class="card-tag journey-tag">Pramati Technologies</div>
-                        <p>Delivered marketing-focused motion graphics and illustrations that strengthened brand identity.</p>
+                        <p>Created marketing motion graphics and vector illustrations to support brand campaigns.</p>
                     </div>
                 </div>
 
@@ -364,12 +359,12 @@
                 <div class="journey-item" data-category="games">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">04 - ENGINEER</span><br>
-                        Oct 2016 — Apr 2018
+                        Oct 2016 - Apr 2018
                     </div>
                     <div class="journey-content">
                         <h3>Game Development Engineer</h3>
                         <div class="card-tag journey-tag">Avaz Inc.</div>
-                        <p>Designed front-end and gameplay for language teaching apps such as Freespeech and Chong-Chong, improving usability and learning outcomes.</p>
+                        <p>Designed front-end layouts and gameplay logic for language learning apps like Freespeech and Chong-Chong.</p>
                     </div>
                 </div>
 
@@ -377,12 +372,12 @@
                 <div class="journey-item" data-category="games">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">03 - GAMES</span><br>
-                        Sep 2011 — Sep 2016
+                        Sep 2011 - Sep 2016
                     </div>
                     <div class="journey-content">
                         <h3>Game Designer</h3>
                         <div class="card-tag journey-tag">Evelyn Software Labs</div>
-                        <p>Created multiple iPad games including Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator, building a diverse global player base.</p>
+                        <p>Developed and shipped multiple iOS games including Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator.</p>
                     </div>
                 </div>
 
@@ -390,12 +385,12 @@
                 <div class="journey-item" data-category="studio">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">02 - ANIMATOR</span><br>
-                        Nov 2010 — Sep 2011
+                        Nov 2010 - Sep 2011
                     </div>
                     <div class="journey-content">
                         <h3>Character Designer &amp; Animator</h3>
                         <div class="card-tag journey-tag">Colours Animation Pvt Ltd</div>
-                        <p>Designed and animated characters, storyboards, and scene-by-scene animations for studio projects.</p>
+                        <p>Drew storyboards, designed characters, and handled scene animation for studio projects.</p>
                     </div>
                 </div>
 
@@ -403,19 +398,19 @@
                 <div class="journey-item" data-category="studio">
                     <div class="journey-year">
                         <span class="ae-timecode-tag">01 - TRAINEE</span><br>
-                        Jul 2009 — Oct 2010
+                        Jul 2009 - Oct 2010
                     </div>
                     <div class="journey-content">
                         <h3>Animator Trainee</h3>
                         <div class="card-tag journey-tag">Vismayas Max</div>
-                        <p>Created character sketches, turn-arounds, 3D models, props, and animations, contributing to multiple training projects.</p>
+                        <p>Built character turn-arounds, 3D props, models, and animation tests for studio training projects.</p>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- Merged Production Stack & AI Workflows (Inside Hero Box Card Styling) -->
+        <!-- Merged Production Stack & AI Workflows -->
         <section id="sec-skills" style="margin-bottom: 48px;">
             <div class="resume-hero-box" style="margin-top: 0; margin-bottom: 0;">
                 <h2 class="resume-section-title" style="margin-top: 0;">PRODUCTION STACK &amp; AI WORKFLOWS</h2>
@@ -423,7 +418,7 @@
                 <div style="margin-bottom: 24px;">
                     <h3 style="font-size: 0.95rem; color: var(--accent); margin-bottom: 10px; letter-spacing: 0.05em;">MOTION DESIGN &amp; VIDEO PRODUCTION</h3>
                     <div class="skill-badge-grid">
-                        <span class="skill-chip">Motion Graphics and Animation</span>
+                        <span class="skill-chip">Motion Graphics &amp; Animation</span>
                         <span class="skill-chip">SaaS Product Explainers</span>
                         <span class="skill-chip">Pre-Production &amp; Storyboarding</span>
                         <span class="skill-chip">Video Editing &amp; Post-Production</span>
@@ -465,18 +460,18 @@
             <div class="capabilities-grid">
                 <div class="capability-card">
                     <h3 style="color: var(--accent);">Education &amp; Certifications</h3>
-                    <p><strong>University of Kerala</strong><br>Coursework toward BA in English Literature (2010–2012)</p>
-                    <p style="margin-top: 12px;"><strong>Vismayas Max Animation Academy</strong><br>Diploma in Traditional &amp; 3D Animation (2008–2009)</p>
-                    <p style="margin-top: 12px;"><strong>Certifications</strong><br>Diploma Certificate in Character Animation — Vismayas Max (2009)</p>
+                    <p><strong>University of Kerala</strong><br>Coursework toward BA in English Literature (2010 to 2012)</p>
+                    <p style="margin-top: 12px;"><strong>Vismayas Max Animation Academy</strong><br>Diploma in Traditional &amp; 3D Animation (2008 to 2009)</p>
+                    <p style="margin-top: 12px;"><strong>Certifications</strong><br>Character Animation Diploma - Vismayas Max (2009)</p>
                 </div>
                 <div class="capability-card">
                     <h3 style="color: var(--accent);">Awards &amp; Languages</h3>
-                    <p><strong>⭐ Star Performer of the Year (2019)</strong><br>Pramati Technologies</p>
+                    <p><strong>Star Performer of the Year (2019)</strong><br>Pramati Technologies</p>
                     <p style="margin-top: 12px;"><strong>Languages</strong><br>
-                    • Malayalam — Native<br>
-                    • English — Professional<br>
-                    • Tamil — Working<br>
-                    • Hindi — Elementary</p>
+                    • Malayalam - Native<br>
+                    • English - Professional<br>
+                    • Tamil - Working<br>
+                    • Hindi - Elementary</p>
                 </div>
             </div>
         </section>
@@ -519,9 +514,6 @@
                 const containerHeight = rect.height;
                 const windowHeight = window.innerHeight;
 
-                // The "reading line" sits at the middle of the screen at the top of the page and slides
-                // down to the bottom edge as you reach the end of the page. That way the animation always
-                // finishes, even on tall screens where little content is left below the timeline.
                 const maxScroll = document.documentElement.scrollHeight - windowHeight;
                 const frac = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 1;
                 const readingLine = windowHeight * (0.5 + 0.5 * frac);
@@ -531,7 +523,6 @@
 
                 progressLine.style.height = `${progressPct}%`;
 
-                // Once the line is complete, the last visible role lights up too
                 const visible = [...document.querySelectorAll("#resume-journey-list .journey-item:not(.hidden)")];
                 visible.forEach((it, i) => it.classList.toggle("at-end", progressPct >= 100 && i === visible.length - 1));
             }
