@@ -55,24 +55,29 @@ const SITE_CONFIG = {
             title: "Enterprise Concept Anim"
         },
         {
-            file: "Gig-Illustration.webp",
-            tag: "ILLUSTRATION",
-            title: "Gig Illustration"
-        },
-        {
-            file: "People.webp",
-            tag: "ILLUSTRATION",
-            title: "People"
-        },
-        {
-            file: "Mascot-new-gen-yogi.webp",
-            tag: "CHARACTER",
-            title: "Mascot — New Gen Yogi"
+            file: "Image-Gig-Icons.webp",
+            tag: "ICON",
+            title: "Gig Icons"
         },
         {
             file: "Image-Banner-RAD-Studio.webp",
             tag: "BANNER",
             title: "RAD Studio Banner"
+        },
+        {
+            file: "People.webp",
+            tag: "CHARACTER",
+            title: "People"
+        },
+        {
+            file: "Gig-Illustration.webp",
+            tag: "ILLUSTRATION",
+            title: "Gig Illustration"
+        },
+        {
+            file: "Mascot-new-gen-yogi.webp",
+            tag: "CHARACTER",
+            title: "Mascot — New Gen Yogi"
         },
         {
             file: "Cartoon-WrongTool-Cars.webp",
@@ -136,8 +141,8 @@ const SITE_CONFIG = {
         },
         {
             file: "Spotcues-BlogBanner-02.webp",
-            tag: "BRAND",
-            title: "SpotCues Blog Banner 02"
+            tag: "ILLUSTRATION",
+            title: "SpotCues Blog Banner"
         },
         {
             file: "full-stack-01.webp",
@@ -193,11 +198,6 @@ const SITE_CONFIG = {
             file: "Image-Banner-Training.webp",
             tag: "BANNER",
             title: "Training Banner"
-        },
-        {
-            file: "Image-Gig-Icons.webp",
-            tag: "ILLUSTRATION",
-            title: "Gig Icons"
         },
         {
             file: "Image-Partner-SalesAndPreSales.webp",
@@ -318,6 +318,11 @@ const SITE_CONFIG = {
             title: "Enterprise 12"
         },
         {
+            file: "Enterprise-13.json",
+            tag: "ENTERPRISE",
+            title: "Enterprise 13"
+        },
+        {
             file: "WM-Hero-Banner-Anim.json",
             tag: "WAVEMAKER",
             title: "WM Hero Banner Animation"
@@ -339,7 +344,7 @@ const SITE_CONFIG = {
         },
         {
             file: "BlinkLogoAnimation.json",
-            tag: "BRAND",
+            tag: "MASCOT",
             title: "Blink Logo Animation"
         }
     ],
@@ -353,184 +358,184 @@ const SITE_CONFIG = {
         {
             platform: "youtube",
             id: "60-JCTDcWNc",
-            tag: "01 / WAVEMAKER",
-            title: "Abba Vishun Demo Reel 2026",
+            tag: "01 / DEMOREEL",
+            title: "Demo Reel",
             link: "https://youtu.be/60-JCTDcWNc"
         },
         {
             platform: "youtube",
             id: "gymmZqbyyKc",
-            tag: "02 / WAVEMAKER",
-            title: "DemoReel LogoAnimations",
+            tag: "02 / LOGO",
+            title: "Demo Reel Logo Animations",
             link: "https://youtu.be/gymmZqbyyKc"
         },
         {
             platform: "youtube",
             id: "lJBK13uBVaA",
-            tag: "03 / WAVEMAKER",
+            tag: "03 / MARKETING",
             title: "WaveMaker Design to Code | Build Pixel-Perfect Enterprise Apps from Figma with AI",
             link: "https://youtu.be/lJBK13uBVaA"
         },
         {
             platform: "youtube",
             id: "UEyhNRlB-6M",
-            tag: "04 / WAVEMAKER",
+            tag: "04 / MARKETING",
             title: "WaveMaker AI - Agentic App Generation Platform",
             link: "https://youtu.be/UEyhNRlB-6M"
         },
         {
             platform: "youtube",
             id: "-r8uLPYdjSE",
-            tag: "05 / WAVEMAKER",
+            tag: "05 / MARKETING",
             title: "WaveMaker launches a sleek, brand-new, upgraded documentation website",
             link: "https://youtu.be/-r8uLPYdjSE"
         },
         {
             platform: "youtube",
             id: "3A0COvpltP0",
-            tag: "06 / WAVEMAKER",
+            tag: "06 / MARKETING",
             title: "WaveMaker Suite Overview: Everything You Need to Build Modern Apps",
             link: "https://youtu.be/3A0COvpltP0"
         },
         {
             platform: "youtube",
             id: "ZebU_YIBwmc",
-            tag: "07 / WAVEMAKER",
+            tag: "07 / MARKETING",
             title: "WaveMaker: Launching Progressive Web Apps",
             link: "https://youtu.be/ZebU_YIBwmc"
         },
         {
             platform: "youtube",
             id: "3k5LUZ--Zws",
-            tag: "08 / WAVEMAKER",
+            tag: "08 / MARKETING",
             title: "WaveMaker Studio for React Native: Build Native Mobile Apps 2X Faster",
             link: "https://youtu.be/3k5LUZ--Zws"
         },
         {
             platform: "youtube",
             id: "XH-i9ZNfil8",
-            tag: "09 / WAVEMAKER",
+            tag: "09 / MARKETING",
             title: "WaveMaker for Enterprises: Accelerating Modern, Composable Applications",
             link: "https://youtu.be/XH-i9ZNfil8"
         },
         {
             platform: "youtube",
             id: "zKwFZZUPv0c",
-            tag: "10 / WAVEMAKER",
+            tag: "10 / MARKETING",
             title: "Banking as a Service (BaaS) with WaveMaker Low-Code Platform",
             link: "https://youtu.be/zKwFZZUPv0c"
         },
         {
             platform: "youtube",
             id: "yS6h3LBCz0c",
-            tag: "11 / WAVEMAKER",
-            title: "WaveMaker does",
+            tag: "11 / MARKETING",
+            title: "Typography Animation",
             link: "https://youtu.be/yS6h3LBCz0c"
         },
         {
             platform: "youtube",
             id: "BCsLB-p9SxM",
-            tag: "12 / WAVEMAKER",
-            title: "SwimWithWaveMaker V1",
+            tag: "12 / MARKETING",
+            title: "Swim with WaveMaker",
             link: "https://youtu.be/BCsLB-p9SxM"
         },
         {
             platform: "youtube",
             id: "E1R_iKbjxww",
-            tag: "13 / WAVEMAKER",
+            tag: "13 / MARKETING",
             title: "Build with WaveMaker",
             link: "https://youtu.be/E1R_iKbjxww"
         },
         {
             platform: "youtube",
             id: "r_0z-c8JP5Q",
-            tag: "14 / WAVEMAKER",
-            title: "WM Banner",
+            tag: "14 / BANNER",
+            title: "WaveMaker Website Banner Animation",
             link: "https://youtu.be/r_0z-c8JP5Q"
         },
         {
             platform: "youtube",
             id: "SDYdp2ggJQ8",
-            tag: "15 / WAVEMAKER",
-            title: "Logo Annual Day 2023",
+            tag: "15 / LOGO",
+            title: "Logo Animation Winds of Change",
             link: "https://youtu.be/SDYdp2ggJQ8"
         },
         {
             platform: "youtube",
-            id: "aYzfgnqXA3w",
-            tag: "16 / WAVEMAKER",
-            title: "Logo AutoCode V2",
-            link: "https://youtu.be/aYzfgnqXA3w"
-        },
-        {
-            platform: "youtube",
             id: "ShrCxjOeBaE",
-            tag: "17 / WAVEMAKER",
-            title: "Logo AutoCode V1",
+            tag: "16 / LOGO",
+            title: "Logo Animation AutoCode V1",
             link: "https://youtu.be/ShrCxjOeBaE"
         },
         {
             platform: "youtube",
+            id: "aYzfgnqXA3w",
+            tag: "17 / LOGO",
+            title: "Logo Animation AutoCode V2",
+            link: "https://youtu.be/aYzfgnqXA3w"
+        },
+        {
+            platform: "youtube",
             id: "cub3-7mHdno",
-            tag: "18 / WAVEMAKER",
-            title: "LogoApplied Intelligence",
+            tag: "18 / LOGO",
+            title: "Logo Animation Applied Intelligence",
             link: "https://youtu.be/cub3-7mHdno"
         },
         {
             platform: "youtube",
             id: "5tm66WJuV4I",
-            tag: "19 / WAVEMAKER",
-            title: "Logo Annual Day 2021",
+            tag: "19 / LOGO",
+            title: "Logo Animation Rule the waves",
             link: "https://youtu.be/5tm66WJuV4I"
         },
         {
             platform: "youtube",
             id: "fafAjcOxqL4",
-            tag: "20 / WAVEMAKER",
-            title: "Logo Groupe io",
+            tag: "20 / LOGO",
+            title: "Logo Animation Groupe.io",
             link: "https://youtu.be/fafAjcOxqL4"
         },
         {
             platform: "vimeo",
             id: "803883521",
-            tag: "21 / VIMEO",
-            title: "Vimeo Study - 803883521",
+            tag: "21 / LOGO",
+            title: "Logo Animation Abba Studio",
             link: "https://vimeo.com/showcase/10034777?video=803883521"
         },
         {
             platform: "vimeo",
             id: "670225098",
-            tag: "22 / VIMEO",
-            title: "Vimeo Study - 670225098",
+            tag: "22 / LOGO",
+            title: "Logo Animation Pramati One",
             link: "https://vimeo.com/showcase/10034777?video=670225098"
         },
         {
             platform: "youtube",
+            id: "4kG0HfzXscI",
+            tag: "23 / LOGO",
+            title: "Logo Animation Infinity",
+            link: "https://youtu.be/4kG0HfzXscI"
+        },
+        {
+            platform: "youtube",
             id: "i0enBQraVjU",
-            tag: "23 / WAVEMAKER",
-            title: "",
+            tag: "24 / BANNER",
+            title: "Enterprise Theme Animation",
             link: "https://youtu.be/i0enBQraVjU"
         },
         {
             platform: "vimeo",
             id: "670239142",
-            tag: "24 / VIMEO",
-            title: "Vimeo Study - 670239142",
+            tag: "25 / PRODUCT",
+            title: "Explainer Video Chatlets.ai",
             link: "https://vimeo.com/showcase/10034777?video=670239142"
         },
         {
             platform: "vimeo",
             id: "670228081",
-            tag: "25 / VIMEO",
-            title: "SpotCues - Micro Transformation Animation",
+            tag: "26 / PRODUCT",
+            title: "Explainer Video SpotCues",
             link: "https://vimeo.com/showcase/10034777?video=670228081"
-        },
-        {
-            platform: "youtube",
-            id: "4kG0HfzXscI",
-            tag: "26 / WAVEMAKER",
-            title: "Infinity 2020 Teaser",
-            link: "https://youtu.be/4kG0HfzXscI"
         },
         {
             platform: "youtube",
@@ -542,105 +547,105 @@ const SITE_CONFIG = {
         {
             platform: "vimeo",
             id: "670246054",
-            tag: "28 / VIMEO",
-            title: "Vimeo Study - 670246054",
+            tag: "28 / MARKETING",
+            title: "HyScale",
             link: "https://vimeo.com/showcase/10034777?video=670246054"
         },
         {
             platform: "youtube",
             id: "9T58a7SOfA0",
-            tag: "29 / WAVEMAKER",
+            tag: "29 / PRODUCT",
             title: "Ledgerline",
             link: "https://youtu.be/9T58a7SOfA0"
         },
         {
             platform: "youtube",
             id: "XuACUrcBa78",
-            tag: "30 / WAVEMAKER",
+            tag: "30 / MARKETING",
             title: "BFS Introduction",
             link: "https://youtu.be/XuACUrcBa78"
         },
         {
             platform: "youtube",
             id: "uqanq0xHVpU",
-            tag: "31 / WAVEMAKER",
+            tag: "31 / EXPLAINER",
             title: "DataAnimation",
             link: "https://youtu.be/uqanq0xHVpU"
         },
         {
             platform: "youtube",
             id: "50IyxsydWlY",
-            tag: "32 / WAVEMAKER",
+            tag: "32 / MARKETING",
             title: "Cardboard Animation",
             link: "https://youtu.be/50IyxsydWlY"
         },
         {
             platform: "youtube",
             id: "H5bo6vLCAXE",
-            tag: "33 / WAVEMAKER",
-            title: "",
+            tag: "33 / EXPLAINER",
+            title: "Tetherfi Explainer Video",
             link: "https://youtu.be/H5bo6vLCAXE"
         },
         {
             platform: "youtube",
             id: "6Ext801lpTM",
-            tag: "34 / WAVEMAKER",
+            tag: "34 / MARKETING",
             title: "Hyscale Kubernetes Troubleshooting",
             link: "https://youtu.be/6Ext801lpTM"
         },
         {
             platform: "youtube",
             id: "BbRa2NMlr_E",
-            tag: "35 / WAVEMAKER",
+            tag: "35 / MARKETING",
             title: "Modernizatoin Woes V1",
             link: "https://youtu.be/BbRa2NMlr_E"
         },
         {
             platform: "youtube",
             id: "s33uYuRnfIE",
-            tag: "36 / WAVEMAKER",
+            tag: "36 / MARKETING",
             title: "Modernizatoin Woes V2",
             link: "https://youtu.be/s33uYuRnfIE"
         },
         {
             platform: "youtube",
             id: "_GQU1DLxpvA",
-            tag: "37 / WAVEMAKER",
+            tag: "37 / EXPLAINER",
             title: "ThumbSignIn",
             link: "https://youtu.be/_GQU1DLxpvA"
         },
         {
             platform: "youtube",
             id: "cgz0gIUcYnQ",
-            tag: "38 / WAVEMAKER",
+            tag: "38 / EXPLAINER",
             title: "ThumbSignIn Loop",
             link: "https://youtu.be/cgz0gIUcYnQ"
         },
         {
             platform: "youtube",
             id: "v-AFz1mS2kQ",
-            tag: "39 / WAVEMAKER",
-            title: "PersonalizedBankingApps V2",
+            tag: "39 / MARKETING",
+            title: "Personalized Banking Apps ",
             link: "https://youtu.be/v-AFz1mS2kQ"
         },
         {
             platform: "youtube",
             id: "aq7Ap8_I1NI",
-            tag: "40 / WAVEMAKER",
+            tag: "40 / MARKETING",
             title: "WaveXD Intro",
             link: "https://youtu.be/aq7Ap8_I1NI"
         },
         {
             platform: "youtube",
             id: "_m020SQef1s",
-            tag: "41 / WAVEMAKER",
-            title: "Speed with Control V3",
+            tag: "41 / MARKETING",
+            title: "Speed with Control",
             link: "https://youtu.be/_m020SQef1s"
         },
         {
             platform: "youtube",
             id: "M8_Yxr8F9M8",
-            tag: "42 / WAVEMAKER",
+            tag: "42 / MARKETING",
             title: "Ad for video creation",
             link: "https://youtu.be/M8_Yxr8F9M8"
         }
