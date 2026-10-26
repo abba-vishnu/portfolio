@@ -268,14 +268,14 @@ const SITE_CONFIG = {
             title: "Expand"
         },
         {
-            file: "Enterprise-05.json",
+            file: "Enterprise-09.json",
             tag: "ENTERPRISE",
             title: "Grow"
         },
         {
             file: "Enterprise-06.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 04"
+            title: "Transform"
         },
         {
             file: "Enterprise-07.json",
@@ -285,12 +285,12 @@ const SITE_CONFIG = {
         {
             file: "Enterprise-08.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 06"
+            title: "Refine"
         },
         {
-            file: "Enterprise-09.json",
+            file: "Enterprise-05.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 07"
+            title: "Shine"
         },
         {
             file: "Enterprise-10.json",
