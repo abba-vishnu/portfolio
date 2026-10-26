@@ -260,72 +260,62 @@ const SITE_CONFIG = {
         {
             file: "Enterprise-01.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 01"
+            title: "Orbit"
         },
         {
             file: "Enterprise-02.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 02"
-        },
-        {
-            file: "Enterprise-03.json",
-            tag: "ENTERPRISE",
-            title: "Enterprise 03"
-        },
-        {
-            file: "Enterprise-04.json",
-            tag: "ENTERPRISE",
-            title: "Enterprise 04"
+            title: "Expand"
         },
         {
             file: "Enterprise-05.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 05"
+            title: "Grow"
         },
         {
             file: "Enterprise-06.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 06"
+            title: "Enterprise 04"
         },
         {
             file: "Enterprise-07.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 07"
+            title: "Group"
         },
         {
             file: "Enterprise-08.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 08"
+            title: "Enterprise 06"
         },
         {
             file: "Enterprise-09.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 09"
+            title: "Enterprise 07"
         },
         {
             file: "Enterprise-10.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 10"
+            title: "Alive"
         },
         {
             file: "Enterprise-11.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 11"
+            title: "Direction"
         },
         {
             file: "Enterprise-12.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 12"
+            title: "Build"
         },
         {
             file: "Enterprise-13.json",
             tag: "ENTERPRISE",
-            title: "Enterprise 13"
+            title: "Power"
         },
         {
             file: "WM-Hero-Banner-Anim.json",
             tag: "WAVEMAKER",
-            title: "WM Hero Banner Animation"
+            title: "Hero Banner Animation"
         },
         {
             file: "AI-app-creation-with-apis.json",
@@ -335,12 +325,12 @@ const SITE_CONFIG = {
         {
             file: "AI-app-creation-V1.json",
             tag: "WAVEMAKER",
-            title: "AI App Creation V1"
+            title: "AI App Creation Version 1"
         },
         {
             file: "AI-App-Creation-V03.json",
             tag: "WAVEMAKER",
-            title: "AI App Creation V03"
+            title: "AI App Creation Version 2"
         },
         {
             file: "BlinkLogoAnimation.json",
