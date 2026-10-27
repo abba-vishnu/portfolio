@@ -144,6 +144,52 @@ header.header-visible {
     gap: 28px;
 }
 
+/* Brand + designation group (left side of the sticky menu) */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.nav-logo {
+    height: 24px;
+    width: auto;
+    display: block;
+    flex-shrink: 0; /* never let a narrow screen squeeze the logo */
+    object-fit: contain;
+}
+
+/* Name + designation: one line on wide screens (name | designation) */
+.nav-brand-text {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-separator {
+    display: block;
+    width: 1px;
+    height: 20px;
+    background-color: var(--border-color);
+    flex-shrink: 0;
+}
+
+/* Same look as the hero badge, scaled to the menu bar */
+.nav-designation {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nav-links a,
+.hero-nav a {
+    white-space: nowrap;
+}
+
 .mobile-menu-toggle {
     display: none;
     background: none;
@@ -219,6 +265,28 @@ header.header-visible {
     margin: 0;
     width: 100%;
     text-align: left;
+}
+
+/* Nav buttons in the hero header: same links, size, spacing and colours as the top menu */
+.hero-nav {
+    display: flex;
+    gap: 28px;
+    flex-shrink: 0;
+    margin-left: auto; /* sticks to the right edge, like the sticky menu */
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+/* Desktop/tablet: if the tagline would get squeezed, the nav drops to its own row, still right-aligned */
+@media (min-width: 900px) {
+    .hero-top-bar {
+        flex-wrap: wrap;
+        row-gap: 16px;
+    }
+    .hero-right {
+        flex: 1 1 360px;
+    }
 }
 
 .hero-subtitle {
@@ -721,7 +789,23 @@ a.view-all {
 
 /* Medium Screens & Laptops */
 @media (max-width: 1199px) {
-    .container { 
+    /* Not enough room beside the name: designation sits under it, and the logo grows to span both lines */
+    .nav-brand-text {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        line-height: 1.2;
+    }
+    .nav-separator {
+        display: none;
+    }
+    .nav-designation {
+        font-size: 10px;
+    }
+    .nav-logo {
+        height: 32px; /* name (~16px) + gap (4px) + designation (~12px) */
+    }
+    .container {
         padding: 48px 32px; 
     }
     .grid { 
@@ -730,7 +814,7 @@ a.view-all {
 }
 
 /* Mobile & Tablet Screens */
-@media (max-width: 809px) {
+@media (max-width: 899px) {
     .container { 
         padding: 40px 20px; 
     }
@@ -741,6 +825,37 @@ a.view-all {
     }
     .hero-separator {
         display: none;
+    }
+    /* Hero header on mobile: hamburger at the top right, links open as a dropdown (same as the sticky menu) */
+    .hero-top-bar {
+        position: relative;
+    }
+    .hero-menu-toggle {
+        position: absolute;
+        top: 8px;
+        right: 5vw;
+    }
+    .hero-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        z-index: 20;
+        margin-left: 0;
+        background-color: rgba(17, 19, 19, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        flex-direction: column;
+        align-items: center;
+        padding: 28px 0;
+        gap: 20px;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        box-sizing: border-box;
+    }
+    .hero-nav.mobile-active {
+        display: flex;
     }
     .hero-top-bar .hero-name {
         white-space: normal;

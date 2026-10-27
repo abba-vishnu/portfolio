@@ -122,14 +122,33 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
+    // --- Shared nav links: ONE list used by both the sticky top menu and the hero header ---
+    const NAV_ITEMS = [
+        { label: "Showcase",     hash: "work" },
+        { label: "Capabilities", hash: "capabilities" },
+        { label: "Workbook",     hash: "workbook" },
+        { label: "Toolkit",      hash: "toolkit" },
+        { label: "Journey",      hash: "journey" },
+        { label: "Contact",      hash: "contact" }
+    ];
+    const navLinksHTML = NAV_ITEMS
+        .map(item => `<a href="${rootPath}index.html#${item.hash}">${item.label}</a>`)
+        .join("\n                ");
+
     // --- B. Dynamic Navigation Header Injector ---
     const header = document.getElementById("site-header");
     if (header) {
         header.innerHTML = `
-            <a href="${rootPath}index.html" id="header-brand-link" class="nav-brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
-                <img src="${rootPath}assets/images/logo_white.png" alt="Logo" style="height: 24px; width: auto; display: block;" />
-                <span id="brand-name">${SITE_CONFIG.name.toUpperCase()}</span>
-            </a>
+            <div class="nav-left">
+                <a href="${rootPath}index.html" id="header-brand-link" class="nav-brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+                    <img class="nav-logo" src="${rootPath}assets/images/logo_white.png" alt="Logo" />
+                    <span class="nav-brand-text">
+                        <span id="brand-name">${SITE_CONFIG.name.toUpperCase()}</span>
+                        <span class="nav-separator"></span>
+                        <span class="nav-designation" id="nav-designation">${SITE_CONFIG.title}</span>
+                    </span>
+                </a>
+            </div>
             <button class="mobile-menu-toggle" aria-label="Toggle Navigation">
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -138,12 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </svg>
             </button>
             <nav class="nav-links">
-                <a href="${rootPath}index.html#work">Showcase</a>
-                <a href="${rootPath}index.html#capabilities">Capabilities</a>
-				<a href="${rootPath}index.html#workbook">Workbook</a>
-                <a href="${rootPath}index.html#toolkit">Toolkit</a>
-                <a href="${rootPath}index.html#journey">Journey</a>
-                <a href="${rootPath}index.html#contact">Contact</a>
+                ${navLinksHTML}
             </nav>
         `;
 
@@ -192,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroBar = document.getElementById("hero-top-bar");
     if (heroBar) {
         // Automatically grabs from HTML data-badge attribute, or falls back to global config
-        const badgeText = heroBar.dataset.badge || `${SITE_CONFIG.title} · ${SITE_CONFIG.location}`;
+        const badgeText = heroBar.dataset.badge || SITE_CONFIG.title;
         const taglineText = heroBar.dataset.tagline || "Over a decade of motion design and visual storytelling...";
 
         heroBar.innerHTML = `
@@ -205,7 +219,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="hero-badge" id="hero-badge">${badgeText}</span>
                 <p class="hero-tagline" id="hero-tagline">${taglineText}</p>
             </div>
+            <button class="mobile-menu-toggle hero-menu-toggle" aria-label="Toggle Navigation">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <nav class="hero-nav" aria-label="Page sections">
+                ${navLinksHTML}
+            </nav>
         `;
+
+        // Mobile hamburger for the hero header (same behaviour as the sticky menu)
+        const heroToggle = heroBar.querySelector('.hero-menu-toggle');
+        const heroNav = heroBar.querySelector('.hero-nav');
+        if (heroToggle && heroNav) {
+            heroToggle.addEventListener('click', () => {
+                heroNav.classList.toggle('mobile-active');
+            });
+            heroNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    heroNav.classList.remove('mobile-active');
+                });
+            });
+        }
     }
 
     // --- D. Global Config Data Binding (Titles, Names, Links) ---
@@ -226,6 +264,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Contact & Social Data Binding
+    document.querySelectorAll(".contact-location").forEach(el => {
+        el.textContent = SITE_CONFIG.location;
+    });
+
     document.querySelectorAll(".contact-email").forEach(el => {
         el.textContent = SITE_CONFIG.email;
         el.href = `mailto:${SITE_CONFIG.email}`;
