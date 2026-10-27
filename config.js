@@ -47,7 +47,7 @@ const SITE_CONFIG = {
         {
             file: "Image-Banner-WM-Studio-App.webp",
             tag: "BANNER",
-            title: "WM Studio App Banner"
+            title: "Web Studio App Banner"
         },
         {
             file: "Enterprise_Concept_Anim.mp4",
@@ -57,12 +57,12 @@ const SITE_CONFIG = {
         {
             file: "Image-Gig-Icons.webp",
             tag: "ICON",
-            title: "Gig Icons"
+            title: "Icons"
         },
         {
             file: "Image-Banner-RAD-Studio.webp",
             tag: "BANNER",
-            title: "RAD Studio Banner"
+            title: "Website Image"
         },
         {
             file: "People.webp",
@@ -79,10 +79,20 @@ const SITE_CONFIG = {
             tag: "WORKBOOK",
             title: "LittleFighter"
         },
+		{
+            file: "Animatics_Storyboard.webm",
+            tag: "STORYBOARD",
+            title: "Animatic Storyboard"
+        },
         {
             file: "Mascot-new-gen-yogi.webp",
             tag: "CHARACTER",
             title: "Mascot — New Gen Yogi"
+        },
+		{
+            file: "Walk-cycle-Raditz.webm",
+            tag: "WALK CYCLE",
+            title: "Character Walk Cycle"
         },
         {
             file: "Cartoon-WrongTool-Cars.webp",
