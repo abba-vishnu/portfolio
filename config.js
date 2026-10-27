@@ -6,7 +6,7 @@ const SITE_CONFIG = {
     phone: "+91 85478 71997",
     phoneRaw: "+918547871997",
 
-    // Footer tagline (shown after "© year Name •" on every page)
+    // Footer tagline (shown after "© year Name •" on every page; edit from admin.html)
     footerText: "Visual design, in motion.",
 
     // Target resume file name
@@ -73,6 +73,11 @@ const SITE_CONFIG = {
             file: "Gig-Illustration.webp",
             tag: "ILLUSTRATION",
             title: "Gig Illustration"
+        },
+        {
+            file: "LittleFighter.mp4",
+            tag: "WORKBOOK",
+            title: "LittleFighter"
         },
         {
             file: "Mascot-new-gen-yogi.webp",
@@ -220,7 +225,7 @@ const SITE_CONFIG = {
             title: "Storyboard"
         },
         {
-            file: "Tetherfi-StoryBoard.jpg",
+            file: "Tetherfi-StoryBoard.webp",
             tag: "WORKBOOK",
             title: "Tetherfi StoryBoard"
         },
@@ -248,6 +253,106 @@ const SITE_CONFIG = {
             file: "how-to-convert-identifiers.webp",
             tag: "PRODUCT UI",
             title: "How to Convert Identifiers"
+        },
+        {
+            file: "Batman.webp",
+            tag: "WORKBOOK",
+            title: "Batman"
+        },
+        {
+            file: "DSC_0665.webp",
+            tag: "WORKBOOK",
+            title: "DSC 0665"
+        },
+        {
+            file: "DSC_0645.webp",
+            tag: "WORKBOOK",
+            title: "DSC 0645"
+        },
+        {
+            file: "Fighter.webp",
+            tag: "WORKBOOK",
+            title: "Fighter"
+        },
+        {
+            file: "14.webp",
+            tag: "WORKBOOK",
+            title: "14"
+        },
+        {
+            file: "17.webp",
+            tag: "WORKBOOK",
+            title: "17"
+        },
+        {
+            file: "19.webp",
+            tag: "WORKBOOK",
+            title: "19"
+        },
+        {
+            file: "20.webp",
+            tag: "WORKBOOK",
+            title: "20"
+        },
+        {
+            file: "DSC_0636.webp",
+            tag: "WORKBOOK",
+            title: "DSC 0636"
+        },
+        {
+            file: "DSC_0669.webp",
+            tag: "WORKBOOK",
+            title: "DSC 0669"
+        },
+        {
+            file: "Tarzan.webp",
+            tag: "WORKBOOK",
+            title: "Tarzan"
+        },
+        {
+            file: "Camera.webp",
+            tag: "WORKBOOK",
+            title: "Camera"
+        },
+        {
+            file: "sony-ericsson.webp",
+            tag: "WORKBOOK",
+            title: "sony ericsson"
+        },
+        {
+            file: "WOLVERINE-PAINTING.webp",
+            tag: "WORKBOOK",
+            title: "WOLVERINE PAINTING"
+        },
+        {
+            file: "Raditz-The-future-human-01.webp",
+            tag: "WORKBOOK",
+            title: "Raditz The future human"
+        },
+        {
+            file: "Raditz-The-future-human-02.webp",
+            tag: "WORKBOOK",
+            title: "Raditz The future human 01"
+        },
+        {
+            file: "Assassin.webp",
+            tag: "WORKBOOK",
+            title: "Assassin"
+        },
+        {
+            file: "Spartan.webp",
+            tag: "WORKBOOK",
+            title: "Spartan"
+        },
+        {
+            file: "Superman.webp",
+            tag: "WORKBOOK",
+            title: "Superman"
+        },
+        {
+            file: "Tarzan.webp",
+            tag: "WORKBOOK",
+            title: "Tarzan"
         }
     ],
     workbookPath: "assets/images/workbook/",
