@@ -1075,3 +1075,101 @@ body.header-morph .hero-top-bar .hero-tagline {
     max-height: calc(200px * (1 - var(--p)));
     overflow: hidden;
 }
+
+/* ==========================================================================
+   HEADER MORPH, PHONE / SMALL TABLET (hero header -> sticky menu)
+   Applies only while body.header-morph-small is set (script.js, section 8).
+   The hero bar becomes a grid: logo | name | hamburger, then badge, then tagline.
+   --p goes 0 (top of page) to 1 (scrolled).
+   ========================================================================== */
+
+body.header-morph-small #site-header {
+    display: none; /* the hero bar itself becomes the sticky menu */
+}
+
+body.header-morph-small .hero-section {
+    margin-top: 0;
+    padding-top: var(--hero-bar-h, 160px); /* the space the bar used to take in the page */
+    box-sizing: border-box;
+}
+
+body.header-morph-small .hero-top-bar {
+    --p: 0;
+    --logo-aspect: 1;  /* script.js replaces this with the real logo ratio */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    margin: 0;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: auto 1fr 0;   /* hamburger column is zero-width so the name keeps its room */
+    align-items: start;
+    justify-items: start;
+    gap: 0;
+    padding: calc(32px - 12px * var(--p)) 5vw;
+    background-color: rgba(17, 19, 19, calc(0.9 * var(--p)));
+    -webkit-backdrop-filter: blur(calc(8px * var(--p)));
+    backdrop-filter: blur(calc(8px * var(--p)));
+    border-bottom: 1px solid rgba(52, 57, 54, var(--p));
+}
+
+/* Let the logo, name, badge and tagline sit directly in the grid */
+body.header-morph-small .hero-left,
+body.header-morph-small .hero-right {
+    display: contents !important;
+}
+
+body.header-morph-small .hero-left img {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+    height: calc(48px - 16px * var(--p)) !important;      /* overrides the inline height */
+    margin-bottom: calc(-16.4px * var(--p));              /* lets the logo reach down beside the designation */
+}
+
+body.header-morph-small .hero-top-bar .hero-name {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    margin: 0 0 0 calc(16px - 4px * var(--p));
+    font-size: calc(2.8rem * (1 - var(--p)) + 13px * var(--p));
+    letter-spacing: calc(-0.03em + 0.13em * var(--p));
+    line-height: calc(1.1 + 0.1 * var(--p));
+    white-space: nowrap;
+}
+
+/* Past halfway the name switches to the sticky-menu style (case can't be animated) */
+body.header-morph-small .hero-top-bar.is-compact .hero-name {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-secondary); /* same grey as the sticky menu's name; delete this line to keep it white */
+}
+
+body.header-morph-small .hero-badge {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: calc(13.5px - 3.5px * var(--p));
+    line-height: 1.2;
+    /* top: 16px -> 4px, bottom: 8px -> 0, left: slides under the name as the logo shrinks */
+    margin: calc(16px - 12px * var(--p)) 0 calc(8px * (1 - var(--p))) calc(var(--p) * (32px * var(--logo-aspect) + 12px));
+}
+
+body.header-morph-small .hero-top-bar .hero-tagline {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin: 0;
+    opacity: calc(1 - 1.8 * var(--p));
+    max-height: calc(200px * (1 - var(--p)));
+    overflow: hidden;
+}
+
+body.header-morph-small .hero-menu-toggle {
+    position: static;                 /* was absolute in the mobile block */
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: start;
+    justify-self: end;
+    margin-top: calc(8px * (1 - var(--p)));
+}

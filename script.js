@@ -817,19 +817,37 @@ if (!customElements.get('lottie-box')) {
     customElements.define('lottie-box', LottieBox);
 }
 
-//-------------- 8. Header morph: hero bar -> sticky menu (wide screens only) ----------
+//-------------- 8. Header morph: hero bar -> sticky menu ----------
 document.addEventListener("DOMContentLoaded", () => {
     const heroBar = document.getElementById("hero-top-bar");
     const heroSection = document.querySelector(".hero-section");
     if (!heroBar || !heroSection) return;   // other pages keep the normal sticky menu
 
-    const MORPH_MIN_WIDTH = 1200;  // below this width the old two-header behaviour stays
-    const MORPH_DISTANCE  = 160;   // px of scrolling over which the header shrinks
+    const WIDE_MIN = 1200;          // width >= this: desktop morph
+    const SMALL_MAX = 900;          // width <= this: phone / small-tablet morph (match your hamburger breakpoint)
+    const SMALL_ENABLED = true;     // set to false to switch the phone/tablet morph off
+    const MORPH_DISTANCE = 160;     // px of scrolling over which the header shrinks
 
-    const mq = window.matchMedia(`(min-width: ${MORPH_MIN_WIDTH}px)`);
+    const mqWide = window.matchMedia(`(min-width: ${WIDE_MIN}px)`);
+    const mqSmall = window.matchMedia(`(max-width: ${SMALL_MAX}px)`);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let active = false;
+    const logo = heroBar.querySelector(".hero-left img");
+
+    let mode = "";          // "", "header-morph" (desktop) or "header-morph-small" (phone/tablet)
     let ticking = false;
+
+    function currentMode() {
+        if (mqWide.matches) return "header-morph";
+        if (SMALL_ENABLED && mqSmall.matches) return "header-morph-small";
+        return "";
+    }
+
+    // The phone layout needs the logo's width/height ratio to line things up
+    function setLogoAspect() {
+        if (logo && logo.naturalWidth && logo.naturalHeight) {
+            heroBar.style.setProperty("--logo-aspect", (logo.naturalWidth / logo.naturalHeight).toFixed(4));
+        }
+    }
 
     function setProgress() {
         const raw = Math.min(Math.max(window.scrollY / MORPH_DISTANCE, 0), 1);
@@ -862,16 +880,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function sync() {
-        const shouldBeActive = mq.matches;
-        if (shouldBeActive === active) {
-            if (active) measure();
+        const next = currentMode();
+        if (next === mode) {
+            if (mode) measure();
             return;
         }
-        active = shouldBeActive;
-        document.body.classList.toggle("header-morph", active);
 
-        if (active) {
+        if (mode) document.body.classList.remove(mode);
+        const heroNav = heroBar.querySelector(".hero-nav");
+        if (heroNav) heroNav.classList.remove("mobile-active");   // close an open dropdown when the layout changes
+        mode = next;
+
+        if (mode) {
+            document.body.classList.add(mode);
             window.addEventListener("scroll", onScroll, { passive: true });
+            setLogoAspect();
             measure();
         } else {
             window.removeEventListener("scroll", onScroll);
@@ -882,11 +905,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    if (logo) {
+        logo.addEventListener("load", () => {
+            setLogoAspect();
+            if (mode) measure();
+        });
+    }
+
     sync();
     window.addEventListener("resize", sync);
     window.addEventListener("load", sync);
     if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => { if (active) measure(); });
+        document.fonts.ready.then(() => { if (mode) measure(); });
     }
 });
 
