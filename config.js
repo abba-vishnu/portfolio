@@ -1,12 +1,12 @@
 const SITE_CONFIG = {
     name: "Abba Vishnu",
-    title: "Lead Visual Designer",
+    title: "Lead Motion Designer",
     location: "Available for on-site & remote projects",
     email: "abbavishnu@gmail.com",
     phone: "+91 85478 71997",
     phoneRaw: "+918547871997",
 
-    // Footer tagline (shown after "© year Name •" on every page; edit from admin.html)
+    // Footer tagline (shown after "© year Name •" on every page)
     footerText: "Visual design, in motion.",
 
     // Target resume file name
