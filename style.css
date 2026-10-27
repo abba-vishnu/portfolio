@@ -1058,7 +1058,6 @@ body.header-morph .hero-top-bar .hero-name {
 body.header-morph .hero-top-bar.is-compact .hero-name {
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--text-secondary); /* same grey as the sticky menu's name; delete this line to keep it white */
 }
 
 body.header-morph .hero-separator {
