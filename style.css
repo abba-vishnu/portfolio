@@ -1007,3 +1007,71 @@ a.view-all {
     height: 100%;
     display: block;
 }
+
+/* ==========================================================================
+   HEADER MORPH (hero header -> sticky menu)
+   Applies only while body.header-morph is set (script.js, section 8).
+   --p goes 0 (top of page) to 1 (scrolled): it drives every size below.
+   ========================================================================== */
+
+body.header-morph #site-header {
+    display: none; /* the hero bar itself becomes the sticky menu */
+}
+
+body.header-morph .hero-section {
+    margin-top: 0;
+    padding-top: var(--hero-bar-h, 120px); /* the space the bar used to take in the page */
+    box-sizing: border-box;
+}
+
+body.header-morph .hero-top-bar {
+    --p: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    margin: 0;
+    flex-wrap: nowrap;
+    gap: calc(24px - 8px * var(--p));
+    padding: calc(32px - 12px * var(--p)) 5vw;
+    background-color: rgba(17, 19, 19, calc(0.9 * var(--p)));
+    -webkit-backdrop-filter: blur(calc(8px * var(--p)));
+    backdrop-filter: blur(calc(8px * var(--p)));
+    border-bottom: 1px solid rgba(52, 57, 54, var(--p));
+}
+
+body.header-morph .hero-left {
+    gap: calc(16px - 4px * var(--p)) !important;   /* overrides the inline gap */
+}
+
+body.header-morph .hero-left img {
+    height: calc(48px - 24px * var(--p)) !important; /* overrides the inline height */
+}
+
+body.header-morph .hero-top-bar .hero-name {
+    font-size: calc(clamp(2.2rem, 3.5vw, 3.8rem) * (1 - var(--p)) + 13px * var(--p));
+    letter-spacing: calc(-0.03em + 0.13em * var(--p));
+}
+
+/* Past halfway the name switches to the sticky-menu style (case can't be animated) */
+body.header-morph .hero-top-bar.is-compact .hero-name {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-secondary); /* same grey as the sticky menu's name; delete this line to keep it white */
+}
+
+body.header-morph .hero-separator {
+    height: calc(55px - 35px * var(--p));
+}
+
+body.header-morph .hero-badge {
+    font-size: calc(13.5px - 1.5px * var(--p));
+    margin-bottom: calc(8px * (1 - var(--p)));
+}
+
+body.header-morph .hero-top-bar .hero-tagline {
+    opacity: calc(1 - 1.8 * var(--p));
+    max-height: calc(200px * (1 - var(--p)));
+    overflow: hidden;
+}

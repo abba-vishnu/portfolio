@@ -210,10 +210,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const taglineText = heroBar.dataset.tagline || "Over a decade of motion design and visual storytelling...";
 
         heroBar.innerHTML = `
-            <div class="hero-left" style="display: flex; align-items: center; gap: 16px;">
-                <img src="${rootPath}assets/images/logo_white.png" alt="${SITE_CONFIG.name} Logo" style="height: 48px; width: auto; display: block;">
-                <h1 class="hero-name" id="hero-name">${SITE_CONFIG.name}</h1>
-            </div>
+            <a href="${rootPath}index.html" class="hero-left hero-home-link" style="display: flex; align-items: center; gap: 16px; text-decoration: none; color: inherit;">
+				<img src="${rootPath}assets/images/logo_white.png" alt="${SITE_CONFIG.name} Logo" style="height: 48px; width: auto; display: block;">
+				<h1 class="hero-name" id="hero-name">${SITE_CONFIG.name}</h1>
+			</a>
             <div class="hero-separator"></div>
             <div class="hero-right">
                 <span class="hero-badge" id="hero-badge">${badgeText}</span>
@@ -816,3 +816,92 @@ class LottieBox extends HTMLElement {
 if (!customElements.get('lottie-box')) {
     customElements.define('lottie-box', LottieBox);
 }
+
+//-------------- 8. Header morph: hero bar -> sticky menu (wide screens only) ----------
+document.addEventListener("DOMContentLoaded", () => {
+    const heroBar = document.getElementById("hero-top-bar");
+    const heroSection = document.querySelector(".hero-section");
+    if (!heroBar || !heroSection) return;   // other pages keep the normal sticky menu
+
+    const MORPH_MIN_WIDTH = 1200;  // below this width the old two-header behaviour stays
+    const MORPH_DISTANCE  = 160;   // px of scrolling over which the header shrinks
+
+    const mq = window.matchMedia(`(min-width: ${MORPH_MIN_WIDTH}px)`);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let active = false;
+    let ticking = false;
+
+    function setProgress() {
+        const raw = Math.min(Math.max(window.scrollY / MORPH_DISTANCE, 0), 1);
+        const p = reduceMotion.matches ? (raw >= 0.5 ? 1 : 0) : raw;   // snap if reduced motion
+        heroBar.style.setProperty("--p", p.toFixed(3));
+        heroBar.classList.toggle("is-compact", p >= 0.5);
+        ticking = false;
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(setProgress);
+        }
+    }
+
+    // Measure the bar fully expanded (spacer height) and fully collapsed (anchor offset)
+    function measure() {
+        heroBar.style.setProperty("--p", "0");
+        heroBar.classList.remove("is-compact");
+        const expandedH = heroBar.offsetHeight;
+
+        heroBar.style.setProperty("--p", "1");
+        heroBar.classList.add("is-compact");
+        const compactH = heroBar.offsetHeight;
+
+        heroSection.style.setProperty("--hero-bar-h", expandedH + "px");
+        document.documentElement.style.setProperty("--header-height", (compactH + 16) + "px");
+        setProgress();
+    }
+
+    function sync() {
+        const shouldBeActive = mq.matches;
+        if (shouldBeActive === active) {
+            if (active) measure();
+            return;
+        }
+        active = shouldBeActive;
+        document.body.classList.toggle("header-morph", active);
+
+        if (active) {
+            window.addEventListener("scroll", onScroll, { passive: true });
+            measure();
+        } else {
+            window.removeEventListener("scroll", onScroll);
+            heroBar.style.removeProperty("--p");
+            heroBar.classList.remove("is-compact");
+            heroSection.style.removeProperty("--hero-bar-h");
+            if (typeof updateHeaderOffset === "function") updateHeaderOffset();
+        }
+    }
+
+    sync();
+    window.addEventListener("resize", sync);
+    window.addEventListener("load", sync);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => { if (active) measure(); });
+    }
+});
+
+//-------------- 9. Logo / name link: go home, or scroll to top if already home ----------
+document.addEventListener("DOMContentLoaded", () => {
+    const stripIndex = path => path.replace(/index\.html$/, "");
+
+    document.querySelectorAll("#header-brand-link, .hero-home-link").forEach(link => {
+        link.addEventListener("click", (e) => {
+            const target = new URL(link.href, document.baseURI);
+            if (stripIndex(target.pathname) === stripIndex(location.pathname)) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                history.replaceState(null, "", location.pathname + location.search); // drop any #section from the address
+            }
+        });
+    });
+});
