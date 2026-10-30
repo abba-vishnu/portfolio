@@ -1,0 +1,1391 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Abba Vishnu — Player Profile</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap">
+
+<style>
+/* =====================================================
+   DESIGN TOKENS — Retro Arcade / Game UI
+   Layout: Full-screen game shell with tabbed sections
+   ===================================================== */
+:root {
+  --bg:        #0a0e1a;
+  --bg2:       #111827;
+  --bg3:       #1a2235;
+  --panel:     #0d1525;
+  --border:    #1e3050;
+  --border2:   #2a4570;
+
+  --green:     #00ff88;
+  --green-dim: #00994d;
+  --amber:     #ffb800;
+  --amber-dim: #8a6500;
+  --magenta:   #ff2d78;
+  --cyan:      #00d4ff;
+  --white:     #e8f0fe;
+  --muted:     #6b7a99;
+  --scanline:  rgba(0,0,0,0.18);
+
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body:  'Inter', system-ui, sans-serif;
+
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+
+/* Light theme override — keep game aesthetic but readable */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:        #0a0e1a;
+    --bg2:       #111827;
+    --bg3:       #1a2235;
+    --panel:     #0d1525;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:        #0a0e1a;
+  --bg2:       #111827;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Scanline overlay — subtle CRT feel */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    var(--scanline) 3px,
+    var(--scanline) 4px
+  );
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* =====================================================
+   HEADER — Player HUD
+   ===================================================== */
+.hud {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 50;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 10px var(--gutter-r) 10px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 51;
+}
+
+.hud-name {
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 2vw, 11px);
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.hud-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.xp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.xp-label {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--amber);
+  letter-spacing: 1px;
+}
+
+.xp-bar-outer {
+  height: 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.xp-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+  transition: width 1.2s ease;
+  box-shadow: 0 0 8px var(--amber);
+  border-radius: 2px;
+}
+
+.level-badge {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--amber);
+  background: var(--bg3);
+  border: 2px solid var(--amber);
+  padding: 4px 8px;
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(255,184,0,0.3);
+}
+
+.contact-links {
+  display: flex;
+  gap: 8px;
+}
+
+.contact-links a {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--cyan);
+  text-decoration: none;
+  border: 1px solid var(--cyan);
+  padding: 4px 6px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.contact-links a:hover, .contact-links a:focus {
+  background: rgba(0,212,255,0.15);
+  box-shadow: 0 0 10px var(--cyan);
+  outline: none;
+}
+
+/* =====================================================
+   MAIN SHELL
+   ===================================================== */
+.game-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px var(--gutter-r) 80px var(--gutter);
+  padding-block: 24px 80px;
+}
+
+/* =====================================================
+   CHARACTER CARD — Top Profile
+   ===================================================== */
+.character-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: start;
+  background: var(--panel);
+  border: 2px solid var(--border2);
+  padding: 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.character-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, rgba(0,255,136,0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.char-sprite-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pixel art character — CSS only */
+.char-sprite {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.char-canvas {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+
+.char-class {
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  color: var(--magenta);
+  text-align: center;
+  line-height: 1.8;
+  text-shadow: 0 0 8px var(--magenta);
+}
+
+.char-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 28px;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-name {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--muted);
+}
+
+.stat-bar {
+  height: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 1.5s ease;
+  width: 0;
+}
+
+.stat-fill.green  { background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: 0 0 6px var(--green); }
+.stat-fill.cyan   { background: linear-gradient(90deg, #007a99, var(--cyan)); box-shadow: 0 0 6px var(--cyan); }
+.stat-fill.amber  { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); box-shadow: 0 0 6px var(--amber); }
+.stat-fill.magenta{ background: linear-gradient(90deg, #8a0040, var(--magenta)); box-shadow: 0 0 6px var(--magenta); }
+
+.stat-num {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--white);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.char-bio {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--white);
+  opacity: 0.85;
+  margin-top: 12px;
+  max-width: 55ch;
+}
+
+.char-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.char-name {
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 3vw, 16px);
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0,255,136,0.5);
+  text-wrap: balance;
+}
+
+.char-role {
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 1.5vw, 8px);
+  color: var(--amber);
+}
+
+/* =====================================================
+   NAV TABS
+   ===================================================== */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 1.5vw, 8px);
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 10px 12px 12px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  letter-spacing: 0.5px;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: var(--white);
+}
+
+.tab-btn.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  text-shadow: 0 0 10px var(--green);
+}
+
+.tab-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   PANELS
+   ===================================================== */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* =====================================================
+   QUEST LOG — Timeline
+   ===================================================== */
+.quest-log {
+  position: relative;
+  padding-left: 24px;
+}
+
+.quest-log::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--green), var(--cyan), var(--magenta));
+  opacity: 0.4;
+}
+
+.quest-item {
+  position: relative;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.quest-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.quest-item::before {
+  content: '';
+  position: absolute;
+  left: -21px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  background: var(--bg);
+  border: 2px solid var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.quest-item:last-child::before { border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.quest-item:nth-child(3)::before { border-color: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+.quest-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.quest-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 1.8vw, 10px);
+  color: var(--white);
+  text-wrap: balance;
+}
+
+.quest-company {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--green);
+}
+
+.quest-dates {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--muted);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.quest-tasks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.quest-tasks li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--white);
+  opacity: 0.8;
+  padding-left: 16px;
+  position: relative;
+}
+
+.quest-tasks li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-size: 10px;
+}
+
+/* =====================================================
+   SKILL TREE
+   ===================================================== */
+.skill-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.skill-category {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.skill-cat-title {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--amber);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.skill-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-node {
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 1.5vw, 7px);
+  padding: 6px 10px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--muted);
+  cursor: default;
+  transition: all 0.25s ease;
+  position: relative;
+  line-height: 1.6;
+}
+
+.skill-node.unlocked {
+  border-color: var(--green);
+  color: var(--green);
+  text-shadow: 0 0 6px rgba(0,255,136,0.4);
+  background: rgba(0,255,136,0.06);
+}
+
+.skill-node.tool {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  text-shadow: 0 0 6px rgba(0,212,255,0.4);
+  background: rgba(0,212,255,0.06);
+}
+
+.skill-node.ai {
+  border-color: var(--magenta);
+  color: var(--magenta);
+  text-shadow: 0 0 6px rgba(255,45,120,0.4);
+  background: rgba(255,45,120,0.06);
+}
+
+.skill-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,255,136,0.2);
+}
+
+/* =====================================================
+   ACHIEVEMENTS
+   ===================================================== */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.achievement {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s, box-shadow 0.3s;
+}
+
+.achievement.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.achievement.unlocked {
+  border-color: var(--amber);
+}
+
+.achievement.unlocked:hover {
+  box-shadow: 0 0 20px rgba(255,184,0,0.2);
+}
+
+.ach-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  filter: grayscale(1);
+  transition: filter 0.4s;
+}
+
+.achievement.unlocked .ach-icon { filter: grayscale(0); }
+
+.ach-body {}
+
+.ach-name {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--amber);
+  margin-bottom: 5px;
+}
+
+.ach-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* =====================================================
+   LANGUAGES PANEL
+   ===================================================== */
+.langs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.lang-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+
+.lang-name {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.lang-level {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.lang-pips {
+  display: flex;
+  gap: 4px;
+}
+
+.pip {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+}
+
+.pip.filled {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  border-color: var(--green);
+}
+
+/* Education */
+.edu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.edu-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: start;
+}
+
+.edu-degree {
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 1.5vw, 8px);
+  color: var(--cyan);
+  margin-bottom: 4px;
+  text-wrap: balance;
+}
+
+.edu-school {
+  font-size: 13px;
+  color: var(--white);
+  opacity: 0.8;
+}
+
+.edu-years {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   TOAST NOTIFICATION
+   ===================================================== */
+#toast {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  right: max(16px, env(safe-area-inset-right, 0px));
+  z-index: 200;
+  background: var(--panel);
+  border: 2px solid var(--amber);
+  padding: 12px 16px;
+  box-shadow: 0 0 20px rgba(255,184,0,0.35);
+  max-width: 280px;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-title {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+
+.toast-body {
+  font-size: 12px;
+  color: var(--white);
+  opacity: 0.85;
+}
+
+/* =====================================================
+   SECTION HEADERS
+   ===================================================== */
+.section-header {
+  font-family: var(--font-pixel);
+  font-size: clamp(8px, 2vw, 11px);
+  color: var(--green);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 0 0 12px rgba(0,255,136,0.4);
+}
+
+.section-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--green-dim), transparent);
+  opacity: 0.4;
+}
+
+/* =====================================================
+   BLINKING CURSOR
+   ===================================================== */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* =====================================================
+   PIXEL GRID BACKGROUND
+   ===================================================== */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.game-shell { position: relative; z-index: 1; }
+.hud { position: sticky; z-index: 50; }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 600px) {
+  .character-card {
+    grid-template-columns: 1fr;
+  }
+  .char-sprite-area {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .stat-row {
+    grid-template-columns: 72px 1fr 24px;
+  }
+  .quest-dates {
+    margin-left: 0;
+    width: 100%;
+  }
+  .hud-right {
+    gap: 8px;
+  }
+  .contact-links a {
+    padding: 3px 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .xp-bar-inner { transition: none; }
+}
+</style>
+
+<!-- Grid background -->
+<div class="grid-bg" aria-hidden="true"></div>
+
+<!-- HUD -->
+<header class="hud" role="banner">
+  <div class="hud-name">ABBA_VISHNU<span class="blink">▮</span></div>
+  <div class="hud-right">
+    <div class="xp-section">
+      <span class="xp-label">XP ████████░░ 15 YRS</span>
+      <div class="xp-bar-outer" role="progressbar" aria-label="Experience: 15 years" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+        <div class="xp-bar-inner" id="xpBar"></div>
+      </div>
+    </div>
+    <div class="level-badge">LVL 15</div>
+    <nav class="contact-links" aria-label="Contact">
+      <a href="mailto:abbavishnu@gmail.com" title="abbavishnu@gmail.com" aria-label="Email Abba">EMAIL</a>
+      <a href="https://abba-vishnu.github.io/portfolio/" target="_blank" rel="noopener" aria-label="View Portfolio">PORTFOLIO</a>
+      <a href="https://www.linkedin.com/in/abbavishnu/" target="_blank" rel="noopener" aria-label="LinkedIn">LINKEDIN</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="game-shell">
+
+  <!-- Character Card -->
+  <section class="character-card" aria-label="Player Profile">
+    <div class="char-sprite-area">
+      <div class="char-sprite" aria-hidden="true">
+        <canvas class="char-canvas" id="charCanvas" width="64" height="64"></canvas>
+      </div>
+      <div class="char-class">MOTION<br>DESIGNER<br>/ GAME DEV</div>
+    </div>
+    <div>
+      <div class="char-title-row">
+        <h1 class="char-name">ABBA VISHNU</h1>
+        <span class="char-role">LEAD VISUAL DESIGNER</span>
+      </div>
+      <div class="char-stats" id="charStats" aria-label="Skill stats">
+        <div class="stat-row">
+          <span class="stat-name">MOTION</span>
+          <div class="stat-bar"><div class="stat-fill green" data-val="95"></div></div>
+          <span class="stat-num">95</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">GAME DEV</span>
+          <div class="stat-bar"><div class="stat-fill cyan" data-val="88"></div></div>
+          <span class="stat-num">88</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">VISUAL DIR</span>
+          <div class="stat-bar"><div class="stat-fill amber" data-val="92"></div></div>
+          <span class="stat-num">92</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-name">AI TOOLS</span>
+          <div class="stat-bar"><div class="stat-fill magenta" data-val="85"></div></div>
+          <span class="stat-num">85</span>
+        </div>
+      </div>
+      <p class="char-bio">Lead Motion Graphics and Visual Designer with 15+ years of creative experience, including 8+ years in motion graphics, video production, and visual storytelling. Experienced in game design, character animation, and interactive media. Turns complex ideas into clear visual stories.</p>
+    </div>
+  </section>
+
+  <!-- Nav Tabs -->
+  <nav class="nav-tabs" role="tablist" aria-label="Resume sections">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-quests" id="tab-quests" data-tab="quests">⚔ QUESTS</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-skills" id="tab-skills" data-tab="skills">🔮 SKILL TREE</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-achievements" id="tab-achievements" data-tab="achievements">🏆 ACHIEVEMENTS</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-lore" id="tab-lore" data-tab="lore">📜 LORE</button>
+  </nav>
+
+  <!-- Panel: Quest Log (Experience) -->
+  <section class="panel active" id="panel-quests" role="tabpanel" aria-labelledby="tab-quests">
+    <h2 class="section-header">QUEST LOG — CAREER MISSIONS</h2>
+    <div class="quest-log">
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">LEAD VISUAL DESIGNER</span>
+          <span class="quest-company">WAVEMAKER, INC.</span>
+          <span class="quest-dates">APR 2023 → PRESENT</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Create enterprise SaaS marketing videos, product walkthroughs, motion graphics, and illustrations to make complex cloud and low-code concepts accessible.</li>
+          <li>Set visual direction and collaborate with product and marketing teams on digital channels and SaaS acquisition campaigns.</li>
+          <li>Build AI-assisted automation scripts to speed up design workflows and improve production efficiency.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">LEAD VISUAL DESIGNER</span>
+          <span class="quest-company">PRAMATI TECHNOLOGIES</span>
+          <span class="quest-dates">NOV 2021 → MAR 2023</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Led design of product videos and graphics for banking and low-code solutions supporting client presentations and product adoption.</li>
+          <li>Worked with cross-functional teams to rethink banking solutions using WaveMaker's low-code platform.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">SENIOR VISUAL DESIGNER</span>
+          <span class="quest-company">PRAMATI TECHNOLOGIES</span>
+          <span class="quest-dates">OCT 2019 → NOV 2021</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Created motion graphics and product videos for WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.</li>
+          <li>Explained complex product concepts through clear visual storytelling to boost customer engagement.</li>
+          <li>Explored AR/VR applications and their use in interactive design.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">VISUAL DESIGNER</span>
+          <span class="quest-company">PRAMATI TECHNOLOGIES</span>
+          <span class="quest-dates">APR 2018 → OCT 2019</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Produced marketing motion graphics and illustrations to support brand identity.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">GAME DEVELOPMENT ENGINEER</span>
+          <span class="quest-company">AVAZ INC.</span>
+          <span class="quest-dates">OCT 2016 → APR 2018</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Designed front-end experiences and gameplay for language-learning apps Freespeech and Chong-Chong, focused on usability and learning outcomes.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">GAME DESIGNER</span>
+          <span class="quest-company">EVELYN SOFTWARE LABS</span>
+          <span class="quest-dates">SEP 2011 → SEP 2016</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Developed iPad games: Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator — all shipped to a global audience.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">CHARACTER DESIGNER & ANIMATOR</span>
+          <span class="quest-company">COLOURS ANIMATION PVT LTD</span>
+          <span class="quest-dates">NOV 2010 → SEP 2011</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Designed and animated characters, prepared storyboards, and produced scene-by-scene animation for studio projects.</li>
+        </ul>
+      </article>
+
+      <article class="quest-item">
+        <div class="quest-header">
+          <span class="quest-title">ANIMATOR TRAINEE</span>
+          <span class="quest-company">VISMAYAS MAX</span>
+          <span class="quest-dates">JUL 2009 → OCT 2010</span>
+        </div>
+        <ul class="quest-tasks">
+          <li>Created character sketches, turnarounds, 3D models, props, and animations for training projects.</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Panel: Skill Tree -->
+  <section class="panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills">
+    <h2 class="section-header">SKILL TREE</h2>
+    <div class="skill-categories">
+
+      <div class="skill-category">
+        <div class="skill-cat-title">⚡ MOTION DESIGN & VIDEO</div>
+        <div class="skill-nodes">
+          <span class="skill-node unlocked">Motion Graphics</span>
+          <span class="skill-node unlocked">Animation</span>
+          <span class="skill-node unlocked">SaaS Marketing Videos</span>
+          <span class="skill-node unlocked">Product Explainers</span>
+          <span class="skill-node unlocked">Video Editing</span>
+          <span class="skill-node unlocked">Post-Production</span>
+          <span class="skill-node unlocked">Pre-Production</span>
+          <span class="skill-node unlocked">Concept Development</span>
+          <span class="skill-node unlocked">Storyboarding</span>
+          <span class="skill-node unlocked">Visual Storytelling</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <div class="skill-cat-title">🎮 GAME DESIGN & INTERACTIVE</div>
+        <div class="skill-nodes">
+          <span class="skill-node unlocked">Game Design</span>
+          <span class="skill-node unlocked">Character Animation</span>
+          <span class="skill-node unlocked">Unity3D</span>
+          <span class="skill-node unlocked">C# Programming</span>
+          <span class="skill-node unlocked">AR/VR Design</span>
+          <span class="skill-node unlocked">Interactive Media</span>
+          <span class="skill-node unlocked">UI/UX for Games</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <div class="skill-cat-title">🛠 CREATIVE TOOLS</div>
+        <div class="skill-nodes">
+          <span class="skill-node tool">After Effects</span>
+          <span class="skill-node tool">Premiere Pro</span>
+          <span class="skill-node tool">Illustrator</span>
+          <span class="skill-node tool">Photoshop</span>
+          <span class="skill-node tool">Figma</span>
+          <span class="skill-node tool">Canva</span>
+          <span class="skill-node tool">Audacity</span>
+          <span class="skill-node tool">Blender (Familiar)</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <div class="skill-cat-title">🤖 AI TOOLKIT</div>
+        <div class="skill-nodes">
+          <span class="skill-node ai">ChatGPT</span>
+          <span class="skill-node ai">Claude</span>
+          <span class="skill-node ai">Gemini</span>
+          <span class="skill-node ai">Copilot</span>
+          <span class="skill-node ai">Adobe Firefly</span>
+          <span class="skill-node ai">Midjourney</span>
+          <span class="skill-node ai">Runway</span>
+          <span class="skill-node ai">Kling AI</span>
+          <span class="skill-node ai">Veo</span>
+          <span class="skill-node ai">LunaAI</span>
+          <span class="skill-node ai">Pika</span>
+          <span class="skill-node ai">ElevenLabs</span>
+          <span class="skill-node ai">Lyria</span>
+          <span class="skill-node ai">Figma AI</span>
+          <span class="skill-node ai">Canva Magic Studio</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <div class="skill-cat-title">👑 LEADERSHIP & DIRECTION</div>
+        <div class="skill-nodes">
+          <span class="skill-node unlocked">Creative Direction</span>
+          <span class="skill-node unlocked">Brand Identity</span>
+          <span class="skill-node unlocked">Team Management</span>
+          <span class="skill-node unlocked">Cross-Functional Collaboration</span>
+          <span class="skill-node unlocked">AI-Assisted Workflows</span>
+          <span class="skill-node unlocked">Project Management</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Panel: Achievements -->
+  <section class="panel" id="panel-achievements" role="tabpanel" aria-labelledby="tab-achievements">
+    <h2 class="section-header">ACHIEVEMENTS UNLOCKED</h2>
+    <div class="achievements-grid">
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">⭐</span>
+        <div class="ach-body">
+          <div class="ach-name">STAR PERFORMER</div>
+          <p class="ach-desc">Star Performer of the Year — Pramati Technologies, 2019</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">🎓</span>
+        <div class="ach-body">
+          <div class="ach-name">CERTIFIED ANIMATOR</div>
+          <p class="ach-desc">Diploma Certificate in Character Animation — Vismayas Max, 2009</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">🎮</span>
+        <div class="ach-body">
+          <div class="ach-name">SHIPPED 4 GAMES</div>
+          <p class="ach-desc">Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator released globally on iPad</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">🤖</span>
+        <div class="ach-body">
+          <div class="ach-name">AI PIONEER</div>
+          <p class="ach-desc">Built AI-assisted automation scripts for design workflows — 15+ AI tools mastered</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">📺</span>
+        <div class="ach-body">
+          <div class="ach-name">STUDIO ANIMATOR</div>
+          <p class="ach-desc">Character designed and animated for professional studio productions at Colours Animation</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">🌐</span>
+        <div class="ach-body">
+          <div class="ach-name">AR/VR EXPLORER</div>
+          <p class="ach-desc">Explored augmented and virtual reality applications in interactive design</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">📱</span>
+        <div class="ach-body">
+          <div class="ach-name">EDU-GAME DESIGNER</div>
+          <p class="ach-desc">Designed language-learning games Freespeech and Chong-Chong at Avaz Inc., improving literacy outcomes</p>
+        </div>
+      </div>
+
+      <div class="achievement unlocked">
+        <span class="ach-icon" aria-hidden="true">🏅</span>
+        <div class="ach-body">
+          <div class="ach-name">15 YEAR VETERAN</div>
+          <p class="ach-desc">15+ years of continuous creative work across animation, game design, and motion graphics</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Panel: Lore (Education, Languages) -->
+  <section class="panel" id="panel-lore" role="tabpanel" aria-labelledby="tab-lore">
+    <h2 class="section-header">ORIGIN STORY — EDUCATION</h2>
+    <div class="edu-list" style="margin-bottom: 32px;">
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">DIPLOMA — TRADITIONAL & 3D ANIMATION</div>
+          <div class="edu-school">Vismayas Max Animation Academy · 3D &amp; Clay Modelling</div>
+        </div>
+        <div class="edu-years">2008 – 2009</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">BA — ENGLISH LITERATURE (COURSEWORK)</div>
+          <div class="edu-school">University of Kerala</div>
+        </div>
+        <div class="edu-years">2010 – 2012</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">HIGHER SECONDARY (+2)</div>
+          <div class="edu-school">Sree Buddha Central School · Computer Science &amp; Maths</div>
+        </div>
+        <div class="edu-years">2006 – 2008</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">10TH STANDARD</div>
+          <div class="edu-school">Bishop Moore Vidyapith · Computer Science &amp; Maths</div>
+        </div>
+        <div class="edu-years">1996 – 2006</div>
+      </div>
+
+    </div>
+
+    <h2 class="section-header">LANGUAGE PROFICIENCIES</h2>
+    <div class="langs-grid">
+      <div class="lang-card">
+        <div class="lang-name">MALAYALAM</div>
+        <div class="lang-level">NATIVE PROFICIENCY</div>
+        <div class="lang-pips" aria-label="5 of 5 pips">
+          <div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div>
+        </div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-name">ENGLISH</div>
+        <div class="lang-level">PROFESSIONAL PROFICIENCY</div>
+        <div class="lang-pips" aria-label="4 of 5 pips">
+          <div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div><div class="pip"></div>
+        </div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-name">TAMIL</div>
+        <div class="lang-level">WORKING PROFICIENCY</div>
+        <div class="lang-pips" aria-label="3 of 5 pips">
+          <div class="pip filled"></div><div class="pip filled"></div><div class="pip filled"></div><div class="pip"></div><div class="pip"></div>
+        </div>
+      </div>
+      <div class="lang-card">
+        <div class="lang-name">HINDI</div>
+        <div class="lang-level">ELEMENTARY PROFICIENCY</div>
+        <div class="lang-pips" aria-label="2 of 5 pips">
+          <div class="pip filled"></div><div class="pip filled"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Toast notification -->
+<div id="toast" role="alert" aria-live="polite">
+  <div class="toast-title" id="toastTitle">ACHIEVEMENT UNLOCKED</div>
+  <div class="toast-body" id="toastBody"></div>
+</div>
+
+<script>
+(function() {
+  // ---- XP Bar ----
+  setTimeout(() => {
+    const bar = document.getElementById('xpBar');
+    if (bar) bar.style.width = '75%';
+  }, 300);
+
+  // ---- Animate stat bars ----
+  setTimeout(() => {
+    document.querySelectorAll('.stat-fill').forEach(el => {
+      const v = el.dataset.val;
+      if (v) el.style.width = v + '%';
+    });
+  }, 500);
+
+  // ---- Pixel art character (CSS canvas) ----
+  function drawChar() {
+    const canvas = document.getElementById('charCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const S = 4; // pixel size
+    // Simple 16x16 pixel art character grid
+    // 0=transparent, 1=skin, 2=hair, 3=shirt(green), 4=pants, 5=outline
+    const sprite = [
+      [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+      [0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0],
+      [0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0],
+      [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,1,1,5,1,1,5,1,1,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,0,1,1,3,3,1,1,0,0,0,0,0],
+      [0,0,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
+      [0,0,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,0,0,0],
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,0,0,0],
+      [0,0,0,4,4,4,0,0,0,0,4,4,4,0,0,0],
+      [0,0,0,4,4,4,0,0,0,0,4,4,4,0,0,0],
+      [0,0,0,1,1,4,0,0,0,0,4,1,1,0,0,0],
+      [0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],
+    ];
+    const colors = {
+      1: '#e8b87a', // skin
+      2: '#1a0a00', // dark hair
+      3: '#00ff88', // green shirt
+      4: '#1a3060', // pants
+      5: '#3a1a00', // eyes
+    };
+    ctx.clearRect(0, 0, 64, 64);
+    sprite.forEach((row, y) => {
+      row.forEach((cell, x) => {
+        if (cell && colors[cell]) {
+          ctx.fillStyle = colors[cell];
+          ctx.fillRect(x * S, y * S, S, S);
+        }
+      });
+    });
+  }
+  drawChar();
+
+  // ---- Tabs ----
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+      const panelId = 'panel-' + tab.dataset.tab;
+      const panel = document.getElementById(panelId);
+      if (panel) {
+        panel.classList.add('active');
+        triggerAnimations(panel);
+      }
+      if (tab.dataset.tab === 'achievements') showToast('SKILL UNLOCKED', 'Viewing Achievements panel');
+      if (tab.dataset.tab === 'skills') showToast('SKILL TREE LOADED', 'Explore all unlocked abilities');
+    });
+  });
+
+  // ---- Keyboard navigation for tabs ----
+  document.querySelector('.nav-tabs').addEventListener('keydown', e => {
+    const btns = [...document.querySelectorAll('.tab-btn')];
+    const idx = btns.indexOf(document.activeElement);
+    if (idx < 0) return;
+    if (e.key === 'ArrowRight') { btns[(idx+1)%btns.length].focus(); btns[(idx+1)%btns.length].click(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { btns[(idx-1+btns.length)%btns.length].focus(); btns[(idx-1+btns.length)%btns.length].click(); e.preventDefault(); }
+  });
+
+  // ---- Intersection Observer for quest items / achievements ----
+  function triggerAnimations(container) {
+    const items = container.querySelectorAll('.quest-item, .achievement');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    items.forEach(item => {
+      item.classList.remove('visible');
+      observer.observe(item);
+    });
+  }
+
+  // Trigger for initial active panel
+  triggerAnimations(document.getElementById('panel-quests'));
+
+  // ---- Toast ----
+  let toastTimer;
+  function showToast(title, body) {
+    const toast = document.getElementById('toast');
+    const tTitle = document.getElementById('toastTitle');
+    const tBody = document.getElementById('toastBody');
+    tTitle.textContent = title;
+    tBody.textContent = body;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  // Welcome toast
+  setTimeout(() => showToast('PLAYER LOADED', 'Welcome to Abba Vishnu\'s profile. Navigate tabs to explore.'), 1200);
+
+  // ---- Pixel character idle animation ----
+  let frame = 0;
+  function animateChar() {
+    const canvas = document.getElementById('charCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    frame++;
+    // Gentle bob — redraw with slight offset
+    const S = 4;
+    const bobY = Math.sin(frame * 0.06) > 0 ? 0 : 1;
+    ctx.clearRect(0, 0, 64, 64);
+    const sprite = [
+      [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+      [0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0],
+      [0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0],
+      [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,1,1,5,1,1,5,1,1,0,0,0,0],
+      [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,0,1,1,3,3,1,1,0,0,0,0,0],
+      [0,0,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
+      [0,0,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,0,0,0],
+      [0,0,0,3,3,3,3,3,3,3,3,3,3,0,0,0],
+      [0,0,0,4,4,4,0,0,0,0,4,4,4,0,0,0],
+      [0,0,0,4,4,4,0,0,0,0,4,4,4,0,0,0],
+      [0,0,0,1,1,4,0,0,0,0,4,1,1,0,0,0],
+      [0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],
+    ];
+    const colors = { 1:'#e8b87a', 2:'#1a0a00', 3:'#00ff88', 4:'#1a3060', 5:'#3a1a00' };
+    sprite.forEach((row, y) => {
+      row.forEach((cell, x) => {
+        if (cell && colors[cell]) {
+          ctx.fillStyle = colors[cell];
+          ctx.fillRect(x * S, (y + bobY) * S, S, S);
+        }
+      });
+    });
+    requestAnimationFrame(animateChar);
+  }
+  animateChar();
+
+})();
+</script>
+
+</body></html>
