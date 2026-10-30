@@ -289,10 +289,10 @@
 
             <!-- Touch-Friendly Filter Tabs -->
             <div class="filter-tabs" id="experience-filters">
-                <button class="filter-btn active" data-filter="all">All Roles</button>
-                <button class="filter-btn" data-filter="saas">Enterprise SaaS</button>
-                <button class="filter-btn" data-filter="games">Games &amp; Interactive</button>
-                <button class="filter-btn" data-filter="studio">Studio &amp; Animation</button>
+                <button class="filter-btn active" data-filter="all" aria-pressed="true">All Roles</button>
+                <button class="filter-btn" data-filter="saas" aria-pressed="false">Enterprise SaaS</button>
+                <button class="filter-btn" data-filter="games" aria-pressed="false">Games &amp; Interactive</button>
+                <button class="filter-btn" data-filter="studio" aria-pressed="false">Studio &amp; Animation</button>
             </div>
 
             <div class="timeline-track-container" id="resume-journey-list">
@@ -489,8 +489,12 @@
 
             filterBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
-                    filterBtns.forEach(b => b.classList.remove("active"));
+                    filterBtns.forEach(b => {
+                        b.classList.remove("active");
+                        b.setAttribute("aria-pressed", "false");
+                    });
                     btn.classList.add("active");
+                    btn.setAttribute("aria-pressed", "true");
                     const cat = btn.getAttribute("data-filter");
                     items.forEach(item => {
                         if (cat === "all" || item.getAttribute("data-category") === cat) {
@@ -544,15 +548,18 @@
 
             items.forEach(item => observer.observe(item));
 
-            // 3. Audio Waveform Canvas Animation
+            // 3. Audio Waveform Canvas Animation (pauses when scrolled off-screen)
             const canvas = document.getElementById("audio-waveform");
             if (canvas) {
                 canvas.width = 130;
                 canvas.height = 24;
                 const ctx = canvas.getContext("2d");
                 let offset = 0;
+                let rafId = null;
+                let isVisible = false;
 
                 function drawWaveform() {
+                    if (!isVisible) { rafId = null; return; }
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.fillStyle = "#d6fa74";
                     const numBars = 16;
@@ -564,9 +571,19 @@
                         ctx.fillRect(i * (barWidth + gap), (canvas.height - h) / 2, barWidth, h);
                     }
                     offset += 0.08;
-                    requestAnimationFrame(drawWaveform);
+                    rafId = requestAnimationFrame(drawWaveform);
                 }
-                drawWaveform();
+
+                const waveObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        isVisible = entry.isIntersecting;
+                        if (isVisible && !rafId) {
+                            rafId = requestAnimationFrame(drawWaveform);
+                        }
+                    });
+                }, { threshold: 0 });
+
+                waveObserver.observe(canvas);
             }
         });
     </script>
