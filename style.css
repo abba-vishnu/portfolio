@@ -842,6 +842,11 @@ a.view-all {
 
 /* Mobile & Tablet Screens */
 @media (max-width: 899px) {
+    #work .grid .card:nth-child(n+4),
+    #workbook-grid-container .card:nth-child(n+4),
+    #lottie-grid-container .card:nth-child(n+4) {
+        display: none !important;
+    }
     .container { 
         padding-block: 40px; 
     }
