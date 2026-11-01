@@ -76,11 +76,11 @@ main { max-width: 1100px; margin: 0 auto; padding: 32px 5vw 120px; display: grid
 .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 label.f { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
 label.f small { font-size: 12px; opacity: .8; }
-input[type=text], input[type=email], select {
+input[type=text], input[type=email], select, textarea {
     width: 100%; padding: 9px 11px; border-radius: 6px;
     background: var(--field); border: 1px solid var(--border); color: var(--text);
 }
-input:focus, select:focus { border-color: var(--accent); outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
 
 /* ---------- Workbook images ---------- */
 .drop {
@@ -226,6 +226,20 @@ details .fields { margin-top: 14px; }
     </section>
 
     <section class="panel">
+        <h2>Home Experience (The Journey)</h2>
+        <p class="hint">Items shown in the journey section on the home page.</p>
+        <button class="btn primary" id="btn-add-home-exp" style="margin-bottom: 16px;">Add journey item</button>
+        <div id="admin-home-exp-list" style="display: grid; gap: 16px;"></div>
+    </section>
+
+    <section class="panel">
+        <h2>Resume Experience (Career Timeline)</h2>
+        <p class="hint">Items shown on the interactive resume page.</p>
+        <button class="btn primary" id="btn-add-resume-exp" style="margin-bottom: 16px;">Add resume role</button>
+        <div id="admin-resume-exp-list" style="display: grid; gap: 16px;"></div>
+    </section>
+
+    <section class="panel">
         <h2>Workbook images &amp; videos</h2>
         <p class="hint">Files are saved to the workbook folder. Images, .webm and .mp4 videos are all supported (use a video instead of a GIF: smaller and sharper). Drag a thumbnail to reorder (or use the arrows). Order here is the order on the site. Removing an item only takes it out of the list; the file stays in the folder.</p>
 
@@ -324,6 +338,7 @@ details .fields { margin-top: 14px; }
 /* ============================ State ============================ */
 const DEFAULTS = {
     name: "", title: "", location: "", email: "", phone: "", phoneRaw: "",
+    heroTagline: "",
     footerText: "Visual design, in motion.",
     resumeFile: "assets/Resume.docx",
     socials: { linkedin: "", vimeo: "" },
@@ -339,7 +354,9 @@ const DEFAULTS = {
     lottieFiles: [],
     lottiePath: "assets/lottie/",
     lottiePlayerSrc: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js",
-    showcaseVideos: []
+    showcaseVideos: [],
+    homeExperience: [],
+    resumeExperience: []
 };
 
 let cfg = normalize(typeof SITE_CONFIG !== "undefined" ? SITE_CONFIG : {});
@@ -400,16 +417,19 @@ window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); 
 /* ============================ Simple form fields ============================ */
 const FORMS = {
     "#form-profile": [
-        ["name", "Name"], ["title", "Title"], ["location", "Location"],
-        ["email", "Email", "email"], ["phone", "Phone"],
-        ["phoneRaw", "Phone, dial format", "text", "Used for the tel: link. Fills in automatically from Phone."],
-        ["footerText", "Footer text", "text", "Shown at the bottom of every page, after \u201c\u00a9 year Name \u2022\u201d."]
+        ["name", "Name"],
+        ["title", "Title"],
+        ["location", "Location"],
+        ["email", "Email", "email"],
+        ["phone", "Phone"],
+        ["footerText", "Footer text", "text"],
+        ["heroTagline", "Hero Tagline", "textarea"]
     ],
     "#form-links": [
 		["socials.linkedin", "LinkedIn URL"],
 		["socials.vimeo", "Vimeo showcase URL"],
-		["resumePdf", "PDF Resume file path", "text", "Relative to the site root."],
-		["resumeDocx", "DOCX Resume file path", "text", "Relative to the site root."]
+		["resumePdf", "PDF Resume file path", "text"],
+		["resumeDocx", "DOCX Resume file path", "text"]
 	],
     "#form-hero": [
         ["heroPoster", "Poster image path", "text", "Shown before the video loads. Relative to the site root.", true]
@@ -428,15 +448,21 @@ const FORMS = {
 
 function buildForms() {
     for (const [sel, fields] of Object.entries(FORMS)) {
-        $(sel).innerHTML = fields.map(([path, label, type = "text", note, preview]) => `
-            <label class="f">${esc(label)}
-                <input type="${type}" data-path="${path}" autocomplete="off" spellcheck="false">
+        $(sel).innerHTML = fields.map(([path, label, type = "text", note, preview]) => {
+            const control = type === "textarea"
+                ? `<textarea data-path="${path}" autocomplete="off" spellcheck="false" rows="3" style="resize:vertical;"></textarea>`
+                : `<input type="${type}" data-path="${path}" autocomplete="off" spellcheck="false">`;
+            return `
+            <label class="f" ${type === "textarea" ? 'style="grid-column: 1 / -1;"' : ''}>${esc(label)}
+                ${control}
                 ${note ? `<small>${esc(note)}</small>` : ""}
                 ${preview ? `<span class="field-preview"><img data-preview-for="${path}" alt="" hidden><span class="missing-sm" hidden>Not found at that path</span></span>` : ""}
-            </label>`).join("");
+            </label>`;
+        }).join("");
     }
     refreshForms();
 }
+
 function updateFieldPreview(path) {
     const img = document.querySelector(`[data-preview-for="${CSS.escape(path)}"]`);
     if (!img) return;
@@ -582,7 +608,9 @@ function serialize() {
         fallbackImage: "// Shown in place of ANY image or animation that fails to load, on every page",
         lottieFiles: "// Lottie animations: each entry has a file name, a tag label, and a display title",
         lottiePlayerSrc: "// The Lottie player library every page loads",
-        showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)"
+        showcaseVideos: "// Unified Showcase List (YouTube & Vimeo Mixed)",
+        homeExperience: "// Home page journey items",
+        resumeExperience: "// Resume career timeline items"
     };
     for (const [key, note] of Object.entries(notes)) {
         s = s.replace(new RegExp("^    " + key + ":", "m"), m => `\n    ${note}\n${m}`);
@@ -1224,6 +1252,100 @@ function enableDragSort(boxSel, itemSel, axis, getList, afterMove) {
     box.addEventListener("dragend", reset);
 }
 
+function renderAdminExperiences() {
+    const homeBox = $("#admin-home-exp-list");
+    if (homeBox) {
+        homeBox.innerHTML = cfg.homeExperience.map((item, i) => `
+            <div class="tile" style="grid-template-columns: 1fr;">
+                <div class="fields">
+                    <label class="f">Year / Period <input type="text" data-home-exp="${i}" data-field="year" value="${esc(item.year)}"></label>
+                    <label class="f">Title <input type="text" data-home-exp="${i}" data-field="title" value="${esc(item.title)}"></label>
+                    <label class="f">Tag / Company <input type="text" data-home-exp="${i}" data-field="tag" value="${esc(item.tag)}"></label>
+                </div>
+                <label class="f" style="margin-top: 8px;">Description 
+                    <textarea data-home-exp="${i}" data-field="description" style="width:100%; padding:9px; background:var(--field); border:1px solid var(--border); color:var(--text); border-radius:6px;" rows="3">${esc(item.description)}</textarea>
+                </label>
+                <div class="row-actions" style="margin-top: 10px;">
+                    <button class="btn sm" data-act="home-exp-up" data-i="${i}" ${i === 0 ? "disabled" : ""}>↑ Up</button>
+                    <button class="btn sm" data-act="home-exp-down" data-i="${i}" ${i === cfg.homeExperience.length - 1 ? "disabled" : ""}>↓ Down</button>
+                    <button class="btn sm danger" data-act="home-exp-remove" data-i="${i}">✕</button>
+                </div>
+            </div>
+        `).join("") || '<p class="empty">No journey items added yet.</p>';
+    }
+
+    const resumeBox = $("#admin-resume-exp-list");
+    if (resumeBox) {
+        resumeBox.innerHTML = cfg.resumeExperience.map((item, i) => `
+            <div class="tile" style="grid-template-columns: 1fr;">
+                <div class="fields">
+                    <label class="f">Timecode <input type="text" data-resume-exp="${i}" data-field="timecode" value="${esc(item.timecode)}"></label>
+                    <label class="f">Date Range <input type="text" data-resume-exp="${i}" data-field="date" value="${esc(item.date)}"></label>
+                    <label class="f">Job Title <input type="text" data-resume-exp="${i}" data-field="title" value="${esc(item.title)}"></label>
+                    <label class="f">Company <input type="text" data-resume-exp="${i}" data-field="company" value="${esc(item.company)}"></label>
+                    <label class="f">Category 
+                        <select data-resume-exp="${i}" data-field="category">
+                            <option value="saas" ${item.category === 'saas' ? 'selected' : ''}>Enterprise SaaS</option>
+                            <option value="games" ${item.category === 'games' ? 'selected' : ''}>Games & Interactive</option>
+                            <option value="studio" ${item.category === 'studio' ? 'selected' : ''}>Studio & Animation</option>
+                        </select>
+                    </label>
+                </div>
+                <label class="f" style="margin-top: 8px;">Paragraphs (one per line)
+                    <textarea data-resume-exp="${i}" data-field="paragraphs" style="width:100%; padding:9px; background:var(--field); border:1px solid var(--border); color:var(--text); border-radius:6px;" rows="3">${esc((item.paragraphs || []).join('\n'))}</textarea>
+                </label>
+                <div class="row-actions" style="margin-top: 10px;">
+                    <button class="btn sm" data-act="resume-exp-up" data-i="${i}" ${i === 0 ? "disabled" : ""}>↑ Up</button>
+                    <button class="btn sm" data-act="resume-exp-down" data-i="${i}" ${i === cfg.resumeExperience.length - 1 ? "disabled" : ""}>↓ Down</button>
+                    <button class="btn sm danger" data-act="resume-exp-remove" data-i="${i}">✕</button>
+                </div>
+            </div>
+        `).join("") || '<p class="empty">No resume roles added yet.</p>';
+    }
+}
+
+document.addEventListener("input", e => {
+    if (e.target.dataset?.homeExp !== undefined) {
+        const i = +e.target.dataset.homeExp;
+        cfg.homeExperience[i][e.target.dataset.field] = e.target.value;
+        setDirty(true);
+    }
+    if (e.target.dataset?.resumeExp !== undefined) {
+        const i = +e.target.dataset.resumeExp;
+        const field = e.target.dataset.field;
+        if (field === 'paragraphs') {
+            cfg.resumeExperience[i].paragraphs = e.target.value.split('\n').map(s => s.trim()).filter(Boolean);
+        } else {
+            cfg.resumeExperience[i][field] = e.target.value;
+        }
+        setDirty(true);
+    }
+});
+
+document.addEventListener("click", e => {
+    const b = e.target.closest("[data-act]");
+    if (!b) return;
+    const i = +b.dataset.i, act = b.dataset.act;
+
+    if (act === "home-exp-up" && move(cfg.homeExperience, i, -1)) { setDirty(true); renderAdminExperiences(); }
+    if (act === "home-exp-down" && move(cfg.homeExperience, i, 1)) { setDirty(true); renderAdminExperiences(); }
+    if (act === "home-exp-remove") { cfg.homeExperience.splice(i, 1); setDirty(true); renderAdminExperiences(); }
+
+    if (act === "resume-exp-up" && move(cfg.resumeExperience, i, -1)) { setDirty(true); renderAdminExperiences(); }
+    if (act === "resume-exp-down" && move(cfg.resumeExperience, i, 1)) { setDirty(true); renderAdminExperiences(); }
+    if (act === "resume-exp-remove") { cfg.resumeExperience.splice(i, 1); setDirty(true); renderAdminExperiences(); }
+});
+
+$("#btn-add-home-exp").onclick = () => {
+    cfg.homeExperience.unshift({ year: "2026", title: "New Role", tag: "Company", description: "Role description..." });
+    setDirty(true); renderAdminExperiences();
+};
+
+$("#btn-add-resume-exp").onclick = () => {
+    cfg.resumeExperience.unshift({ timecode: "09 - NEW", date: "2026", title: "New Role", company: "Company", category: "saas", paragraphs: ["Description paragraph 1"] });
+    setDirty(true); renderAdminExperiences();
+};
+
 /* ============================ Init ============================ */
 (async function init() {
     buildForms();
@@ -1235,6 +1357,7 @@ function enableDragSort(boxSel, itemSel, axis, getList, afterMove) {
     renderVideos();
     renderHeroVideo();
     updateStatus();
+    renderAdminExperiences();
 
     if (!window.showDirectoryPicker) {
         $("#unsupported").hidden = false;

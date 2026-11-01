@@ -318,6 +318,20 @@ document.addEventListener("DOMContentLoaded", () => {
         el.href = SITE_CONFIG.socials.vimeo;
     });
 
+    // --- HOME JOURNEY INJECTOR ---
+    const homeJourneyContainer = document.getElementById("home-journey-container");
+    if (homeJourneyContainer && SITE_CONFIG.homeExperience) {
+        homeJourneyContainer.innerHTML = SITE_CONFIG.homeExperience.map(item => `
+            <div class="journey-item">
+                <div class="journey-year" style="color: var(--accent, #d6fa74);">${item.year}</div>
+                <div class="journey-content">
+                    <h3>${item.title}</h3>
+                    <div class="card-tag journey-tag" style="color: var(--accent, #d6fa74);">${item.tag}</div>
+                    <p>${item.description}</p>
+                </div>
+            </div>
+        `).join("");
+    }
 
     // --- E. Automatic Mixed Showcase Generator (YouTube & Vimeo) ---
     const container = document.getElementById("vimeo-grid-container");

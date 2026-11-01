@@ -5,6 +5,7 @@ const SITE_CONFIG = {
     email: "abbavishnu@gmail.com",
     phone: "+91 85478 71997",
     phoneRaw: "+918547871997",
+    heroTagline: "Motion designer and lead visual creator with over 8 years of experience building product videos, explainer films, brand motion, and uses AI tools to speed up production workflows.",
 
     // Footer tagline (shown after "© year Name •" on every page; edit from admin.html)
     footerText: "Visual design, in motion.",
@@ -42,7 +43,7 @@ const SITE_CONFIG = {
         {
             file: "Animals-RunWild.webp",
             tag: "ILLUSTRATION",
-            title: "Animals — Run Wild"
+            title: "Run Wild"
         },
         {
             file: "Image-Banner-WM-Studio-App.webp",
@@ -79,7 +80,7 @@ const SITE_CONFIG = {
             tag: "WORKBOOK",
             title: "LittleFighter"
         },
-		{
+        {
             file: "Animatics_Storyboard.webm",
             tag: "STORYBOARD",
             title: "Animatic Storyboard"
@@ -89,7 +90,7 @@ const SITE_CONFIG = {
             tag: "CHARACTER",
             title: "Mascot — New Gen Yogi"
         },
-		{
+        {
             file: "Walk-cycle-Raditz.webm",
             tag: "WALK CYCLE",
             title: "Character Walk Cycle"
@@ -358,11 +359,6 @@ const SITE_CONFIG = {
             file: "Superman.webp",
             tag: "WORKBOOK",
             title: "Superman"
-        },
-        {
-            file: "Tarzan.webp",
-            tag: "WORKBOOK",
-            title: "Tarzan"
         }
     ],
     workbookPath: "assets/images/workbook/",
@@ -753,6 +749,116 @@ const SITE_CONFIG = {
             tag: "42 / MARKETING",
             title: "Ad for video creation",
             link: "https://youtu.be/M8_Yxr8F9M8"
+        }
+    ],
+
+    // Home page journey items
+    homeExperience: [
+        {
+            year: "2018 — PRESENT",
+            title: "Graphics & Motion Graphics Design",
+            tag: "WaveMaker & Pramati Technologies",
+            description: "Leading visual design and motion production for enterprise SaaS platforms (WaveMaker, ThumbSignIn, Hyscale). Producing 50+ product films, AI feature launches, and brand motion systems while integrating automated workflows."
+        },
+        {
+            year: "2011 — 2018",
+            title: "Gaming & Interactive Design",
+            tag: "Avaz Inc. & Evelyn Software Labs",
+            description: "Designed and released commercial mobile games (Battleground Defense Trilogy, Welding Simulator) and built accessible UI/gameplay logic for AAC assistive communication apps."
+        },
+        {
+            year: "2009 — 2011",
+            title: "Animation",
+            tag: "Colours Animation & Vismayas Max",
+            description: "Started with character design, storyboards, and 3D modeling in professional studio environments, building core expertise in animation timing, composition, and visual structure."
+        }
+    ],
+
+    // Resume career timeline items
+    resumeExperience: [
+        {
+            timecode: "PRESENT",
+            date: "Apr 2023 - Present",
+            title: "Lead Visual Designer",
+            company: "WaveMaker, Inc.",
+            category: "saas",
+            paragraphs: [
+                "Directing enterprise SaaS product videos, feature walkthroughs, and brand motion that explain cloud and low-code concepts clearly.",
+                "Collaborating with product and marketing teams to keep video style consistent across campaigns and product releases.",
+                "Writing custom automation scripts and integrating AI tools into daily workflows to speed up production."
+            ]
+        },
+        {
+            timecode: "LEAD",
+            date: "Nov 2021 - Mar 2023",
+            title: "Lead Visual Designer",
+            company: "Pramati Technologies",
+            category: "saas",
+            paragraphs: [
+                "Directed product videos and visual assets for banking and low-code software to help with client demos and product adoption.",
+                "Worked with cross-functional teams to update how banking solutions were presented using WaveMaker."
+            ]
+        },
+        {
+            timecode: "SENIOR",
+            date: "Oct 2019 - Nov 2021",
+            title: "Senior Visual Designer",
+            company: "Pramati Technologies",
+            category: "saas",
+            paragraphs: [
+                "Created motion graphics and product videos for enterprise tools like WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.",
+                "Turned technical product features into clear visual explanations to improve engagement, alongside early AR/VR design tests."
+            ]
+        },
+        {
+            timecode: "DESIGNER",
+            date: "Apr 2018 - Oct 2019",
+            title: "Visual Designer",
+            company: "Pramati Technologies",
+            category: "saas",
+            paragraphs: [
+                "Created marketing motion graphics and vector illustrations to support brand campaigns."
+            ]
+        },
+        {
+            timecode: "ENGINEER",
+            date: "Oct 2016 - Apr 2018",
+            title: "Game Development Engineer",
+            company: "Avaz Inc.",
+            category: "games",
+            paragraphs: [
+                "Designed front-end layouts and gameplay logic for language learning apps like Freespeech and Chong-Chong."
+            ]
+        },
+        {
+            timecode: "GAMES",
+            date: "Sep 2011 - Sep 2016",
+            title: "Game Designer",
+            company: "Evelyn Software Labs",
+            category: "games",
+            paragraphs: [
+                "Developed and shipped multiple iOS games including Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator."
+            ]
+        },
+        {
+            timecode: "ANIMATOR",
+            date: "Nov 2010 - Sep 2011",
+            title: "Character Designer & Animator",
+            company: "Colours Animation Pvt Ltd",
+            category: "studio",
+            paragraphs: [
+                "Drew storyboards, designed characters, and handled scene animation for studio projects."
+            ]
+        },
+        {
+            timecode: "TRAINEE",
+            date: "Jul 2009 - Oct 2010",
+            title: "Animator Trainee",
+            company: "Vismayas Max",
+            category: "studio",
+            paragraphs: [
+                "Built character turn-arounds, 3D props, models, and animation tests for studio training projects."
+            ]
         }
     ],
     resumePdf: "assets/Abba_Vishnu_Resume.pdf",

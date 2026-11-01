@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< Updated upstream
     <title id="page-title">Abba Vishnu | Lead Motion and Visual Designer</title>
     <meta name="description" content="Lead Visual Designer with 15+ years of experience in motion design, game development, and AI workflows. Specializing in SaaS films, brand motion, and interactive media.">
+=======
+    <title id="page-title">Abba Vishnu | Lead Visual Designer</title>
+    <meta name="description" content="Lead Visual Designer with 8+ years of experience in motion design, and AI workflows. Specializing in SaaS films, brand motion, and interactive media.">
+>>>>>>> Stashed changes
 
     <meta property="og:title" content="Abba Vishnu | Lead Motion and Visual Designer">
     <meta property="og:description" content="Lead Visual Designer with 15+ years of experience in motion design, game development, and AI workflows. Specializing in SaaS films, brand motion, and interactive media.">
@@ -45,9 +50,13 @@
     <!-- True Edge-to-Edge Hero Section -->
     <section class="hero-section">
         <!-- Dynamically Injected Hero Banner Header -->
-        <div id="hero-top-bar" class="hero-top-bar"
-             data-tagline="15+ years in motion design, game dev, and modern AI workflows. Turning complex tech into clear visual stories."></div>
-        
+        <div id="hero-top-bar" class="hero-top-bar"></div>
+        <script>
+            if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.heroTagline) {
+                document.getElementById('hero-top-bar').setAttribute('data-tagline', SITE_CONFIG.heroTagline);
+            }
+        </script>
+
         <!-- Full-Width Edge-to-Edge Video Container (src filled in from SITE_CONFIG.heroVideo / heroPoster by script.js) -->
         <div class="video-container edge-video">
             <!-- Filler Poster Image (Displays until video loads) -->
@@ -68,14 +77,14 @@
         <section id="work">
             <div class="section-header-row">
                 <h2>SHOWCASE</h2>
-                <span class="section-eyebrow">FILMS · EXPLAINERS · PRODUCT STORIES</span>
+                <span class="section-eyebrow">FILMS &nbsp;·&nbsp; EXPLAINERS &nbsp;·&nbsp; PRODUCT STORIES</span>
             </div>
             <p class="subtitle">Selected projects from WaveMaker and beyond. Includes SaaS product videos, platform overviews, brand animations, and motion experiments.</p>
 
             <!-- WaveMaker Feature Block -->
             <div class="journey-highlight" style="margin-top: 28px; margin-bottom: 0;">
                 <span>Currently: Lead Visual Designer at WaveMaker, Inc.</span>
-                <span>50+ SaaS videos &nbsp;·&nbsp; 10+ product lines &nbsp;·&nbsp; Unified visual system</span>
+                <span>100+ videos delivered &nbsp;·&nbsp; 10+ product lines &nbsp;·&nbsp; Unified visual system</span>
             </div>
 
             <div class="grid">
@@ -183,7 +192,7 @@
         <section id="capabilities">
             <div class="section-header-row">
                 <h2>WHAT I BRING</h2>
-                <span class="section-eyebrow">15+ YEARS · ENTERPRISE SAAS · GAMES · AI</span>
+                <span class="section-eyebrow">8+ YEARS &nbsp;·&nbsp; MOTION DESIGN &nbsp;·&nbsp; ANIMATION &nbsp;·&nbsp; AI</span>
             </div>
             <p class="subtitle">A multi-disciplinary skill set developed across animation studios, game design, accessibility software, and enterprise SaaS platforms.</p>
             <div class="capabilities-grid" style="margin-top: 32px;">
@@ -191,31 +200,31 @@
                 <div class="capability-card">
                     <h3>Pre-production</h3>
                     <p>Concept development, narrative planning, and storyboarding to align the core idea before animating. Writing scripts and sketching rough frames keeps production organized and fast.</p>
-                    <div class="card-tag no-margin">Concept development · Storyboarding · Scripting · Art direction</div>
+                    <div class="card-tag no-margin">Concept development &nbsp;·&nbsp; Storyboarding &nbsp;·&nbsp; Scripting &nbsp;·&nbsp; Art direction</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Motion design &amp; video</h3>
                     <p>Complete video production, covering character animation, title graphics, SaaS product explainers, UI walkthroughs, and brand promo videos. Over 50 videos delivered for WaveMaker.</p>
-                    <div class="card-tag no-margin">After Effects · Premiere Pro · Illustrator · Photoshop · Blender</div>
+                    <div class="card-tag no-margin">After Effects &nbsp;·&nbsp; Premiere Pro &nbsp;·&nbsp; Illustrator &nbsp;·&nbsp; Photoshop &nbsp;·&nbsp; Blender</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Creative direction</h3>
                     <p>Maintaining visual style, brand consistency, and cross-team alignment. Partnering with product management, marketing, and engineering to keep output clear across channels.</p>
-                    <div class="card-tag no-margin">Brand identity · Visual systems · Team leadership · Figma</div>
+                    <div class="card-tag no-margin">Brand identity &nbsp;·&nbsp; Visual systems &nbsp;·&nbsp; Team leadership &nbsp;·&nbsp; Figma</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>AI-driven workflows</h3>
                     <p>Integrating generative AI tools into production pipelines to speed up tasks without sacrificing finish. Writing custom scripts to automate repetitive timeline steps.</p>
-                    <div class="card-tag no-margin">Runway · ElevenLabs · MidJourney · Adobe Firefly · Kling AI · Pika · Veo</div>
+                    <div class="card-tag no-margin">Runway &nbsp;·&nbsp; ElevenLabs &nbsp;·&nbsp; MidJourney &nbsp;·&nbsp; Adobe Firefly &nbsp;·&nbsp; Kling AI &nbsp;·&nbsp; Pika &nbsp;·&nbsp; Veo</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Interactive &amp; game design</h3>
                     <p>Five years designing commercial mobile games and assistive communication apps, bringing practical UI and interaction experience into motion design.</p>
-                    <div class="card-tag no-margin">Unity3D · C# · AR/VR · Game UI · AAC app design</div>
+                    <div class="card-tag no-margin">Unity3D &nbsp;·&nbsp; C# &nbsp;·&nbsp; AR/VR &nbsp;·&nbsp; Game UI &nbsp;·&nbsp; AAC app design</div>
                 </div>
 
             </div>
@@ -376,7 +385,7 @@
         <section id="ai-toolkit">
             <div class="section-header-row">
                 <h2>AI IN MY WORKFLOW</h2>
-                <span class="section-eyebrow">GENERATIVE · AUTOMATED · INTEGRATED</span>
+                <span class="section-eyebrow">GENERATIVE &nbsp;·&nbsp; AUTOMATED &nbsp;·&nbsp; INTEGRATED</span>
             </div>
 
             <div class="capabilities-grid" style="margin-top: 32px;">
@@ -384,25 +393,25 @@
                 <div class="capability-card">
                     <h3>Video &amp; motion generation</h3>
                     <p>Generating video clips for quick visual tests, background elements, and rapid scene layout before moving into full production.</p>
-                    <div class="card-tag no-margin">Runway · Kling AI · Veo · Pika · LunaAI</div>
+                    <div class="card-tag no-margin">Runway &nbsp;·&nbsp; Kling AI &nbsp;·&nbsp; Veo &nbsp;·&nbsp; Pika &nbsp;·&nbsp; LunaAI</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Image &amp; visual ideation</h3>
                     <p>Creating quick style references, artwork variations, and visual concepts to pitch direction before starting vector graphics or other work.</p>
-                    <div class="card-tag no-margin">MidJourney · Adobe Firefly · Canva Magic Studio</div>
+                    <div class="card-tag no-margin">MidJourney &nbsp;·&nbsp; Adobe Firefly &nbsp;·&nbsp; Canva Magic Studio</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Voice &amp; audio</h3>
                     <p>Generating scratch voiceovers to test timing on scripts early, alongside temporary background audio for initial video reviews.</p>
-                    <div class="card-tag no-margin">ElevenLabs · Lyria</div>
+                    <div class="card-tag no-margin">ElevenLabs &nbsp;·&nbsp; Lyria</div>
                 </div>
 
                 <div class="capability-card">
                     <h3>Design &amp; production scripting</h3>
                     <p>Speeding up layout iterations, reviewing script copy, and running scripts to automate file management and project setup.</p>
-                    <div class="card-tag no-margin">Figma AI · ChatGPT · Claude · Gemini · Copilot</div>
+                    <div class="card-tag no-margin">Figma AI &nbsp;·&nbsp; ChatGPT &nbsp;·&nbsp; Claude &nbsp;·&nbsp; Gemini &nbsp;·&nbsp; Copilot</div>
                 </div>
 
             </div>
@@ -413,40 +422,11 @@
         <section id="journey">
             <div class="section-header-row">
                 <h2>THE JOURNEY</h2>
-                <span class="section-eyebrow uppercase">15 Years Across Motion Design, Gaming &amp; Animation</span>
+                <span class="section-eyebrow uppercase">8+ Years Across Motion Design &amp; Animation</span>
             </div>
-
-			<div class="journey-list-box">
-				<div class="journey-list">
-					<div class="journey-item">
-						<div class="journey-year" style="color: var(--accent, #d6fa74);">2018 — PRESENT</div>
-						<div class="journey-content">
-							<h3>Graphics &amp; Motion Graphics Design</h3>
-							<div class="card-tag journey-tag" style="color: var(--accent, #d6fa74);">WaveMaker &amp; Pramati Technologies</div>
-							<p>Leading visual design and motion production for enterprise SaaS platforms (WaveMaker, ThumbSignIn, Hyscale). Producing 50+ product films, AI feature launches, and brand motion systems while integrating automated workflows.</p>
-						</div>
-					</div>
-
-					<div class="journey-item">
-						<div class="journey-year" style="color: var(--accent, #d6fa74);">2011 — 2018</div>
-						<div class="journey-content">
-							<h3>Gaming &amp; Interactive Design</h3>
-							<div class="card-tag journey-tag" style="color: var(--accent, #d6fa74);">Avaz Inc. &amp; Evelyn Software Labs</div>
-							<p>Designed and released commercial mobile games (Battleground Defense Trilogy, Welding Simulator) and built accessible UI/gameplay logic for AAC assistive communication apps.</p>
-						</div>
-					</div>
-
-					<div class="journey-item">
-						<div class="journey-year" style="color: var(--accent, #d6fa74);">2009 — 2011</div>
-						<div class="journey-content">
-							<h3>Animation</h3>
-							<div class="card-tag journey-tag" style="color: var(--accent, #d6fa74);">Colours Animation &amp; Vismayas Max</div>
-							<p>Started with character design, storyboards, and 3D modeling in professional studio environments, building core expertise in animation timing, composition, and visual structure.</p>
-						</div>
-					</div>
-
-				</div>
-			</div>
+            <div class="journey-list-box">
+            	<div class="journey-list" id="home-journey-container"></div>
+            </div>
             <!-- Journey Highlight Box -->
             <div class="journey-highlight">
                 <span>⭐ Star Performer of the Year, 2019 (Pramati Technologies)</span>
@@ -496,7 +476,14 @@
                     <a href="tel:+918547871997">+91 85478 71997</a>
                 </div>
                 <div class="contact-links" style="margin-bottom: 0;">
+<<<<<<< Updated upstream
                     <span style="color: var(--text-secondary); font-size: 0.85rem;"><span class="contact-location">Available for remote &amp; on-site projects</span> &nbsp;·&nbsp; English · Malayalam · Tamil · Hindi</span>
+=======
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;"><span class="contact-location">
+                    	Available for on-site &amp; remote projects</span>
+                    <span>•</span>
+                    <span>English &nbsp;·&nbsp; Malayalam &nbsp;·&nbsp; Tamil &nbsp;·&nbsp; Hindi</span>
+>>>>>>> Stashed changes
                 </div>
             </div>
 
