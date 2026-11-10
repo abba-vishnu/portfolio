@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skillveri - XR & MR Skills Training</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Font Awesome Icons for Social Media -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root {
+    --orange: #F47C20;
+    --orange-dark: #E66E14;
+    --orange-glow: rgba(244, 124, 32, 0.2);
+    --text: #0f172a;
+    --muted: #64748b;
+    --bg: #ffffff;
+    --soft: #f8fafc;
+    --border: #e2e8f0;
+    --card-bg: #ffffff;
+    --dark-bg: #0f172a;
+    --dark-card: #1e293b;
+    
+    /* Responsive Fluid Variables */
+    --container-max-width: 1600px;
+    --container-padding: clamp(1.25rem, 3vw, 4rem);
+    --section-padding: clamp(3.5rem, 6vw, 7.5rem);
+    
+    --radius-sm: clamp(8px, 0.75vw, 14px);
+    --radius-md: clamp(12px, 1.2vw, 22px);
+    --radius-lg: clamp(16px, 1.8vw, 30px);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: clamp(15px, 0.45vw + 11px, 22px);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+}
+
+section {
+    padding: var(--section-padding) 0;
+    width: 100%;
+}
+
+h1 {
+    font-size: clamp(2.4rem, 4vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: clamp(1rem, 1.5vw, 2rem);
+}
+
+h2 {
+    font-size: clamp(1.8rem, 2.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.75rem;
+}
+
+p {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.1vw, 1.25rem);
+}
+
+.section-header {
+    text-align: center;
+    max-width: 50rem;
+    margin: 0 auto clamp(2.5rem, 4vw, 4.5rem) auto;
+}
+
+/* -------------------------------------------------------------
+   BUTTON STYLES
+------------------------------------------------------------- */
+.btn {
+    min-height: clamp(2.8rem, 3.2vw, 3.8rem);
+    padding: clamp(0.7rem, 1vw, 1.1rem) clamp(1.5rem, 2vw, 2.5rem);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1vw, 1.15rem);
+    transition: var(--transition);
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--orange);
+    color: #fff;
+    box-shadow: 0 0.25rem 0.9rem var(--orange-glow);
+}
+
+.btn-primary:hover {
+    background: var(--orange-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 0.4rem 1.25rem rgba(244, 124, 32, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: white;
+}
+
+.btn-secondary:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(1px);
+}
+
+/* -------------------------------------------------------------
+   HEADER & NAVIGATION
+------------------------------------------------------------- */
+header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    width: 100%;
+}
+
+.nav {
+    height: clamp(4.5rem, 6vw, 6rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: clamp(1.5rem, 2vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+}
+
+.logo span {
+    color: var(--orange);
+}
+
+.menu {
+    display: flex;
+    gap: clamp(1.25rem, 2.5vw, 3rem);
+}
+
+.menu a {
+    text-decoration: none;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: clamp(0.95rem, 1vw, 1.15rem);
+    padding: 0.5rem 0;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+
+.menu a:hover {
+    color: var(--orange);
+}
+
+/* -------------------------------------------------------------
+   UNIFIED CONTENT CARD HOVER ANIMATIONS
+------------------------------------------------------------- */
+.stat-card,
+.who-feature-item,
+.card,
+.product-card,
+.step-card,
+.testimonial-card {
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover,
+.who-feature-item:hover,
+.card:hover,
+.product-card:hover,
+.step-card:hover,
+.testimonial-card:hover {
+    transform: translateY(-0.35rem);
+    border-color: var(--orange);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.06);
+}
+
+/* -------------------------------------------------------------
+   HERO SECTION
+------------------------------------------------------------- */
+.hero {
+    background: radial-gradient(circle at top right, rgba(244,124,32,0.06), transparent 50%), linear-gradient(180deg, #fff, #f8fafc);
+    padding: clamp(3rem, 5vw, 6rem) 0 clamp(4rem, 6vw, 7.5rem);
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(2rem, 4vw, 5rem);
+    align-items: center;
+}
+
+.hero h1 span {
+    color: var(--orange);
+}
+
+.hero-visual {
+    position: relative;
+    width: 100%;
+    height: clamp(280px, 32vw, 520px);
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1.25rem 2.5rem rgba(0,0,0,0.12);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-media-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    gap: 0.75rem;
+}
+
+.hero-media-placeholder i {
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    color: var(--orange);
+}
+
+/* -------------------------------------------------------------
+   STATS / METRICS SECTION
+------------------------------------------------------------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    margin-top: clamp(2.5rem, 4vw, 4.5rem);
+}
+
+.stat-card {
+    background: white;
+    padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1rem, 1.8vw, 2rem);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    text-align: center;
+    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.02);
+}
+
+.stat-card h3 {
+    color: var(--orange);
+    font-size: clamp(2.2rem, 3.2vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    font-weight: 600;
+    color: var(--text);
+    font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+}
+
+/* -------------------------------------------------------------
+   TESTIMONIALS & AFFILIATIONS SECTION
+------------------------------------------------------------- */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2vw, 2.25rem);
+}
+
+.testimonial-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: clamp(1.5rem, 2.2vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-quote {
+    font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.testimonial-quote::before {
+    content: "“";
+    font-size: clamp(2.5rem, 3.5vw, 4rem);
+    color: var(--orange);
+    line-height: 0;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
+.author-avatar {
+    width: clamp(2.75rem, 3.5vw, 3.75rem);
+    height: clamp(2.75rem, 3.5vw, 3.75rem);
+    border-radius: 50%;
+    background: var(--soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    font-weight: 700;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    font-size: clamp(0.85rem, 1vw, 1.1rem);
+}
+
+.author-info h4 {
+    font-size: clamp(0.9rem, 1vw, 1.1rem);
+    font-weight: 700;
+    color: var(--text);
+}
+
+.author-info p {
+    font-size: clamp(0.8rem, 0.9vw, 1rem);
+    color: var(--muted);
+}
+
+/* AFFILIATIONS RESTYLED */
+.affiliations {
+    margin-top: clamp(2.5rem, 4vw, 4.5rem);
+    padding-top: clamp(1.5rem, 2.5vw, 3rem);
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.affiliations-title {
+    font-size: clamp(1.1rem, 1.3vw, 1.4rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: clamp(1.25rem, 2vw, 2rem);
+}
+
+.affiliations-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    flex-wrap: wrap;
+}
+
+.badge-box {
+    min-height: clamp(2.5rem, 3vw, 3.25rem);
+    padding: 0 clamp(1.25rem, 1.8vw, 2rem);
+    background: var(--soft);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    font-weight: 600;
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.badge-box:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    transform: translateY(-2px);
+}
+
+/* -------------------------------------------------------------
+   INFINITE MARQUEE LOGO SECTION
+------------------------------------------------------------- */
+.logos-section {
+    background: var(--soft);
+    overflow: hidden;
+    padding: clamp(3rem, 5vw, 5.5rem) 0;
+}
+
+.marquee-container {
+    position: relative;
+    width: 100%;
+    margin-top: 1.5rem;
+    overflow-x: auto;
+    cursor: grab;
+    user-select: none;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.marquee-container::-webkit-scrollbar {
+    display: none;
+}
+
+.marquee-track {
+    display: flex;
+    gap: clamp(1rem, 1.5vw, 1.75rem);
+    width: max-content;
+    will-change: transform;
+}
+
+.logo-box {
+    width: clamp(140px, 12vw, 220px);
+    height: clamp(70px, 6vw, 100px);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    flex-shrink: 0;
+    transition: border-color 0.2s ease;
+}
+
+.logo-box:hover {
+    border-color: var(--orange);
+}
+
+/* -------------------------------------------------------------
+   WHO WE ARE SECTION
+------------------------------------------------------------- */
+.who-we-are {
+    background: var(--dark-bg);
+    color: white;
+}
+
+.who-we-are h2 {
+    color: white;
+}
+
+.who-we-are p {
+    color: #94a3b8;
+}
+
+.who-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: center;
+}
+
+.who-card {
+    background: var(--dark-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.75rem, 3vw, 3.5rem);
+}
+
+.who-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 1.5vw, 1.75rem);
+}
+
+.who-feature-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: clamp(1.25rem, 2vw, 2rem);
+}
+
+.who-feature-item h4 {
+    color: white;
+    font-size: clamp(1rem, 1.15vw, 1.3rem);
+    margin-bottom: 0.5rem;
+}
+
+.who-feature-item p {
+    font-size: clamp(0.85rem, 0.95vw, 1.05rem);
+}
+
+/* -------------------------------------------------------------
+   FEATURES SECTION
+------------------------------------------------------------- */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 1.8vw, 2rem);
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: clamp(1.5rem, 2.2vw, 2.5rem) clamp(1.25rem, 1.8vw, 2rem);
+}
+
+.card h3 {
+    font-size: clamp(1.1rem, 1.25vw, 1.45rem);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+}
+
+/* -------------------------------------------------------------
+   PRODUCTS / SIMULATORS SECTION
+------------------------------------------------------------- */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.2vw, 2.5rem);
+}
+
+.product-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.product-media {
+    height: clamp(180px, 16vw, 280px);
+    background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #334155;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1vw, 1.15rem);
+}
+
+.product-body {
+    padding: clamp(1.25rem, 2vw, 2.25rem);
+}
+
+.product-body h3 {
+    font-size: clamp(1.15rem, 1.3vw, 1.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* -------------------------------------------------------------
+   HOW IT WORKS / WORKFLOW
+------------------------------------------------------------- */
+.workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 1.8vw, 2rem);
+}
+
+.step-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: clamp(1.5rem, 2.2vw, 2.5rem) clamp(1.25rem, 1.8vw, 2rem);
+    border-radius: var(--radius-md);
+}
+
+.step-num {
+    color: var(--orange);
+    font-weight: 800;
+    font-size: clamp(1.15rem, 1.4vw, 1.6rem);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.step-card h3 {
+    font-size: clamp(1.1rem, 1.25vw, 1.45rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* -------------------------------------------------------------
+   CALL TO ACTION
+------------------------------------------------------------- */
+.cta-section {
+    padding: clamp(2rem, 4vw, 4rem) 0 clamp(4rem, 6vw, 7.5rem);
+}
+
+.cta-box {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    padding: clamp(3rem, 5vw, 6rem) clamp(1.5rem, 4vw, 4rem);
+    box-shadow: 0 1.25rem 3rem rgba(244, 124, 32, 0.3);
+}
+
+.cta-box h2 {
+    color: white;
+    font-size: clamp(2rem, 3vw, 3.25rem);
+}
+
+.cta-box p {
+    color: white;
+    opacity: 0.95;
+    max-width: 42rem;
+    margin: 1rem auto 2rem;
+    font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+}
+
+/* -------------------------------------------------------------
+   FOOTER SECTION
+------------------------------------------------------------- */
+footer {
+    padding: clamp(3.5rem, 5vw, 6rem) 0 clamp(2rem, 3vw, 3rem);
+    background: #070a12;
+    color: #94a3b8;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.6fr 1fr auto;
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+    align-items: start;
+}
+
+.footer-col h4 {
+    font-size: clamp(0.85rem, 0.95vw, 1.05rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+    color: #ffffff;
+}
+
+.footer-col p {
+    margin-bottom: 0.5rem;
+    font-size: clamp(0.85rem, 0.95vw, 1.05rem);
+    color: #94a3b8;
+}
+
+.footer-col a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.footer-col a:hover {
+    color: var(--orange);
+}
+
+.social-icons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(2.5rem, 3vw, 3.25rem);
+    height: clamp(2.5rem, 3vw, 3.25rem);
+    padding: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: clamp(1rem, 1.1vw, 1.3rem);
+    transition: var(--transition);
+}
+
+.social-btn:hover {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.9rem var(--orange-glow);
+}
+
+.social-btn:active {
+    transform: translateY(1px);
+}
+
+.footer-bottom {
+    margin-top: clamp(2.5rem, 4vw, 4.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+    font-size: clamp(0.8rem, 0.9vw, 1rem);
+    color: #64748b;
+}
+
+/* -------------------------------------------------------------
+   RESPONSIVE DESIGN BREAKPOINTS
+------------------------------------------------------------- */
+@media(max-width: 1024px) {
+    .hero-grid,
+    .who-grid,
+    .stats-grid,
+    .testimonials-grid,
+    .features-grid,
+    .products-grid,
+    .workflow-grid,
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 768px) {
+    .hero-grid,
+    .who-grid,
+    .who-features,
+    .stats-grid,
+    .testimonials-grid,
+    .features-grid,
+    .products-grid,
+    .workflow-grid,
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .cta-box {
+        padding: 3rem 1.5rem;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="container nav">
+        <div class="logo">Skill<span>veri</span></div>
+
+        <div class="menu">
+            <a href="#">Products</a>
+            <a href="#">Solutions</a>
+            <a href="#">Industries</a>
+            <a href="#">Resources</a>
+            <a href="#">Company</a>
+        </div>
+
+        <a href="#" class="btn btn-primary">Book Demo</a>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="container hero-grid">
+        <div>
+            <h1>State of the Art <span>Mixed Reality</span></h1>
+            <p style="font-size: clamp(1.05rem, 1.2vw, 1.35rem); margin-bottom: clamp(1.5rem, 2vw, 2.5rem);">
+                Real surroundings blended with virtual tools for natural comfort — leading to longer practice hours, safer skill acquisition, and verifiable outcomes.
+            </p>
+
+            <div style="display:flex; gap: 1rem; flex-wrap:wrap;">
+                <a href="#" class="btn btn-primary">Schedule a Demo</a>
+                <a href="#" class="btn btn-secondary">Watch Showcase</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-media-placeholder">
+                <i class="fa-solid fa-circle-play"></i>
+                <span>[ HERO MEDIA / VIDEO PLACEHOLDER ]</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>500+</h3>
+                <p>Simulators Installed Worldwide</p>
+            </div>
+            <div class="stat-card">
+                <h3>3 Mn+</h3>
+                <p>Training Sessions Delivered</p>
+            </div>
+            <div class="stat-card">
+                <h3>$15 Mn+</h3>
+                <p>Material Costs Saved</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS & AFFILIATIONS SECTION -->
+<section style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2>Trusted by Educators & Leaders</h2>
+            <p>See how institutions use Skillveri to redefine vocational training.</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-quote">
+                    "Skillveri's MR simulators have drastically reduced material consumption while allowing students to gain extra confidence before stepping into the physical lab."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">VCC</div>
+                    <div class="author-info">
+                        <h4>Vancouver Community College</h4>
+                        <p>Vocational Department</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-quote">
+                    "The feedback and real-time accuracy enable our instructors to train double the capacity with higher pass rates."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SCO</div>
+                    <div class="author-info">
+                        <h4>Stanislaus County</h4>
+                        <p>Office of Education</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-quote">
+                    "Students learn faster and retain spatial techniques better. It's the standard for modern skill development."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">CCC</div>
+                    <div class="author-info">
+                        <h4>Cypress Creek College</h4>
+                        <p>Technical Institute</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RE-STYLED AFFILIATIONS SECTION -->
+        <div class="affiliations">
+            <div class="affiliations-title">Affiliations &amp; Standards Alignments</div>
+            <div class="affiliations-flex">
+                <div class="badge-box">AWS SENSE Member</div>
+                <div class="badge-box">Worlddidac Member</div>
+                <div class="badge-box">SCRS Member</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INFINITE SCROLL LOGOS -->
+<section class="logos-section">
+    <div class="container">
+        <div class="section-header" style="margin-bottom: clamp(1.5rem, 2vw, 2.5rem);">
+            <h2>Industry Partners & Institutions</h2>
+            <p>Empowering leading technical institutes and global enterprises worldwide.</p>
+        </div>
+    </div>
+
+    <div class="marquee-container" id="marqueeContainer1">
+        <div class="marquee-track" id="marqueeTrack1">
+            <div class="logo-box">Partner 1</div>
+            <div class="logo-box">Partner 2</div>
+            <div class="logo-box">Partner 3</div>
+            <div class="logo-box">Partner 4</div>
+            <div class="logo-box">Partner 5</div>
+            <div class="logo-box">Partner 6</div>
+            <div class="logo-box">Partner 7</div>
+            <div class="logo-box">Partner 8</div>
+            <div class="logo-box">Partner 9</div>
+            <div class="logo-box">Partner 10</div>
+            <div class="logo-box">Partner 11</div>
+            <div class="logo-box">Partner 12</div>
+            <div class="logo-box">Partner 13</div>
+            <div class="logo-box">Partner 14</div>
+            <div class="logo-box">Partner 15</div>
+        </div>
+    </div>
+
+    <div class="marquee-container" id="marqueeContainer2">
+        <div class="marquee-track" id="marqueeTrack2">
+            <div class="logo-box">Partner 16</div>
+            <div class="logo-box">Partner 17</div>
+            <div class="logo-box">Partner 18</div>
+            <div class="logo-box">Partner 19</div>
+            <div class="logo-box">Partner 20</div>
+            <div class="logo-box">Partner 21</div>
+            <div class="logo-box">Partner 22</div>
+            <div class="logo-box">Partner 23</div>
+            <div class="logo-box">Partner 24</div>
+            <div class="logo-box">Partner 25</div>
+            <div class="logo-box">Partner 26</div>
+            <div class="logo-box">Partner 27</div>
+            <div class="logo-box">Partner 28</div>
+            <div class="logo-box">Partner 29</div>
+            <div class="logo-box">Partner 30</div>
+        </div>
+    </div>
+</section>
+
+<!-- WHO WE ARE SECTION -->
+<section class="who-we-are">
+    <div class="container who-grid">
+        <div class="who-card">
+            <h2>Who We Are</h2>
+            <p style="margin-top: 1rem;">
+                Skillveri is a pioneer in bringing multi-skill Mixed Reality simulation platforms to vocational education and industrial workforce training worldwide.
+            </p>
+            <p style="margin-top: 1rem;">
+                Our vision is to empower skill training with high efficiency, reducing training costs, eliminating physical raw material waste, and standardizing certification across industries.
+            </p>
+        </div>
+
+        <div class="who-features">
+            <div class="who-feature-item">
+                <h4>Multi-Skill Platform</h4>
+                <p>Train across Welding, HVAC, Solar, Painting, and custom domains on unified hardware setups.</p>
+            </div>
+            <div class="who-feature-item">
+                <h4>Cost Efficient</h4>
+                <p>Dramatically lower consumable costs by shifting repetitive basic practice hours to MR.</p>
+            </div>
+            <div class="who-feature-item">
+                <h4>Data Analytics</h4>
+                <p>Measure speed, angle, distance, and precision with instant digital objective feedback.</p>
+            </div>
+            <div class="who-feature-item">
+                <h4>Global Standard</h4>
+                <p>Trusted across leading academic institutions and global Fortune 500 manufacturers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY SKILLVERI / FEATURES -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <h2>Why Skillveri</h2>
+            <p>Engineered for high-impact vocational and industrial training.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="card">
+                <h3>Immersive MR Training</h3>
+                <p>Blend physical tools with virtual environments for spatial precision.</p>
+            </div>
+            <div class="card">
+                <h3>Authentic Equipment</h3>
+                <p>Train using realistic tool form factors matching industry specifications.</p>
+            </div>
+            <div class="card">
+                <h3>Assessment & Analytics</h3>
+                <p>Track student performance metrics with objective data logging.</p>
+            </div>
+            <div class="card">
+                <h3>Scalable Deployment</h3>
+                <p>Deploy specialized training programs anywhere with minimal setup requirements.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED SIMULATORS -->
+<section style="background: var(--soft);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Featured Simulators</h2>
+            <p>Explore our flagship hardware-integrated XR training platforms.</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-media">[ WELDING SIMULATOR ]</div>
+                <div class="product-body">
+                    <h3>Welding Simulator</h3>
+                    <p>Precision hands-on welding practice in immersive mixed reality.</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-media">[ HVAC SIMULATOR ]</div>
+                <div class="product-body">
+                    <h3>HVAC Skills</h3>
+                    <p>Advanced system maintenance and diagnostic troubleshooting.</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-media">[ SOLAR SIMULATOR ]</div>
+                <div class="product-body">
+                    <h3>Solar Installation</h3>
+                    <p>Safe, repeatable rooftop panel and electrical setup training.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+    <div class="container">
+        <div class="section-header">
+            <h2>How Training Works</h2>
+            <p>A structured, four-step progressive learning methodology.</p>
+        </div>
+
+        <div class="workflow-grid">
+            <div class="step-card">
+                <span class="step-num">01</span>
+                <h3>Learn</h3>
+                <p>Understand core spatial and procedural concepts through guided steps.</p>
+            </div>
+
+            <div class="step-card">
+                <span class="step-num">02</span>
+                <h3>Practice</h3>
+                <p>Build muscle memory safely with authentic physical tools.</p>
+            </div>
+
+            <div class="step-card">
+                <span class="step-num">03</span>
+                <h3>Assess</h3>
+                <p>Evaluate precision and technique with automated data feedback.</p>
+            </div>
+
+            <div class="step-card">
+                <span class="step-num">04</span>
+                <h3>Certify</h3>
+                <p>Earn industry credentials backed by verifiable telemetry data.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CALL TO ACTION BANNER -->
+<div class="container cta-section">
+    <div class="cta-box">
+        <h2>Ready to Transform Skills Training?</h2>
+        <p>Discover how XR and MR simulations dramatically improve engagement, safety, assessment, and material savings.</p>
+        <a href="#" class="btn" style="background:white; color:var(--text); font-weight:700;">
+            Schedule a Demo
+        </a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p><strong style="color:#ffffff;">Skillveri Inc, USA</strong></p>
+                <p>8 The Green #8266</p>
+                <p>Dover, Delaware, 19901</p>
+                <p style="margin-top:0.75rem;">Email – <a href="mailto:usa@skillveri.com">usa@skillveri.com</a></p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Skillveri Training Solutions Pvt Ltd</h4>
+                <p>Call: <a href="tel:+919345841361">+91 93458 41361</a></p>
+                <p><a href="tel:+918778635327">+91 87786 35327</a></p>
+                <p>Landline: 044-4264 7437</p>
+                <p style="margin-top:0.4rem; font-size:clamp(0.75rem, 0.85vw, 0.95rem); color:#64748b;">(Mon-Fri, 10 AM-6 PM)</p>
+                <p style="margin-top:0.75rem;">Email – <a href="mailto:sales@skillveri.com">sales@skillveri.com</a></p>
+            </div>
+
+            <div class="footer-col">
+                <h4>United Kingdom</h4>
+                <p><strong style="color:#ffffff;">Skillveri UK</strong></p>
+                <p style="margin-top:0.75rem;">Email – <a href="mailto:uk@skillveri.com">uk@skillveri.com</a></p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <div class="social-icons">
+                    <a href="https://linkedin.com" target="_blank" class="social-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank" class="social-btn" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>Copyright - Skillveri Inc</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const wrappers = document.querySelectorAll('.marquee-container');
+    const PIXELS_PER_SECOND = 30;
+
+    wrappers.forEach(wrapper => {
+        const track = wrapper.querySelector('.marquee-track');
+        if (!wrapper || !track) return;
+
+        const originals = Array.from(track.children);
+        if (originals.length === 0) return;
+        const count = originals.length;
+
+        let setWidth = 0;   
+        let pos = 0;        
+        let lastSet = 0;    
+        let isDown = false;
+        let startX = 0, scrollLeftStart = 0;
+        let lastTime = null;
+
+        function measure() {
+            const first = track.children[0];
+            if (track.children.length === count) {
+                originals.forEach(el => track.appendChild(el.cloneNode(true)));
+            }
+            setWidth = track.children[count].offsetLeft - first.offsetLeft;
+            if (setWidth <= 0) return;
+
+            let guard = 0;
+            while (guard++ < 30) {
+                const last = track.children[track.children.length - 1];
+                const totalWidth = last.offsetLeft + last.offsetWidth - first.offsetLeft;
+                if (totalWidth >= setWidth + wrapper.clientWidth + 4) break;
+                originals.forEach(el => track.appendChild(el.cloneNode(true)));
+            }
+        }
+
+        measure();
+        window.addEventListener('load', measure);
+        window.addEventListener('resize', measure);
+        track.addEventListener('load', measure, true);
+
+        function tick(now) {
+            if (lastTime === null) lastTime = now;
+            const dt = Math.min(now - lastTime, 100);
+            lastTime = now;
+
+            if (setWidth > 0) {
+                const cur = wrapper.scrollLeft;
+
+                if (Math.abs(cur - lastSet) > 0.01) {
+                    pos = cur;
+                    if (pos < 1) pos += setWidth;   
+                }
+
+                if (!isDown) pos += PIXELS_PER_SECOND * dt / 1000;
+
+                if (pos >= setWidth) pos -= setWidth;
+
+                wrapper.scrollLeft = pos;
+                lastSet = wrapper.scrollLeft;
+            }
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+
+        wrapper.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - wrapper.offsetLeft;
+            scrollLeftStart = wrapper.scrollLeft;
+        });
+
+        const release = () => { isDown = false; };
+        window.addEventListener('mouseup', release);
+        window.addEventListener('blur', release);
+        document.addEventListener('mouseleave', release);
+
+        wrapper.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - wrapper.offsetLeft;
+            wrapper.scrollLeft = scrollLeftStart - (x - startX) * 1.5;
+        });
+
+        wrapper.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            wrapper.scrollLeft += e.deltaY * 0.5;
+        }, { passive: false });
+    });
+});
+</script>
+
+</body>
+</html>

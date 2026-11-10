@@ -758,7 +758,7 @@ const SITE_CONFIG = {
             year: "2018 — PRESENT",
             title: "Graphics & Motion Graphics Design",
             tag: "WaveMaker & Pramati Technologies",
-            description: "Leading visual design and motion production for enterprise SaaS platforms (WaveMaker, ThumbSignIn, Hyscale). Producing 50+ product films, AI feature launches, and brand motion systems while integrating automated workflows."
+            description: "Led and managed the video creation and design teams across enterprise platforms, directing software developers on product screencasts while producing 100+ product films, motion systems, and AI-driven workflows."
         },
         {
             year: "2011 — 2018",
@@ -783,9 +783,10 @@ const SITE_CONFIG = {
             company: "WaveMaker, Inc.",
             category: "saas",
             paragraphs: [
-                "Directing enterprise SaaS product videos, feature walkthroughs, and brand motion that explain cloud and low-code concepts clearly.",
-                "Collaborating with product and marketing teams to keep video style consistent across campaigns and product releases.",
-                "Writing custom automation scripts and integrating AI tools into daily workflows to speed up production."
+                "• Managed and led the video creation team, overseeing project pipelines, timeline execution, and end-to-end production of enterprise SaaS marketing videos, product walkthroughs, motion graphics, and illustrations.",
+                "• Collaborated directly with product engineering and software development teams, establishing technical workflows and directing developers on capturing accurate screen recordings and screencasts of complex cloud and low-code platform features.",
+                "• Set visual direction and aligned cross-functional product and marketing teams to deliver cohesive, high-converting video content across digital channels and SaaS acquisition campaigns.",
+                "• Engineered AI-assisted automation scripts to streamline motion design workflows and increase overall team production efficiency."
             ]
         },
         {
@@ -795,8 +796,9 @@ const SITE_CONFIG = {
             company: "Pramati Technologies",
             category: "saas",
             paragraphs: [
-                "Directed product videos and visual assets for banking and low-code software to help with client demos and product adoption.",
-                "Worked with cross-functional teams to update how banking solutions were presented using WaveMaker."
+                "• Directed the video design team in executing product videos, graphic assets, and marketing collateral for enterprise banking and low-code solutions to drive client presentations and product adoption.",
+                "• Partnered closely with software developers, guiding them on capturing high-quality software screencasts and UI flows to visually demonstrate platform capabilities and technical architecture.",
+                "• Led creative reviews and mentored junior designers to maintain brand consistency, visual fidelity, and high narrative quality across all video deliverables."
             ]
         },
         {
@@ -806,8 +808,8 @@ const SITE_CONFIG = {
             company: "Pramati Technologies",
             category: "saas",
             paragraphs: [
-                "Created motion graphics and product videos for enterprise tools like WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.",
-                "Turned technical product features into clear visual explanations to improve engagement, alongside early AR/VR design tests."
+                "• Created motion graphics and product videos for enterprise tools like WaveMaker, ThumbSignIn, Apitive, Hyscale, and Groupe.",
+                "• Turned technical product features into clear visual explanations to improve engagement, alongside early AR/VR design tests."
             ]
         },
         {
@@ -817,7 +819,7 @@ const SITE_CONFIG = {
             company: "Pramati Technologies",
             category: "saas",
             paragraphs: [
-                "Created marketing motion graphics and vector illustrations to support brand campaigns."
+                "• Created marketing motion graphics and vector illustrations to support brand campaigns."
             ]
         },
         {
@@ -827,7 +829,7 @@ const SITE_CONFIG = {
             company: "Avaz Inc.",
             category: "games",
             paragraphs: [
-                "Designed front-end layouts and gameplay logic for language learning apps like Freespeech and Chong-Chong."
+                "• Designed front-end layouts and gameplay logic for language learning apps like Freespeech and Chong-Chong."
             ]
         },
         {
@@ -837,7 +839,7 @@ const SITE_CONFIG = {
             company: "Evelyn Software Labs",
             category: "games",
             paragraphs: [
-                "Developed and shipped multiple iOS games including Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator."
+                "• Developed and shipped multiple iOS games including Battleground Defense Trilogy, Fix the Candy, Adrian's Crusade, and Welding Simulator."
             ]
         },
         {
@@ -847,7 +849,7 @@ const SITE_CONFIG = {
             company: "Colours Animation Pvt Ltd",
             category: "studio",
             paragraphs: [
-                "Drew storyboards, designed characters, and handled scene animation for studio projects."
+                "• Drew storyboards, designed characters, and handled scene animation for studio projects."
             ]
         },
         {
@@ -857,7 +859,7 @@ const SITE_CONFIG = {
             company: "Vismayas Max",
             category: "studio",
             paragraphs: [
-                "Built character turn-arounds, 3D props, models, and animation tests for studio training projects."
+                "• Built character turn-arounds, 3D props, models, and animation tests for studio training projects."
             ]
         }
     ],
